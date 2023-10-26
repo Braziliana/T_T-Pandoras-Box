@@ -37,7 +37,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	        return;
         }
         
-        var size = (int)(end.ToInt64() - start.ToInt64()) / 0x10;
+        var size = (int)(end.ToInt64() - start.ToInt64()) / 0x8;
         if (size > 100)
         {
 	        return;
@@ -45,7 +45,7 @@ internal class BuffReader : BaseReader, IBuffReader
         
         for (var i = 0; i < size; i++)
         {
-	        var ptr = start + 0x10 * i;
+	        var ptr = start + 0x8 * i;
 	        if (ptr.ToInt64() < 0x1000)
 	        {
 		        continue;
