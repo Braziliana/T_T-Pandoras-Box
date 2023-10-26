@@ -8,6 +8,7 @@ namespace Api.Inputs
 {
     public enum VirtualKey : ushort
     {
+        Unknown = ushort.MaxValue,
         SelectKey = 0x0,
         MouseLeft = 0x01,
         MouseRight = 0x02,

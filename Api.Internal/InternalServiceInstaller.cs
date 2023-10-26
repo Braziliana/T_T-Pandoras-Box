@@ -48,7 +48,6 @@ namespace Api.Internal
             collection.TryAddSingleton<ITargetProcess, TargetProcess>();
             collection.TryAddSingleton<IMemory, BasicMemory>();
             
-            collection.TryAddSingleton<GlobalKeyboardHook>();
             collection.TryAddSingleton<IInputManager, InputManager>();
             
             collection.TryAddSingleton<IMainMenu, MainMenu>();

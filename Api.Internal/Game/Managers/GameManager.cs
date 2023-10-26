@@ -5,6 +5,7 @@ using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
 using Api.Internal.Game.Objects;
+using WinApi;
 
 namespace Api.Internal.Game.Managers;
 

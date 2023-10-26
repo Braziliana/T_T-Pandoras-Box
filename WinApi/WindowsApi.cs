@@ -3,9 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace WinApi
 {
-    public static class WindowsApi
+    public static unsafe class WindowsApi
     {
         public delegate IntPtr HookProc(int nCode, IntPtr wParam, IntPtr lParam);
+        public delegate IntPtr KeyboardHookProc(int nCode, IntPtr wParam, LowLevelKeyboardInputEvent* lParam);
+        public delegate IntPtr MouseHookProc(int nCode, IntPtr wParam, LowLevelMouseInputEvent* lParam);
 
         public const int GwlExStyle = -20;
         
@@ -61,18 +63,45 @@ namespace WinApi
             SetWindowLong(hwnd, GwlExStyle, extendedStyle & ~(int)WindowStyle.WsExTransparent);
         }
         
-        public const int WhKeyboardLl = 13;
+        public enum HookType : int
+        {
+            JournalRecord = 0,
+            JournalPlayback = 1,
+            Keyboard = 2,
+            GetMessage = 3,
+            CallWndProc = 4,
+            Cbt = 5,
+            SysMsgFilter = 6,
+            Mouse = 7,
+            Hardware = 8,
+            Debug = 9,
+            Shell = 10,
+            ForegroundIdle = 11,
+            CallWndProcRet = 12,
+            KeyboardLowLevel = 13,
+            MouseLowLevel = 14
+        }
     
         [StructLayout(LayoutKind.Sequential)]
         public struct LowLevelKeyboardInputEvent
         {
             public int VirtualCode;
             public int HardwareScanCode;
-            public int Flags;
-            public int TimeStamp;
+            public uint  Flags;
+            public uint TimeStamp;
             public IntPtr AdditionalInformation;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        public unsafe struct LowLevelMouseInputEvent
+        {
+            public Point point;
+            public uint MouseData;
+            public uint Flags;
+            public uint TimeStamp;
+            public IntPtr AdditionalInformation;
+        }
+        
         public enum KeyboardState
         {
             KeyDown = 0x0100,
@@ -81,15 +110,40 @@ namespace WinApi
             SysKeyUp = 0x0105
         }
         
+        public enum MouseState
+        {
+            Mousemove = 0x0200,
+            LeftButtonDown = 0x0201,
+            LeftButtonUp = 0x0202,
+            RightButtonDown = 0x0204,
+            RightButtonUp = 0x0205,
+            MouseWheelDown = 0x0207,
+            MouseWheelUp = 0x0208,
+            MouseWheel = 0x020A,
+            MouseHorizontalWheel = 0x020E,
+            XButtonDown = 0x020B,
+            XButtonUp = 0x020C
+        }
+        
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr SetWindowsHookEx(int idHook, HookProc hookProc, IntPtr hMod, uint dwThreadId);
+        public static extern IntPtr SetWindowsHookEx(HookType hookType, HookProc hookProc, IntPtr hMod, uint dwThreadId);
+        
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr SetWindowsHookEx(HookType hookType, KeyboardHookProc keyboardHookProc, IntPtr hMod, uint dwThreadId);
+        
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern IntPtr SetWindowsHookEx(HookType hookType, MouseHookProc mouseHookProc, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+        public static extern unsafe IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, LowLevelKeyboardInputEvent* lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern unsafe IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, LowLevelMouseInputEvent* lParam);
+
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern IntPtr GetModuleHandle(string lpModuleName);
@@ -222,6 +276,18 @@ namespace WinApi
         {
             public int x;
             public int y;
+        }
+        
+        // ReSharper disable once InconsistentNaming
+        public const uint LLMHF_INJECTED = 0x1;
+        // ReSharper disable once InconsistentNaming
+        public const uint LOWER_IL_INJECTED = 0x2;
+        // ReSharper disable once InconsistentNaming
+        public const uint LLKHF_INJECTED = 0x10;
+        
+        public static ushort HIWORD(uint dwValue)
+        {
+            return (ushort)((dwValue >> 16) & 0xffff);
         }
     }
 }

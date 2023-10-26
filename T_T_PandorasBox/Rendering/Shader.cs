@@ -155,7 +155,14 @@ namespace T_T_PandorasBox.Rendering
                 if (_disposed) return;
                 if (_handle > 0)
                 {
-                    _gl.DeleteProgram(_handle);
+                    try
+                    {
+                        _gl.DeleteProgram(_handle);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Failed to dispose shader {ex}");
+                    }
                 }
 
                 _handle = 0;

@@ -23,15 +23,17 @@ namespace Api.Internal.Inputs
 
         private readonly int _width;
         private readonly int _height;
+        private Vector2 _mousePosition = Vector2.Zero;
 
-        public InputManager(GlobalKeyboardHook globalKeyboardHook)
+        public InputManager()
         {
             _width =  WindowsApi.GetSystemMetrics(WindowsApi.SystemMetric.VirtualScreenWidth);
             _height = WindowsApi.GetSystemMetrics(WindowsApi.SystemMetric.VirtualScreenHeight);
             _states = new Dictionary<VirtualKey, KeyState>();
-            globalKeyboardHook.KeyboardPressed += GlobalKeyboardHookKeyboardPressed;
+            GlobalKeyboardHook.KeyboardPressed += GlobalKeyboardHookKeyboardPressed;
+            GlobalMouseHook.MouseEvent += GlobalMouseHookOnMouseEvent;
         }
-        
+
         public KeyState GetKeyState(int key)
         {
             return GetKeyState((VirtualKey)key);
@@ -130,8 +132,7 @@ namespace Api.Internal.Inputs
 
         public Vector2 GetMousePosition()
         {
-            WindowsApi.GetCursorPos(out var point);
-            return new Vector2(point.x, point.y);
+            return _mousePosition;
         }
 
         private WindowsApi.MouseEvent MapButton(MouseButton mouseButton, bool down)
@@ -276,6 +277,111 @@ namespace Api.Internal.Inputs
                 WindowsApi.KeyboardState.KeyDown => KeyState.KeyDown,
                 WindowsApi.KeyboardState.KeyUp => KeyState.KeyUp,
                 _ => KeyState.Unknown,
+            };
+        }
+        
+        private void GlobalMouseHookOnMouseEvent(object? sender, GlobalMouseHookEventArgs e)
+        {
+            var (isValid, keyEvent) = IsValid(e);
+            if (!isValid)
+            {
+                return;
+            }
+            
+            _states[keyEvent.VirtualKey] = keyEvent.KeyState;
+            
+            var eventArguments = new InputKeyEventArgs(keyEvent);
+            InputKeyEvent?.Invoke(this, eventArguments);
+            if(eventArguments.BlockInput)
+            {
+                e.Handled = true;
+                return;
+            }
+            
+            switch (keyEvent.KeyState)
+            {
+                case KeyState.KeyDown:
+                    KeyDown?.Invoke(keyEvent.VirtualKey);
+                    break;
+                case KeyState.KeyUp:
+                    KeyUp?.Invoke(keyEvent.VirtualKey);
+                    break;
+                case KeyState.Unknown:
+                    break;
+            }
+        }
+
+        private (bool isValid, KeyEvent keyEvent) IsValid(GlobalMouseHookEventArgs e)
+        {
+            _mousePosition.X = e.MouseData.point.x;
+            _mousePosition.Y = e.MouseData.point.y;
+            
+            var virtualKey = MapVirtualKey(e.MouseState, e.MouseData.MouseData);
+            var keyState = MapKeyState(e.MouseState);
+
+            var keyEvent = new KeyEvent(
+                virtualKey,
+                keyState,
+                e.MouseData.TimeStamp
+            );
+
+            if (_states.TryGetValue(keyEvent.VirtualKey, out var currentState))
+            {
+                if (currentState == keyEvent.KeyState)
+                {
+                    return (false, default);
+                }
+            }
+
+            return (true, keyEvent);
+        }
+        
+        private KeyState MapKeyState(WindowsApi.MouseState mouseState)
+        {
+            return mouseState switch
+            {
+                WindowsApi.MouseState.LeftButtonDown => KeyState.KeyDown,
+                WindowsApi.MouseState.RightButtonDown => KeyState.KeyDown,
+                WindowsApi.MouseState.MouseWheelDown => KeyState.KeyDown,
+                WindowsApi.MouseState.XButtonDown =>  KeyState.KeyDown,
+                
+                WindowsApi.MouseState.LeftButtonUp => KeyState.KeyUp,
+                WindowsApi.MouseState.RightButtonUp => KeyState.KeyUp,
+                WindowsApi.MouseState.MouseWheelUp => KeyState.KeyUp,
+                WindowsApi.MouseState.XButtonUp => KeyState.KeyUp,
+               
+                _ => KeyState.Unknown,
+            };
+        }
+        
+        
+        private VirtualKey MapVirtualKey(WindowsApi.MouseState mouseState, uint mouseData)
+        {
+            VirtualKey MapXKey(uint md)
+            {
+                var key = WindowsApi.HIWORD(md);
+                Console.WriteLine(key);
+                return key switch
+                {
+                    1 => VirtualKey.MouseX1,
+                    2 => VirtualKey.MouseX2,
+                    _ => VirtualKey.Unknown
+                };
+            }
+            
+            return mouseState switch
+            {
+                WindowsApi.MouseState.LeftButtonDown => VirtualKey.MouseLeft,
+                WindowsApi.MouseState.LeftButtonUp =>  VirtualKey.MouseLeft,
+                WindowsApi.MouseState.RightButtonDown => VirtualKey.MouseRight,
+                WindowsApi.MouseState.RightButtonUp => VirtualKey.MouseRight,
+                WindowsApi.MouseState.MouseWheelDown => VirtualKey.MouseMiddle,
+                WindowsApi.MouseState.MouseWheelUp => VirtualKey.MouseMiddle,
+                WindowsApi.MouseState.MouseWheel => VirtualKey.MouseMiddle,
+                WindowsApi.MouseState.MouseHorizontalWheel => VirtualKey.MouseMiddle,
+                WindowsApi.MouseState.XButtonDown => MapXKey(mouseData),
+                WindowsApi.MouseState.XButtonUp => MapXKey(mouseData),
+                _ => VirtualKey.Unknown,
             };
         }
     }

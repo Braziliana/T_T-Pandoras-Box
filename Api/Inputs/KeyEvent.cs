@@ -10,9 +10,9 @@ namespace Api.Inputs
     {
         public VirtualKey VirtualKey { get; set; }
         public KeyState KeyState { get; private set; }
-        public int TimeStamp { get; private set; }
+        public uint TimeStamp { get; private set; }
 
-        public KeyEvent(VirtualKey virtualKey, KeyState keyState, int timeStamp)
+        public KeyEvent(VirtualKey virtualKey, KeyState keyState, uint timeStamp)
         {
             VirtualKey = virtualKey;
             KeyState = keyState;

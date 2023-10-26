@@ -13,6 +13,7 @@ using T_T_PandorasBox;
 using T_T_PandorasBox.Rendering;
 using T_T_PandorasBox.States;
 using T_T_PandorasBox.States.MainWindowViews;
+using WinApi;
 
 void RegisterMainWindows(IServiceCollection collection)
 {
@@ -64,3 +65,6 @@ while (!appStateManager.ShouldExit)
 {
     appStateManager.Update();
 }
+
+GlobalKeyboardHook.Unhook();
+GlobalMouseHook.Unhook();
