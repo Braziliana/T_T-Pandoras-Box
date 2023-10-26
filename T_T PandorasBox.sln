@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.Internal", "Api.Interna
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LCU", "LCU\LCU.csproj", "{2504132C-E87A-4EF9-9045-77724FC0361C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Native", "Native\Native.vcxproj", "{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{2504132C-E87A-4EF9-9045-77724FC0361C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2504132C-E87A-4EF9-9045-77724FC0361C}.Release|x64.ActiveCfg = Release|Any CPU
 		{2504132C-E87A-4EF9-9045-77724FC0361C}.Release|x64.Build.0 = Release|Any CPU
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Debug|Any CPU.Build.0 = Debug|Win32
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Debug|x64.ActiveCfg = Debug|x64
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Debug|x64.Build.0 = Debug|x64
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Release|Any CPU.ActiveCfg = Release|Win32
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Release|Any CPU.Build.0 = Release|Win32
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Release|x64.ActiveCfg = Release|x64
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

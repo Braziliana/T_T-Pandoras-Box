@@ -65,3 +65,6 @@ ScaffoldingReadMe.txt
 *.tmp
 *.swp
 .DS_Store
+
+#c++
+.x64/Release/*
