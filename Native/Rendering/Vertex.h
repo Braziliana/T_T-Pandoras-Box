@@ -1,9 +1,11 @@
 ﻿#pragma once
+#include "../Math/Color.h"
 #include "../Math/Vector2.h"
 #include "../Math/Vector3.h"
-#include <DirectXMath.h>
+
 struct Vertex
 {
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT2 uv;
+    Vector3 position;
+    Vector2 uv;
+    Color color;
 };
