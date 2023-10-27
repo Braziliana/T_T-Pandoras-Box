@@ -15,4 +15,5 @@ public:
     bool Initialize(ID3D11Device* device, const std::wstring& shaderPath);
     void Use(ID3D11DeviceContext* deviceContext) const;
     void Dispose();
+    ID3D11InputLayout* GetInputLayout() const;
 };

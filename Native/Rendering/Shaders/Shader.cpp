@@ -92,3 +92,8 @@ void Shader::Dispose()
         _vertexShader = nullptr;
     }
 }
+
+ID3D11InputLayout* Shader::GetInputLayout() const
+{
+    return _inputLayout;
+}

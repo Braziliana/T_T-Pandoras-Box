@@ -2,6 +2,7 @@
 #include <d3d11.h>
 #include <Windows.h>
 
+#include "Vertex.h"
 #include "../Math/Color.h"
 #include "../Math/Vector2.h"
 
@@ -23,6 +24,13 @@ private:
     ID3D11BlendState* _blendState = nullptr;
     D3D11_VIEWPORT _viewport = {0};
     RenderCallback _renderCallback = nullptr;
+
+    Vertex* _rectVertex = nullptr;
+    Vertex* _planeVertex = nullptr;
+    Vertex* _circle2DVertex = nullptr;
+    Vertex* _circle3DVertex = nullptr;
+
+    void InitShapes();
     
 public:
     ~Renderer();
@@ -32,6 +40,7 @@ public:
     void Dispose();
 
     void SetClearColor(Color color);
+    void SetCircleSegments(int segments);
     
     void RenderCircle(Vector2 position, float width, Color color);
 };

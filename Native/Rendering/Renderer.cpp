@@ -1,4 +1,6 @@
 ﻿#include "Renderer.h"
+
+#include "Vertex.h"
 #include "../Math/Color.h"
 
 void RegisterRenderCallback(Renderer* renderer, const RenderCallback callback)
@@ -13,6 +15,37 @@ void RenderSetClearColor(Renderer* renderer, Color color)
     if(renderer == nullptr) return;
     
     renderer->SetClearColor(color);
+}
+
+void Renderer::InitShapes()
+{
+    _rectVertex = new Vertex[]
+    {
+        // Triangle 1
+        {Vector3(-0.5f,  0.5f, 0.0f), Vector2(0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-left
+        {Vector3( 0.5f,  0.5f, 0.0f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
+        {Vector3(-0.5f, -0.5f, 0.0f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
+
+        // Triangle 2
+        {Vector3(-0.5f, -0.5f, 0.0f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
+        {Vector3( 0.5f,  0.5f, 0.0f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
+        {Vector3( 0.5f, -0.5f, 0.0f), Vector2(1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-right
+    };
+
+    _planeVertex = new Vertex[]
+    {
+        // Triangle 1
+        {Vector3(-0.5f,  0.0f, 0.5f), Vector2(0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-left
+        {Vector3( 0.5f,  0.0f, 0.5f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
+        {Vector3(-0.5f, 0.0f, -0.5f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
+
+        // Triangle 2
+        {Vector3(-0.5f, 0.0f, -0.5f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
+        {Vector3( 0.5f,  0.0f, 0.5f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
+        {Vector3( 0.5f, 0.0f, -0.5f), Vector2(1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-right
+    };
+
+    SetCircleSegments(64);
 }
 
 Renderer::~Renderer()
@@ -90,6 +123,8 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
     _viewport.MinDepth = 0.0f;
     _viewport.MaxDepth = 1.0f;
     _deviceContext->RSSetViewports(1, &_viewport);
+
+    InitShapes();
     
     return true;
 }
@@ -117,6 +152,11 @@ void Renderer::Render(float deltaTime) const
 
 void Renderer::Dispose()
 {
+    delete _rectVertex;
+    delete _planeVertex;
+    delete _circle2DVertex;
+    delete _circle3DVertex;
+    
     if(_blendState != nullptr)
     {
         _blendState->Release();
@@ -151,6 +191,24 @@ void Renderer::Dispose()
 void Renderer::SetClearColor(const Color color)
 {
     _clearColor = color;
+}
+
+void Renderer::SetCircleSegments(int segments)
+{
+    _circle2DVertex = new Vertex[segments+2];
+    _circle3DVertex = new Vertex[segments+2];
+    _circle2DVertex[0] = {Vector3(0.0f, 0.0f, 0.0f), Vector2(0.5f, 0.5f), Color(1.0f, 1.0f, 1.0f, 1.0f)};
+    _circle3DVertex[0] = {Vector3(0.0f, 0.0f, 0.0f), Vector2(0.5f, 0.5f), Color(1.0f, 1.0f, 1.0f, 1.0f)};
+
+    for (int i = 0; i <= segments; ++i) {
+        const float theta = 2.0f * 3.1415926f * static_cast<float>(i) / static_cast<float>(segments);
+        const float dx = cosf(theta);
+        const float dy = sinf(theta);
+        
+        _circle2DVertex[i+1] = {Vector3( dx, dy, 0.0f), Vector2(0.5f + 0.5f * cosf(theta), 0.5f + 0.5f * sinf(theta)), Color(1.0f, 1.0f, 1.0f, 1.0f)};
+        _circle3DVertex[i+1] = {Vector3( dx, 0.0f, dy), Vector2(0.5f + 0.5f * cosf(theta), 0.5f + 0.5f * sinf(theta)), Color(1.0f, 1.0f, 1.0f, 1.0f)};
+    }
+    
 }
 
 void Renderer::RenderCircle(Vector2 position, float width, Color color)

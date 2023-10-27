@@ -234,8 +234,9 @@
       <SDLCheck>true</SDLCheck>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
-    <ClCompile Include="Rendering\RenderBatch.cpp" />
+    <ClCompile Include="Rendering\Materials\MaterialManager.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\Renderers\CircleRenderer.cpp" />
     <ClCompile Include="Rendering\Shaders\Shader.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>x64\Release\</AssemblerListingLocation>
@@ -319,9 +320,14 @@
     <ClInclude Include="Math\Color.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Rendering\Buffers\BatchBuffer.h" />
+    <ClInclude Include="Rendering\Buffers\InstancedVertexBuffer.h" />
     <ClInclude Include="Rendering\Materials\Material.h" />
-    <ClInclude Include="Rendering\RenderBatch.h" />
+    <ClInclude Include="Rendering\Materials\MaterialManager.h" />
     <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\Renderers\BufferRenderer.h" />
+    <ClInclude Include="Rendering\Renderers\CircleRenderer.h" />
+    <ClInclude Include="Rendering\Renderers\InstancedVertexBufferRenderer.h" />
     <ClInclude Include="Rendering\Shaders\Shader.h" />
     <ClInclude Include="Rendering\Shaders\ShaderManager.h" />
     <ClInclude Include="Rendering\Vertex.h" />
