@@ -69,3 +69,5 @@ ScaffoldingReadMe.txt
 #c++
 x64/Release
 Native/x64/Release
+x64/Debug
+Native/x64/Debug
