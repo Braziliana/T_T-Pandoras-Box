@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <iostream>
+
 #include "../Buffers/InstancedVertexBuffer.h"
 #include "../Materials/Material.h"
 
@@ -7,7 +9,7 @@ template<typename TVertex, typename TBufferData>
 class InstancedVertexBufferRenderer
 {
 protected:
-    InstancedVertexBuffer<TVertex, TBufferData> _instancedVertexBuffer;
+    InstancedVertexBuffer<TVertex, TBufferData> _instancedVertexBuffer = {};
     ID3D11DeviceContext* _deviceContext = nullptr;
     D3D11_PRIMITIVE_TOPOLOGY _topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
     Material* _material = nullptr;

@@ -13,6 +13,7 @@ protected:
     size_t _maxItems = 0;
     
 public:
+    BatchBuffer() {  }
     virtual ~BatchBuffer()
     {
         
@@ -61,7 +62,7 @@ bool BatchBuffer<T>::Init(ID3D11Device* device, ID3D11DeviceContext* deviceConte
 template <typename T>
 bool BatchBuffer<T>::IsEmpty() const
 {
-    return _count > 0;
+    return _count < 1;
 }
 
 template <typename T>
@@ -75,6 +76,7 @@ bool BatchBuffer<T>::Add(const T& item)
 {
     if(_count + 1 >= _maxItems)
     {
+        std::cout << "c: " << _count << " m: " << _maxItems << std::endl;
         return false;
     }
     
@@ -135,6 +137,8 @@ bool BatchBuffer<T>::Flush()
     _deviceContext->Unmap(_buffer, 0);
 
     Bind();
+
+    Clear();
     return true;
 }
 

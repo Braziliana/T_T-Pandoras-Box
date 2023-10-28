@@ -8,6 +8,11 @@ Material::Material(const unsigned int id, Shader* shader)
 
 void Material::Use(ID3D11DeviceContext* deviceContext) const
 {
+    if(_shader == nullptr)
+    {
+        return;
+    }
+
     _shader->Use(deviceContext);
 }
 

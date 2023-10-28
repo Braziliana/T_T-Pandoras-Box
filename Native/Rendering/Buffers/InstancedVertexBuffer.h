@@ -10,6 +10,7 @@ protected:
     ID3D11Buffer* _vertexBuffer = nullptr;
     size_t _verticesCount = 0;
 public:
+    InstancedVertexBuffer() { }
     bool Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, size_t maxItems, const TVertex* vertexBuffer, size_t verticesCount);
     size_t GetVerticesCount() const;
     bool Bind() override;

@@ -1,5 +1,7 @@
 ﻿#include "Renderer.h"
 
+#include <iostream>
+
 #include "Vertex.h"
 #include "../Math/Color.h"
 
@@ -10,6 +12,13 @@ void RegisterRenderCallback(Renderer* renderer, const RenderCallback callback)
     renderer->SetRenderCallback(callback);
 }
 
+void RegisterRenderGuiCallback(Renderer* renderer, const RenderCallback callback)
+{
+    if(renderer == nullptr) return;
+    
+    renderer->SetRenderGuiCallback(callback);
+}
+
 void RenderSetClearColor(Renderer* renderer, Color color)
 {
     if(renderer == nullptr) return;
@@ -17,40 +26,9 @@ void RenderSetClearColor(Renderer* renderer, Color color)
     renderer->SetClearColor(color);
 }
 
-void Renderer::InitShapes()
-{
-    _rectVertex = new Vertex[]
-    {
-        // Triangle 1
-        {Vector3(-0.5f,  0.5f, 0.0f), Vector2(0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-left
-        {Vector3( 0.5f,  0.5f, 0.0f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
-        {Vector3(-0.5f, -0.5f, 0.0f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
-
-        // Triangle 2
-        {Vector3(-0.5f, -0.5f, 0.0f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
-        {Vector3( 0.5f,  0.5f, 0.0f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
-        {Vector3( 0.5f, -0.5f, 0.0f), Vector2(1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-right
-    };
-
-    _planeVertex = new Vertex[]
-    {
-        // Triangle 1
-        {Vector3(-0.5f,  0.0f, 0.5f), Vector2(0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-left
-        {Vector3( 0.5f,  0.0f, 0.5f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
-        {Vector3(-0.5f, 0.0f, -0.5f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
-
-        // Triangle 2
-        {Vector3(-0.5f, 0.0f, -0.5f), Vector2(0.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-left
-        {Vector3( 0.5f,  0.0f, 0.5f), Vector2(1.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Top-right
-        {Vector3( 0.5f, 0.0f, -0.5f), Vector2(1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-right
-    };
-
-    SetCircleSegments(64);
-}
-
 Renderer::~Renderer()
 {
-    Dispose();
+    Release();
 }
 
 bool Renderer::Init(const HWND hWnd, const int width, const int height)
@@ -80,20 +58,23 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
     swapChainDesc.Windowed = TRUE;
     swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, nullptr, 0, D3D11_SDK_VERSION, &swapChainDesc, &_swapChain, &_device, nullptr, &_deviceContext);
+    HRESULT hr = D3D11CreateDeviceAndSwapChain(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, D3D11_CREATE_DEVICE_DEBUG, nullptr, 0, D3D11_SDK_VERSION, &swapChainDesc, &_swapChain, &_device, nullptr, &_deviceContext);
     if (FAILED(hr)) {
+        OutputDebugStringA("Failed to D3D11CreateDeviceAndSwapChain");
         return false;
     }
 
     ID3D11Texture2D* backBuffer = nullptr;
     hr = _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<LPVOID*>(&backBuffer));
     if (FAILED(hr)) {
+        OutputDebugStringA("Failed to backBuffer GetBuffer");
         return false;
     }
 
     hr = _device->CreateRenderTargetView(backBuffer, nullptr, &_renderTargetView);
     backBuffer->Release();
     if (FAILED(hr)) {
+        OutputDebugStringA("Failed to _renderTargetView CreateRenderTargetView");
         return false;
     }
 
@@ -111,6 +92,7 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
 
     hr =_device->CreateBlendState(&blendDesc, &_blendState);
     if (FAILED(hr)) {
+        OutputDebugStringA("Failed to _blendState CreateBlendState");
         return false;
     }
     
@@ -123,8 +105,58 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
     _viewport.MinDepth = 0.0f;
     _viewport.MaxDepth = 1.0f;
     _deviceContext->RSSetViewports(1, &_viewport);
+    
+    D3D11_BUFFER_DESC matrixBufferDesc;
+    ZeroMemory(&matrixBufferDesc, sizeof(matrixBufferDesc));
+    matrixBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    matrixBufferDesc.ByteWidth = sizeof(MatrixBufferType);
+    matrixBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    matrixBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-    InitShapes();
+    hr = _device->CreateBuffer(&matrixBufferDesc, nullptr, &_matrixBuffer);
+    
+    if (FAILED(hr)) {
+        std::cout << "Failed to _matrixBuffer CreateBuffer" << std::endl;
+        OutputDebugStringA("Failed to _matrixBuffer CreateBuffer");
+        return false;
+    }
+
+    _shaderManager = new ShaderManager(_device);
+    if(!_shaderManager->LoadDefaultShaders())
+    {
+        std::cout << "Failed to LoadDefaultShaders" << std::endl;
+        OutputDebugStringA("Failed to LoadDefaultShaders");
+        _shaderManager->Release();
+        delete _shaderManager;
+        _shaderManager = nullptr;
+        return false;
+    }
+
+    _materialManager = new MaterialManager(_shaderManager);
+    if(!_materialManager->Init())
+    {
+        std::cout << "Failed to Init MaterialManager" << std::endl;
+        OutputDebugStringA("Failed to Init MaterialManager");
+        _materialManager->Release();
+        delete _materialManager;
+        _materialManager = nullptr;
+        return false;
+    }
+
+    if(!_rectRenderer.Init(_device, _deviceContext, 100, _materialManager->GetRectMaterial()))
+    {
+        std::cout << "Failed to Init _rectRenderer" << std::endl;
+        OutputDebugStringA("Failed to Init _rectRenderer");
+        return false;
+    }
+    
+    if(!_circleRenderer.Init(_device, _deviceContext, 100, _materialManager->GetCircleMaterial(), 64))
+    {
+        std::cout << "Failed to Init _circleRenderer" << std::endl;
+        OutputDebugStringA("Failed to Init _circleRenderer");
+        return false;
+    }
+
     
     return true;
 }
@@ -134,28 +166,90 @@ void Renderer::SetRenderCallback(const RenderCallback callback)
     _renderCallback = callback;
 }
 
-void Renderer::Render(float deltaTime) const
+void Renderer::SetRenderGuiCallback(RenderCallback callback)
+{
+    _renderGuiCallback = callback;
+}
+
+void Renderer::Begin3D() const
+{
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    _deviceContext->Map(_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto* dataPtr = static_cast<MatrixBufferType*>(mappedResource.pData);
+    dataPtr->viewProjectionMatrix = DirectX::XMMatrixTranspose(_viewProjectionMatrix3D);
+    _deviceContext->Unmap(_matrixBuffer, 0);
+
+    _deviceContext->VSSetConstantBuffers(0, 1, &_matrixBuffer);
+}
+
+void Renderer::Begin2D() const
+{
+    float nearPlane = -1.0f;
+    float farPlane = 1.0f;
+    DirectX::XMMATRIX orthoMatrix = DirectX::XMMatrixOrthographicOffCenterLH(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, nearPlane, farPlane);
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    _deviceContext->Map(_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    auto* dataPtr = static_cast<MatrixBufferType*>(mappedResource.pData);
+    dataPtr->viewProjectionMatrix = orthoMatrix;
+    
+    _deviceContext->Unmap(_matrixBuffer, 0);
+    _deviceContext->VSSetConstantBuffers(0, 1, &_matrixBuffer);
+}
+
+void Renderer::Render(float deltaTime)
 {
     const auto blendFactor = Color(0.0f, 0.0f, 0.0f, 0.0f);
-    
     _deviceContext->ClearRenderTargetView(_renderTargetView, _clearColor.rgba);
     _deviceContext->OMSetBlendState(_blendState, blendFactor.rgba, 0xffffffff);
-    
+
+    Begin3D();
     if(_renderCallback != nullptr)
     {
         _renderCallback(deltaTime);
     }
     
+    Begin2D();    
+    if(_renderGuiCallback != nullptr)
+    {
+        _renderGuiCallback(deltaTime);
+    }
+
+    auto positon = Vector2(400, 300);
+    auto width = 5.0f;
+    auto height = 10.0f;
+    auto color = Color(1.0f, 0.0f, 1.0f, 1.0f);
+
+    
+    _rectRenderer.Draw(positon, width, height, color);
+    _rectRenderer.Flush2D();
+    
     _deviceContext->OMSetBlendState( _blendState, blendFactor.rgba, 0xffffffff );
     HRESULT hr = _swapChain->Present(0, 0);
 }
 
-void Renderer::Dispose()
+void Renderer::Release()
 {
-    delete _rectVertex;
-    delete _planeVertex;
-    delete _circle2DVertex;
-    delete _circle3DVertex;
+    _rectRenderer.Release();
+    _circleRenderer.Release();
+
+    if(_materialManager != nullptr)
+    {
+        _materialManager->Release();
+        delete _materialManager;
+        _materialManager = nullptr;
+    }
+    
+    if(_shaderManager != nullptr)
+    {
+        _shaderManager->Release();
+        delete _shaderManager;
+        _shaderManager = nullptr;
+    }
+    
+    if(_matrixBuffer != nullptr)
+    {
+        _matrixBuffer->Release();
+    }
     
     if(_blendState != nullptr)
     {
@@ -193,25 +287,12 @@ void Renderer::SetClearColor(const Color color)
     _clearColor = color;
 }
 
-void Renderer::SetCircleSegments(int segments)
+void Renderer::DrawCircle(const Vector2& position, const float radius, const float width, const Color& color)
 {
-    _circle2DVertex = new Vertex[segments+2];
-    _circle3DVertex = new Vertex[segments+2];
-    _circle2DVertex[0] = {Vector3(0.0f, 0.0f, 0.0f), Vector2(0.5f, 0.5f), Color(1.0f, 1.0f, 1.0f, 1.0f)};
-    _circle3DVertex[0] = {Vector3(0.0f, 0.0f, 0.0f), Vector2(0.5f, 0.5f), Color(1.0f, 1.0f, 1.0f, 1.0f)};
-
-    for (int i = 0; i <= segments; ++i) {
-        const float theta = 2.0f * 3.1415926f * static_cast<float>(i) / static_cast<float>(segments);
-        const float dx = cosf(theta);
-        const float dy = sinf(theta);
-        
-        _circle2DVertex[i+1] = {Vector3( dx, dy, 0.0f), Vector2(0.5f + 0.5f * cosf(theta), 0.5f + 0.5f * sinf(theta)), Color(1.0f, 1.0f, 1.0f, 1.0f)};
-        _circle3DVertex[i+1] = {Vector3( dx, 0.0f, dy), Vector2(0.5f + 0.5f * cosf(theta), 0.5f + 0.5f * sinf(theta)), Color(1.0f, 1.0f, 1.0f, 1.0f)};
-    }
-    
+    _circleRenderer.Draw(position, radius, width, color);
 }
 
-void Renderer::RenderCircle(Vector2 position, float width, Color color)
+void Renderer::DrawCircle(const Vector3& position, const float radius, const float width, const Color& color)
 {
-    
+    _circleRenderer.Draw(position, radius, width, color);
 }

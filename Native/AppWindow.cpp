@@ -118,11 +118,12 @@ AppWindow::AppWindow(const WindowSettings& windowSettings) : _isRunning(false), 
     auto hr = DwmExtendFrameIntoClientArea(_hWnd, &margins);
     
     _renderer = new Renderer();
-    _renderer->Init(_hWnd, windowSettings.width, windowSettings.height);
+    auto res = _renderer->Init(_hWnd, windowSettings.width, windowSettings.height);
+    std::cout << "_renderer init " << res << std::endl;
 }
 
 AppWindow::~AppWindow() {
-    _renderer->Dispose();
+    _renderer->Release();
     delete _renderer;
 }
 
@@ -155,7 +156,7 @@ void AppWindow::Run()
     }
     
     _isRunning = false;
-    _renderer->Dispose();
+    _renderer->Release();
     DestroyWindow(_hWnd);
     UnregisterClass(_wc.lpszClassName, _wc.hInstance);
 }
