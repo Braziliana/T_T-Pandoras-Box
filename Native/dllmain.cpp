@@ -1,6 +1,14 @@
 #include <windows.h>
+
 #pragma comment(lib, "d3d11.lib")
+#ifdef _DEBUG
+#pragma comment(lib, "d3dx11d.lib")
+// ... any other debug versions of libraries you're using
+#else
 #pragma comment(lib, "d3dx11.lib")
+// ... any other release versions of libraries you're using
+#endif
+
 #pragma comment(lib, "dwrite.lib")
 #pragma comment(lib, "Dwmapi.lib")
 #pragma comment(lib, "D3DCompiler.lib")

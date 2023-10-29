@@ -9,8 +9,9 @@
 
 struct RectData
 {
-    Vector3 position;
-    Vector3 scale;
+    //Vector3 position;
+    //Vector3 scale;
+    DirectX::XMMATRIX modelMatrix;
     Color color;
 };
 

@@ -97,14 +97,7 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
     }
     
     _deviceContext->OMSetRenderTargets(1, &_renderTargetView, nullptr);
-
-    _viewport.TopLeftX = 0;
-    _viewport.TopLeftY = 0;
-    _viewport.Width = static_cast<float>(width);
-    _viewport.Height = static_cast<float>(height);
-    _viewport.MinDepth = 0.0f;
-    _viewport.MaxDepth = 1.0f;
-    _deviceContext->RSSetViewports(1, &_viewport);
+    
     
     D3D11_BUFFER_DESC matrixBufferDesc;
     ZeroMemory(&matrixBufferDesc, sizeof(matrixBufferDesc));
@@ -156,7 +149,14 @@ bool Renderer::Init(const HWND hWnd, const int width, const int height)
         OutputDebugStringA("Failed to Init _circleRenderer");
         return false;
     }
-
+    
+    _viewport.TopLeftX = 0;
+    _viewport.TopLeftY = 0;
+    _viewport.Width = static_cast<float>(width);
+    _viewport.Height = static_cast<float>(height);
+    _viewport.MinDepth = -1.0f;
+    _viewport.MaxDepth = 1.0f;
+    _deviceContext->RSSetViewports(1, &_viewport);
     
     return true;
 }
@@ -184,16 +184,12 @@ void Renderer::Begin3D() const
 
 void Renderer::Begin2D() const
 {
-    float nearPlane = -1.0f;
-    float farPlane = 1.0f;
-    DirectX::XMMATRIX orthoMatrix = DirectX::XMMatrixOrthographicOffCenterLH(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, nearPlane, farPlane);
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    _deviceContext->Map(_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    auto* dataPtr = static_cast<MatrixBufferType*>(mappedResource.pData);
-    dataPtr->viewProjectionMatrix = orthoMatrix;
-    
-    _deviceContext->Unmap(_matrixBuffer, 0);
-    _deviceContext->VSSetConstantBuffers(0, 1, &_matrixBuffer);
+    constexpr float nearPlane = -1.0f;
+    constexpr float farPlane = 1.0f;
+    const DirectX::XMMATRIX orthoMatrix = DirectX::XMMatrixOrthographicOffCenterLH(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, nearPlane, farPlane);
+    auto mt = MatrixBufferType{ DirectX::XMMatrixTranspose(orthoMatrix) };
+    _deviceContext->UpdateSubresource( _matrixBuffer, 0, nullptr, &mt, 0, 0 );
+    _deviceContext->VSSetConstantBuffers( 0, 1, &_matrixBuffer );
 }
 
 void Renderer::Render(float deltaTime)
@@ -214,16 +210,15 @@ void Renderer::Render(float deltaTime)
         _renderGuiCallback(deltaTime);
     }
 
-    auto positon = Vector2(400, 300);
-    auto width = 5.0f;
-    auto height = 10.0f;
+    auto positon = Vector2(1.f, 1.f);
+    auto width = 50.0f;
+    auto height = 40.f;
     auto color = Color(1.0f, 0.0f, 1.0f, 1.0f);
-
     
     _rectRenderer.Draw(positon, width, height, color);
     _rectRenderer.Flush2D();
     
-    _deviceContext->OMSetBlendState( _blendState, blendFactor.rgba, 0xffffffff );
+    //_deviceContext->OMSetBlendState( _blendState, blendFactor.rgba, 0xffffffff );
     HRESULT hr = _swapChain->Present(0, 0);
 }
 

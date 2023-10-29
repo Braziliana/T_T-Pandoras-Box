@@ -76,7 +76,7 @@ bool BatchBuffer<T>::Add(const T& item)
 {
     if(_count + 1 >= _maxItems)
     {
-        std::cout << "c: " << _count << " m: " << _maxItems << std::endl;
+        std::cout << "_count: " << _count << " _maxItems: " << _maxItems << std::endl;
         return false;
     }
     

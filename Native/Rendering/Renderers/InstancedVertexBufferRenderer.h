@@ -46,21 +46,18 @@ void InstancedVertexBufferRenderer<TVertex, TBufferData>::Add(TBufferData item)
     if(!_instancedVertexBuffer.Add(item))
     {
         Flush();
+        _instancedVertexBuffer.Add(item);
     }
-    
-    _instancedVertexBuffer.Add(item);
 }
 
 template <typename TVertex, typename TBufferData>
 void InstancedVertexBufferRenderer<TVertex, TBufferData>::Add(TBufferData* items, size_t count)
 {
-    
     if(!_instancedVertexBuffer.Add(items, count))
     {
         Flush();
+        _instancedVertexBuffer.Add(items, count);
     }
-    
-    _instancedVertexBuffer.Add(items, count);
 }
 
 template <typename TVertex, typename TBufferData>
@@ -71,11 +68,11 @@ void InstancedVertexBufferRenderer<TVertex, TBufferData>::Flush()
         return;
     }
 
+    _deviceContext->IASetPrimitiveTopology(_topology); 
     auto count = _instancedVertexBuffer.Count();
     _instancedVertexBuffer.Flush();
     _material->Use(_deviceContext);
-
-    _deviceContext->DrawInstanced(_instancedVertexBuffer.GetVerticesCount(), count, 0, 0);
+    _deviceContext->DrawInstanced(static_cast<UINT>(_instancedVertexBuffer.GetVerticesCount()), static_cast<UINT>(count), 0, 0);
 }
 
 template <typename TVertex, typename TBufferData>
