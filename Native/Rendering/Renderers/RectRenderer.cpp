@@ -29,12 +29,12 @@ bool RectRenderer::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext
         {Vector3( -size,  0.0f, size), Vector2(0.0f, 0.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)}, // Bottom-right
     };
 
-    if(!_instancedVertexBuffer2D.Init(device, deviceContext, maxItems, rect2DVertex, 6, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, material))
+    if(!_instancedVertexBuffer2D.Init(device, deviceContext, maxItems, rect2DVertex, 6, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, material))
     {
         return false;
     }
     
-    if(!_instancedVertexBuffer3D.Init(device, deviceContext, maxItems, rect3DVertex, 6, D3D11_PRIMITIVE_TOPOLOGY_LINELIST, material))
+    if(!_instancedVertexBuffer3D.Init(device, deviceContext, maxItems, rect3DVertex, 6, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST, material))
     {
         return false;
     }

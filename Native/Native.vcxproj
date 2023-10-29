@@ -104,14 +104,16 @@
     <ClCompile Include="Rendering\Shaders\Shader.cpp" />
     <ClCompile Include="Rendering\Shaders\ShaderManager.cpp" />
     <ClCompile Include="Rendering\Vertex.cpp" />
-    <None Include="Shaders\RectPS.hlsl">
+    <CopyFileToFolders Include="Shaders\RectPS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </None>
-    <None Include="Shaders\RectVS.hlsl">
+	  <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="Shaders\RectVS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </None>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h" />

@@ -28,7 +28,7 @@ private:
     
     ID3D11Buffer* _matrixBuffer = nullptr;
     DirectX::XMMATRIX _viewProjectionMatrix3D = DirectX::XMMatrixIdentity();
-    Color _clearColor = {0, 0, 0, 0};
+    Color _clearColor = {0, 0, 0, 1.0};
     ID3D11Device* _device = nullptr;
     ID3D11DeviceContext* _deviceContext = nullptr;
     IDXGISwapChain* _swapChain = nullptr;

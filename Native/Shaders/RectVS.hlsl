@@ -23,20 +23,18 @@ struct VertexShaderOutput
     float4 color : COLOR;
 };
 
-
-
 VertexShaderOutput main(Vertex vertex, Instance instance)
 {
     VertexShaderOutput output;
     output.position = float4(vertex.position, 1.0f);
 
-    // output.position = mul( vertex.position, instance.WorldMat );
+    
+    output.position = mul(vertex.position, instance.WorldMat);
+    //output.position = mul( vertex.position, instance.WorldMat );
     // output.position = mul( output.position, viewProjectionMatrix );
-    
-    
+      
     output.uv = vertex.uv;
-
-    output.color = float4(1, 0, 0, 0);
+    output.color = instance.color;
 
     return output;
 }

@@ -80,7 +80,7 @@ bool BatchBuffer<T>::Add(const T& item)
         return false;
     }
     
-    _items[_count] = item;
+    _items.push_back(item);
     _count++;
     return true;
 }
@@ -124,18 +124,7 @@ bool BatchBuffer<T>::Bind()
 template <typename T>
 bool BatchBuffer<T>::Flush()
 {
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    auto hr = _deviceContext->Map(_buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-    if (FAILED(hr)) {
-        Clear();
-        return false;
-    }
-    
-    const auto dataPtr = static_cast<T*>(mappedResource.pData);
-    memcpy(dataPtr, _items.data(), sizeof(T) * _count);
-    _deviceContext->Unmap(_buffer, 0);
-
+    _deviceContext->UpdateSubresource(_buffer, 0, nullptr, _items.data(), static_cast<UINT>(sizeof(T) * _count), 0 );
     Bind();
 
     Clear();

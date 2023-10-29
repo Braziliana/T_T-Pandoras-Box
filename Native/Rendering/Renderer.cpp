@@ -173,12 +173,8 @@ void Renderer::SetRenderGuiCallback(RenderCallback callback)
 
 void Renderer::Begin3D() const
 {
-    D3D11_MAPPED_SUBRESOURCE mappedResource;
-    _deviceContext->Map(_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-    auto* dataPtr = static_cast<MatrixBufferType*>(mappedResource.pData);
-    dataPtr->viewProjectionMatrix = DirectX::XMMatrixTranspose(_viewProjectionMatrix3D);
-    _deviceContext->Unmap(_matrixBuffer, 0);
-
+    auto mt = MatrixBufferType{ DirectX::XMMatrixTranspose(_viewProjectionMatrix3D) };
+    _deviceContext->UpdateSubresource(_matrixBuffer, 0, nullptr, &mt, 0, 0);
     _deviceContext->VSSetConstantBuffers(0, 1, &_matrixBuffer);
 }
 
@@ -210,7 +206,7 @@ void Renderer::Render(float deltaTime)
         _renderGuiCallback(deltaTime);
     }
 
-    auto positon = Vector2(1.f, 1.f);
+    auto positon = Vector2(5.f, 5.f);
     auto width = 50.0f;
     auto height = 40.f;
     auto color = Color(1.0f, 0.0f, 1.0f, 1.0f);
@@ -218,7 +214,7 @@ void Renderer::Render(float deltaTime)
     _rectRenderer.Draw(positon, width, height, color);
     _rectRenderer.Flush2D();
     
-    //_deviceContext->OMSetBlendState( _blendState, blendFactor.rgba, 0xffffffff );
+    _deviceContext->OMSetBlendState( _blendState, blendFactor.rgba, 0xffffffff );
     HRESULT hr = _swapChain->Present(0, 0);
 }
 

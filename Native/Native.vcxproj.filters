@@ -97,7 +97,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\RectPS.hlsl" />
-    <None Include="Shaders\RectVS.hlsl" />
+    <CopyFileToFolders Include="Shaders\RectVS.hlsl" />
+    <CopyFileToFolders Include="Shaders\RectPS.hlsl" />
   </ItemGroup>
 </Project>
