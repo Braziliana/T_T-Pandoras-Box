@@ -110,6 +110,24 @@ AppWindow::AppWindow(const WindowSettings& windowSettings) : _isRunning(false), 
     //     nullptr,//_wc.hInstance,
     //     nullptr);
 
+
+    HDC hdc = GetDC(_hWnd);
+
+    PIXELFORMATDESCRIPTOR pfd = {};
+    pfd.nSize = sizeof(pfd);
+    pfd.nVersion = 1;
+    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+    pfd.iPixelType = PFD_TYPE_RGBA;
+    pfd.cColorBits = 32;
+    pfd.cDepthBits = 24;
+    pfd.cStencilBits = 8;
+    pfd.iLayerType = PFD_MAIN_PLANE;
+
+    int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+    SetPixelFormat(hdc, pixelFormat, &pfd);
+
+    _hGlRc = wglCreateContext(hdc);
+    wglMakeCurrent(hdc, _hGlRc);
     
     ShowWindow(_hWnd, SW_NORMAL);
     UpdateWindow(_hWnd);
@@ -117,8 +135,8 @@ AppWindow::AppWindow(const WindowSettings& windowSettings) : _isRunning(false), 
     MARGINS margins = {-1};
     auto hr = DwmExtendFrameIntoClientArea(_hWnd, &margins);
     
-    _renderer = new Renderer();
-    auto res = _renderer->Init(_hWnd, windowSettings.width, windowSettings.height);
+    _renderer = new Renderer(hdc);
+    auto res = _renderer->Init(windowSettings.width, windowSettings.height);
     std::cout << "_renderer init " << res << std::endl;
 }
 
@@ -157,6 +175,8 @@ void AppWindow::Run()
     
     _isRunning = false;
     _renderer->Release();
+    wglMakeCurrent(nullptr, nullptr);
+    wglDeleteContext(_hGlRc);
     DestroyWindow(_hWnd);
     UnregisterClass(_wc.lpszClassName, _wc.hInstance);
 }

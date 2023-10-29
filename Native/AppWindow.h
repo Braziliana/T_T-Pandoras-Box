@@ -22,6 +22,7 @@ private:
     std::wstring _name;
     WNDCLASSEX _wc;
     HWND _hWnd;
+    HGLRC _hGlRc;
     Renderer* _renderer;
     bool _isRunning;
     WindowSettings _windowSettings;

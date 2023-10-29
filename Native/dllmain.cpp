@@ -1,17 +1,12 @@
 #include <windows.h>
+#include <cstdlib>
+#define GLEW_STATIC
+#include <GL/glew.h>
 
-#pragma comment(lib, "d3d11.lib")
-#ifdef _DEBUG
-#pragma comment(lib, "d3dx11d.lib")
-// ... any other debug versions of libraries you're using
-#else
-#pragma comment(lib, "d3dx11.lib")
-// ... any other release versions of libraries you're using
-#endif
-
-#pragma comment(lib, "dwrite.lib")
-#pragma comment(lib, "Dwmapi.lib")
-#pragma comment(lib, "D3DCompiler.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glew32s.lib")
+#pragma comment(lib, "dwmapi.lib")
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
 {

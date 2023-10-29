@@ -1,22 +1,28 @@
 ﻿#pragma once
 #include <cmath>
-#include <DirectXMath.h>
 #include <limits>
 
 
-struct Vector2 : public DirectX::XMFLOAT2
+struct Vector2
 {
-    Vector2() : XMFLOAT2(0, 0)
+    union
+    {
+        struct
+        {
+            float x;
+            float y;  
+        };
+        float xy[2];
+    };
+    
+    Vector2()
     {
     }
 
-    Vector2(const float x, const float y) : XMFLOAT2(x, y)
+    Vector2(const float x, const float y) : x(x), y(y)
     {
     }
-
-    explicit Vector2(_In_reads_(2) const float* pArray) noexcept : XMFLOAT2(pArray)
-    {
-    }
+    
 
     Vector2 operator+(const Vector2& other) const
     {

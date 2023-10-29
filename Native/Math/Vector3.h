@@ -1,19 +1,26 @@
 ﻿#pragma once
 #include <cmath>
 #include <limits>
-#include <DirectXMath.h>
 
-struct Vector3 : public DirectX::XMFLOAT3
+struct Vector3
 {
-    Vector3() : XMFLOAT3(0, 0, 0)
+    union
+    {
+        struct
+        {
+            float x;
+            float y;
+            float z;
+        };
+        float xyz[3];
+    };
+
+    
+    Vector3() : Vector3(0, 0, 0)
     {
     }
 
-    Vector3(const float x, const float y, const float z) : XMFLOAT3(x, y, z)
-    {
-    }
-
-    explicit Vector3(_In_reads_(3) const float* pArray) noexcept : XMFLOAT3(pArray)
+    Vector3(const float x, const float y, const float z) : x(x), y(y), z(z)
     {
     }
 
