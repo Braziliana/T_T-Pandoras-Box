@@ -46,7 +46,9 @@ bool Renderer::Init(const int width, const int height)
     }
 
     _rectRenderer = new RectRenderer();
- 
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     return true;
 }
@@ -93,7 +95,7 @@ void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Co
 
 void Renderer::Render(float deltaTime)
 {
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);  // Transparent
     glClear(GL_COLOR_BUFFER_BIT);
     
     Begin3D();
@@ -107,7 +109,8 @@ void Renderer::Render(float deltaTime)
     {
         _renderGuiCallback(deltaTime);
     }
-    DrawRect(Vector2(100, 100), Vector2(100, 100), Color(1.0f, 0.0f, 0.0f, 1.0f));
+    DrawRect(Vector2(100, 100), Vector2(100, 100), Color(0.0f, 1.0f, 0.0f, 1.0f));
+    DrawRect(Vector2(300, 100), Vector2(100, 20), Color(1.0f, 1.0f, 1.0f, 1.0f));
     _rectRenderer->Flush2D();
     
     

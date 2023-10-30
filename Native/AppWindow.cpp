@@ -94,34 +94,38 @@ AppWindow::AppWindow(const WindowSettings& windowSettings) : _isRunning(false), 
         _windowSettings.positionY = 1;
     }
     
-    _hWnd = CreateWindow(_wc.lpszClassName, _wc.lpszClassName, WS_OVERLAPPEDWINDOW, windowSettings.positionX, windowSettings.positionY, windowSettings.width, windowSettings.height, nullptr, nullptr, _wc.hInstance, nullptr);
+    //_hWnd = CreateWindow(_wc.lpszClassName, _wc.lpszClassName, WS_OVERLAPPEDWINDOW, windowSettings.positionX, windowSettings.positionY, windowSettings.width, windowSettings.height, nullptr, nullptr, _wc.hInstance, nullptr);
 
-    // _hWnd = CreateWindowEx(
-    //     WS_EX_TOPMOST | WS_EX_LAYERED,
-    //     _wc.lpszClassName,
-    //     _wc.lpszClassName,
-    //     WS_POPUP,
-    //     _windowSettings.positionX,
-    //     _windowSettings.positionY,
-    //     _windowSettings.width,
-    //     _windowSettings.height,
-    //     nullptr,
-    //     nullptr,
-    //     nullptr,//_wc.hInstance,
-    //     nullptr);
+    _hWnd = CreateWindowEx(
+        WS_EX_LAYERED,          // Extended window style
+        _wc.lpszClassName,         // Window class name
+        _wc.lpszClassName,  // Window title
+        WS_OVERLAPPEDWINDOW,    // Window style
+        windowSettings.positionX, windowSettings.positionY, windowSettings.width, windowSettings.height, // x, y, width, height
+        nullptr, nullptr, _wc.hInstance, nullptr
+    );
 
+    SetLayeredWindowAttributes(_hWnd, 0, 255, LWA_COLORKEY);
 
     HDC hdc = GetDC(_hWnd);
-
-    PIXELFORMATDESCRIPTOR pfd = {};
-    pfd.nSize = sizeof(pfd);
-    pfd.nVersion = 1;
-    pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-    pfd.iPixelType = PFD_TYPE_RGBA;
-    pfd.cColorBits = 32;
-    pfd.cDepthBits = 24;
-    pfd.cStencilBits = 8;
-    pfd.iLayerType = PFD_MAIN_PLANE;
+    PIXELFORMATDESCRIPTOR pfd = {
+        sizeof(PIXELFORMATDESCRIPTOR),
+        1,
+        PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+        PFD_TYPE_RGBA,
+        32,    // 32-bit color
+        0, 0, 0, 0, 0, 0,
+        8,     // 8-bit alpha
+        0,
+        0,
+        0, 0, 0, 0,
+        24,    // 24-bit depth buffer
+        8,     // 8-bit stencil buffer
+        0,
+        PFD_MAIN_PLANE,
+        0,
+        0, 0, 0
+    };
 
     int pixelFormat = ChoosePixelFormat(hdc, &pfd);
     SetPixelFormat(hdc, pixelFormat, &pfd);
@@ -132,8 +136,8 @@ AppWindow::AppWindow(const WindowSettings& windowSettings) : _isRunning(false), 
     ShowWindow(_hWnd, SW_NORMAL);
     UpdateWindow(_hWnd);
 
-    MARGINS margins = {-1};
-    auto hr = DwmExtendFrameIntoClientArea(_hWnd, &margins);
+    // MARGINS margins = {-1};
+    // auto hr = DwmExtendFrameIntoClientArea(_hWnd, &margins);
     
     _renderer = new Renderer(hdc);
     auto res = _renderer->Init(windowSettings.width, windowSettings.height);

@@ -97,7 +97,6 @@
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
-    <ClCompile Include="Glad\src\glad.c" />
     <ClCompile Include="Materials\Material.cpp" />
     <ClCompile Include="Materials\MaterialManager.cpp" />
     <ClCompile Include="Materials\Shader.cpp" />
@@ -109,7 +108,6 @@
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Buffers\VertexAttribute.h" />
-    <ClInclude Include="Glad\include\glad\glad.h" />
     <ClInclude Include="Glad\include\glm\common.hpp" />
     <ClInclude Include="Glad\include\glm\detail\compute_common.hpp" />
     <ClInclude Include="Glad\include\glm\detail\compute_vector_relational.hpp" />

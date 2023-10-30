@@ -25,5 +25,5 @@ void main() {
 
     gl_Position = viewProjectionMatrix * model * vec4(inPosition, 1.0);
     UV = inUV;
-    Color = inColor; // Combine vertex color and instance color
+    Color = inColor * instanceColor;
 }
