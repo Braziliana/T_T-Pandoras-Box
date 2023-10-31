@@ -103,11 +103,67 @@
     <ClCompile Include="Materials\ShaderManager.cpp" />
     <ClCompile Include="Rendering\RectRenderer.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\TextRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h" />
     <ClInclude Include="Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Buffers\VertexAttribute.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftheader.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftoption.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="Glad\include\freetype\config\integer-types.h" />
+    <ClInclude Include="Glad\include\freetype\config\mac-support.h" />
+    <ClInclude Include="Glad\include\freetype\config\public-macros.h" />
+    <ClInclude Include="Glad\include\freetype\freetype.h" />
+    <ClInclude Include="Glad\include\freetype\ftadvanc.h" />
+    <ClInclude Include="Glad\include\freetype\ftbbox.h" />
+    <ClInclude Include="Glad\include\freetype\ftbdf.h" />
+    <ClInclude Include="Glad\include\freetype\ftbitmap.h" />
+    <ClInclude Include="Glad\include\freetype\ftbzip2.h" />
+    <ClInclude Include="Glad\include\freetype\ftcache.h" />
+    <ClInclude Include="Glad\include\freetype\ftchapters.h" />
+    <ClInclude Include="Glad\include\freetype\ftcid.h" />
+    <ClInclude Include="Glad\include\freetype\ftcolor.h" />
+    <ClInclude Include="Glad\include\freetype\ftdriver.h" />
+    <ClInclude Include="Glad\include\freetype\fterrdef.h" />
+    <ClInclude Include="Glad\include\freetype\fterrors.h" />
+    <ClInclude Include="Glad\include\freetype\ftfntfmt.h" />
+    <ClInclude Include="Glad\include\freetype\ftgasp.h" />
+    <ClInclude Include="Glad\include\freetype\ftglyph.h" />
+    <ClInclude Include="Glad\include\freetype\ftgxval.h" />
+    <ClInclude Include="Glad\include\freetype\ftgzip.h" />
+    <ClInclude Include="Glad\include\freetype\ftimage.h" />
+    <ClInclude Include="Glad\include\freetype\ftincrem.h" />
+    <ClInclude Include="Glad\include\freetype\ftlcdfil.h" />
+    <ClInclude Include="Glad\include\freetype\ftlist.h" />
+    <ClInclude Include="Glad\include\freetype\ftlogging.h" />
+    <ClInclude Include="Glad\include\freetype\ftlzw.h" />
+    <ClInclude Include="Glad\include\freetype\ftmac.h" />
+    <ClInclude Include="Glad\include\freetype\ftmm.h" />
+    <ClInclude Include="Glad\include\freetype\ftmodapi.h" />
+    <ClInclude Include="Glad\include\freetype\ftmoderr.h" />
+    <ClInclude Include="Glad\include\freetype\ftotval.h" />
+    <ClInclude Include="Glad\include\freetype\ftoutln.h" />
+    <ClInclude Include="Glad\include\freetype\ftparams.h" />
+    <ClInclude Include="Glad\include\freetype\ftpfr.h" />
+    <ClInclude Include="Glad\include\freetype\ftrender.h" />
+    <ClInclude Include="Glad\include\freetype\ftsizes.h" />
+    <ClInclude Include="Glad\include\freetype\ftsnames.h" />
+    <ClInclude Include="Glad\include\freetype\ftstroke.h" />
+    <ClInclude Include="Glad\include\freetype\ftsynth.h" />
+    <ClInclude Include="Glad\include\freetype\ftsystem.h" />
+    <ClInclude Include="Glad\include\freetype\fttrigon.h" />
+    <ClInclude Include="Glad\include\freetype\fttypes.h" />
+    <ClInclude Include="Glad\include\freetype\ftwinfnt.h" />
+    <ClInclude Include="Glad\include\freetype\otsvg.h" />
+    <ClInclude Include="Glad\include\freetype\t1tables.h" />
+    <ClInclude Include="Glad\include\freetype\ttnameid.h" />
+    <ClInclude Include="Glad\include\freetype\tttables.h" />
+    <ClInclude Include="Glad\include\freetype\tttags.h" />
+    <ClInclude Include="Glad\include\ft2build.h" />
     <ClInclude Include="Glad\include\glm\common.hpp" />
     <ClInclude Include="Glad\include\glm\detail\compute_common.hpp" />
     <ClInclude Include="Glad\include\glm\detail\compute_vector_relational.hpp" />
@@ -540,12 +596,16 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Rendering\RectRenderer.h" />
     <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\TextRenderer.h" />
     <ClInclude Include="Rendering\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Glad\include\glm\CMakeLists.txt" />
+    <Content Include="Glad\lib\freetype.lib" />
     <Content Include="Glad\lib\glew32.lib" />
     <Content Include="Glad\lib\glew32s.lib" />
+    <Content Include="Shaders\Font.frag" />
+    <Content Include="Shaders\Font.vert" />
     <Content Include="Shaders\Rect.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

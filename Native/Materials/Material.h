@@ -33,17 +33,15 @@ public:
     {
     }
     
-    void Use() const
+    virtual void Begin() const
     {
         _shader->Use();
-        OnUse();
     }
 
-    virtual void OnUse() const
+    virtual void End() const
     {
-        
     }
-
+    
     void SetBool(const std::string& name, bool value) const
     {
         _shader->SetBool(name, value);

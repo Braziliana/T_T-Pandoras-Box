@@ -69,7 +69,7 @@ public:
         glBufferSubData(GL_ARRAY_BUFFER, 0, _instanceDataVector.size() * sizeof(InstanceDataType), _instanceDataVector.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        _material->Use();
+        _material->Begin();
         glBindVertexArray(_vao);
         glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<GLsizei>(_vertexCount), static_cast<GLsizei>(_instanceDataVector.size()));
         glBindVertexArray(0);
