@@ -604,14 +604,23 @@
     <Content Include="Glad\lib\freetype.lib" />
     <Content Include="Glad\lib\glew32.lib" />
     <Content Include="Glad\lib\glew32s.lib" />
-    <Content Include="Shaders\Font.frag" />
-    <Content Include="Shaders\Font.vert" />
-    <Content Include="Shaders\Rect.frag">
+    <Content Include="Resources\Shaders\Font.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Rect.vert">
+    <Content Include="Resources\Shaders\Font.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Shaders\Rect.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Rect.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fonts\OpenSans-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,7 @@
 #include <glm/vec2.hpp>
 
 #include "../Materials/Shader.h"
+#include "../Materials/ShaderManager.h"
 #include "GL/glew.h"
 
 #include FT_FREETYPE_H
@@ -91,19 +92,19 @@ public:
             const Character ch = _characters[*c];
 
             const float xPos = x + static_cast<float>(ch.bearing.x) * scale;
-            const float yPos = y - (ch.size.y - ch.bearing.y) * scale;
-
+            const float yPos = y - (static_cast<float>(ch.bearing.y) * scale);
+            
             const float w = ch.size.x * scale;
             const float h = ch.size.y * scale;
             // update VBO for each character
             const float vertices[6][4] = {
-                { xPos,     yPos + h,   0.0f, 0.0f },            
-                { xPos,     yPos,       0.0f, 1.0f },
-                { xPos + w, yPos,       1.0f, 1.0f },
+                { xPos,     yPos + h,   0.0f, 1.0f },            
+                { xPos,     yPos,       0.0f, 0.0f },
+                { xPos + w, yPos,       1.0f, 0.0f },
 
-                { xPos,     yPos + h,   0.0f, 0.0f },
-                { xPos + w, yPos,       1.0f, 1.0f },
-                { xPos + w, yPos + h,   1.0f, 0.0f }           
+                { xPos,     yPos + h,   0.0f, 1.0f },
+                { xPos + w, yPos,       1.0f, 0.0f },
+                { xPos + w, yPos + h,   1.0f, 1.0f }           
             };
             // render glyph texture over quad
             glBindTexture(GL_TEXTURE_2D, ch.textureId);
@@ -134,8 +135,17 @@ public:
 class TextRenderer
 {
 private:
-    std::map<std::string, Font> _fonts;
+    Font* _default; 
+    std::map<std::string, Font*> _fonts;
 public:
+    TextRenderer()
+    {
+        if(LoadFont("default", "Resources/Fonts/OpenSans-Regular.ttf", ShaderManager::GetInstance().CreateShader(L"Font")))
+        {
+            _default = _fonts["default"];
+        }
+    }
+    
     bool LoadFont(const std::string& name, const std::string& fontFilePath, Shader* shader)
     {
         FT_Library ft;
@@ -150,7 +160,7 @@ public:
             return false;
         }
 
-        _fonts.insert({name, Font(shader, face)});
+        _fonts.insert({name, new Font(shader, face)});
 
         FT_Done_FreeType(ft);
         
@@ -159,14 +169,15 @@ public:
 
     void Render(const std::string& text, Vector2 position)
     {
-        
+        _default->RenderText(text, position.x, position.y, 1, Color(1.0f, 1.0f, 1.0f, 1.0f));
     }
 
     void Release()
     {
-        for (auto& font : _fonts)
+        _default = nullptr;
+        for (const auto& font : _fonts)
         {
-            font.second.Release();
+            font.second->Release();
         }
         _fonts.clear();
     }

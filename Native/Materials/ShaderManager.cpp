@@ -25,7 +25,7 @@ Shader* ShaderManager::CreateShader(const std::wstring& shaderPath, const std::w
 
 Shader* ShaderManager::CreateShader(const std::wstring& shaderName)
 {
-    return CreateShader(L"Shaders", shaderName);
+    return CreateShader(L"Resources/Shaders", shaderName);
 }
 
 Shader* ShaderManager::GetShader(const std::wstring& shaderName)

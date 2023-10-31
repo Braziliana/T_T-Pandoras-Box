@@ -148,9 +148,9 @@ namespace Api.Internal.Inputs
         
         private void InternalMouse(Vector2 position, ref WindowsApi.Input input)
         {
-            input.u.mi.dwFlags |= (uint)(WindowsApi.MouseEvent.Move | WindowsApi.MouseEvent.Absolute | WindowsApi.MouseEvent.VirtualDesk);
-            input.u.mi.dx = (int)position.X * 65535 / _width;
-            input.u.mi.dy = (int)position.Y * 65535 / _height;
+            input.u.mi.dwFlags |= (uint)(WindowsApi.MouseEvent.Move | WindowsApi.MouseEvent.Absolute);
+            input.u.mi.dx = ((int)position.X * 65535 / _width) + 1;
+            input.u.mi.dy = ((int)position.Y * 65535 / _height)  + 1;
         }
         
         private void InternalMouse(MouseButton mouseButton, bool down, ref WindowsApi.Input input)
