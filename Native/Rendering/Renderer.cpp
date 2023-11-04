@@ -48,9 +48,13 @@ bool Renderer::Init(const int width, const int height)
     _rectRenderer = new RectRenderer();
     _textRenderer = new TextRenderer();
     
+    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // glEnable(GL_ALPHA_TEST);
+    // glAlphaFunc(GL_GREATER, 0.05f);
     
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     return true;
 }
 
@@ -96,8 +100,7 @@ void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Co
 
 void Renderer::Render(float deltaTime)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);  // Transparent
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     Begin3D();
     if(_renderCallback != nullptr)
@@ -114,9 +117,9 @@ void Renderer::Render(float deltaTime)
     //DrawRect(Vector2(300, 100), Vector2(100, 20), Color(1.0f, 1.0f, 1.0f, 1.0f));
     _rectRenderer->Flush2D();
     
-    _textRenderer->Render("Test", Vector2(300, 300), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("Test", Vector2(100, 100), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Render("WWW", Vector2(300, 400), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Render("TTT", Vector2(300, 500), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("WabTcdGe`?,.=+-0", Vector2(300, 500), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Flush2D();
     
     SwapBuffers(_hdc);

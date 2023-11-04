@@ -10,6 +10,8 @@
 #include "../Vertex.h"
 #include "../../Buffers/InstancedBatchBuffer.h"
 #include "../../Materials/Shader.h"
+#include "../../Materials/MaterialManager.h"
+#include "../../Materials/TexturedMaterial.h"
 #include "../../Materials/ShaderManager.h"
 #include "GL/glew.h"
 #include <string>
@@ -17,7 +19,8 @@
 class FontRenderer
 {
 private:
-    unsigned int _textureId;
+    TexturedMaterial* _fontMaterial;
+    
     Font* _font;
     InstancedBuffer<VertexPositionUv, FontCharacterInstance>* _buffer2D = nullptr;
     InstancedBuffer<VertexPositionUv, FontCharacterInstance>* _buffer3D = nullptr;
@@ -29,4 +32,6 @@ public:
     void Draw(std::string text, const Vector3& position, const Vector3& scale, const Color& color);
     void Flush2D();
     void Flush3D();
+
+    void Release();
 };

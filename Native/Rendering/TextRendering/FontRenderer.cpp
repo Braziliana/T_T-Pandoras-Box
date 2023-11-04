@@ -1,14 +1,9 @@
 ﻿#include "FontRenderer.h"
 
-#include "../../Materials/MaterialManager.h"
-#include "../../Materials/TexturedMaterial.h"
-
 
 FontRenderer::FontRenderer(Font* font)
 {
-
     _font = font;
-    _textureId = 0;
     const std::vector<VertexAttribute> vertexAttributes = {
         {0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUv), reinterpret_cast<void*>(offsetof(VertexPositionUv, position)), 0},
         {1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPositionUv), reinterpret_cast<void*>(offsetof(VertexPositionUv, uv)), 0},
@@ -36,9 +31,9 @@ FontRenderer::FontRenderer(Font* font)
     verts2D.push_back({{ size, size, 0.0f }, { 1.0f, 1.0f }});
     
     auto shader = ShaderManager::GetInstance().CreateShader(L"Font");
-    auto fontMaterial = new TexturedMaterial(_font->GetFontTexture(), shader);
-    _buffer2D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(fontMaterial));
-    _buffer3D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(fontMaterial));
+    _fontMaterial = new TexturedMaterial(_font->GetFontTexture(), shader);
+    _buffer2D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
+    _buffer3D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
 }
 
 void FontRenderer::Draw(std::string text, const Vector2& position, const float& scale, const Color& color)
@@ -64,4 +59,9 @@ void FontRenderer::Flush2D()
 void FontRenderer::Flush3D()
 {
     _buffer3D->Flush();
+}
+
+void FontRenderer::Release()
+{
+    _fontMaterial->Release();
 }

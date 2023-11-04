@@ -23,8 +23,7 @@ private:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-        std::cout << "Texture: " << texId << " " << width << " " << height << std::endl;
+        
         glTexImage2D(GL_TEXTURE_2D,
             0,
             static_cast<GLint>(GetFormat()),
@@ -44,19 +43,15 @@ public:
     int height;
     unsigned int textureId;
     TextureType type;
-    
-    unsigned char* d;
 
     Texture() = delete;
     Texture(const int width, const int height, const unsigned int textureId, const TextureType type) : width(width), height(height), textureId(textureId), type(type)
     {
-        d = nullptr;
     }
     
     Texture(const int width, const int height, const TextureType type, unsigned char* data) : width(width), height(height), type(type)
     {
         textureId = GenerateTexture(data);
-        d=data;
     }
     
     void Bind() const
@@ -172,7 +167,7 @@ public:
         file.write(reinterpret_cast<char*>(header), 54);
 
         // Write the pixel data
-        auto buffer = d;//GetBytes();
+        auto buffer = GetBytes();
 
         unsigned char* bmpData = new unsigned char[width * height * 3];
 

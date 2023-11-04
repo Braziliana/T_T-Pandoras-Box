@@ -89,7 +89,7 @@ public:
                 //size
                 {static_cast<float>(glyph->bitmap.width), static_cast<float>(glyph->bitmap.rows)},
                 //bearing
-                {static_cast<float>(glyph->bitmap_left) / static_cast<float>(atlasSize), static_cast<float>(glyph->bitmap_top) / static_cast<float>(atlasSize)},
+                {static_cast<float>(glyph->bitmap_left), static_cast<float>(glyph->bitmap_top)},
                 // UV (bottom-left of the glyph in the atlas)
                  {
                      static_cast<float>(x * itemSize) / static_cast<float>(atlasSize),
@@ -112,17 +112,22 @@ public:
         }
         
         glPixelStorei(GL_PACK_ALIGNMENT, 1);
-        _textureAtlas = new TextureAtlas(atlasSize, atlasSize, TextureType::Single, side, side, data);
+        _textureAtlas = new TextureAtlas(static_cast<int>(atlasSize), static_cast<int>(atlasSize), TextureType::Single, static_cast<int>(side), static_cast<int>(side), data);
         _textureAtlas->SaveToFile();
     }
 
     FontCharacterInstance GetInstance(char c, Vector2& position, float scale, Color color)
     {
+        if(c < 32 || c >= 127)
+        {
+            c = '?';
+        }
+        
         const Character ch = _characters[c];
 
         float xPos = position.x + (ch.bearing.x * scale);
-        float yPos = position.y - (ch.size.y - ch.bearing.y) * scale;
-        
+        float yPos = position.y - ch.bearing.y * scale;
+
         position.x += (ch.advance * scale); 
         return  {
             {xPos, yPos, 0.0f},

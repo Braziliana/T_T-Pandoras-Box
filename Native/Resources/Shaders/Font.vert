@@ -26,9 +26,6 @@ void main()
                          0.0, 0.0, 0.0, 1.0); // Scale
 
     gl_Position = viewProjectionMatrix * model * vec4(inPosition, 1.0);
-    //TexCoords = instanceUV;
-    
-    Color = instanceColor; 
-    
     TexCoords = inUv * instanceUVSize + instanceUV;
+    Color = instanceColor;
 }  
