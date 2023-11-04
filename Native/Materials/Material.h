@@ -13,16 +13,6 @@ public:
     {
         _shader = shader;
     }
-    
-    Material(const std::wstring& shaderName)
-    {
-        _shader = ShaderManager::GetInstance().GetShader(shaderName);
-    }
-
-    Material(const std::wstring& shaderPath, const std::wstring& shaderName)
-    {
-        _shader = ShaderManager::GetInstance().CreateShader(shaderPath, shaderName);
-    }
 
     virtual ~Material()
     {

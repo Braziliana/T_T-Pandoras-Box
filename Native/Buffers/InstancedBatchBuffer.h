@@ -65,15 +65,16 @@ public:
     void Flush() {
         if (_instanceDataVector.empty()) return;
 
+        _material->Begin();
         glBindBuffer(GL_ARRAY_BUFFER, _instanceVbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, _instanceDataVector.size() * sizeof(InstanceDataType), _instanceDataVector.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        _material->Begin();
         glBindVertexArray(_vao);
         glDrawArraysInstanced(GL_TRIANGLES, 0, static_cast<GLsizei>(_vertexCount), static_cast<GLsizei>(_instanceDataVector.size()));
         glBindVertexArray(0);
 
+        _material->End();
         _instanceDataVector.clear();
     }
 

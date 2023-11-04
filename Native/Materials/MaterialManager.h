@@ -21,7 +21,7 @@ public:
         if(material == nullptr)
         {
             material = new Material(shader);
-            _materials[name] = material;
+            AddMaterial(name, material);
         }
         
         return material;
@@ -47,6 +47,11 @@ public:
         
         const auto shader = ShaderManager::GetInstance().CreateShader(shaderPath, shaderName);
         return CreateMaterial(name, shader);
+    }
+
+    void AddMaterial(const std::wstring& name, Material* material)
+    {
+        _materials[name] = material;
     }
     
     Material* GetMaterial(const std::wstring& name)

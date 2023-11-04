@@ -4,7 +4,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include "RectRenderer.h"
-#include "TextRenderer.h"
+#include "TextRendering/TextRenderer.h"
 #include "Vertex.h"
 #include "../Math/Color.h"
 #include "../Math/Vector2.h"

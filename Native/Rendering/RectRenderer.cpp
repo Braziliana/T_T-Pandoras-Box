@@ -63,12 +63,12 @@ void RectRenderer::Release()
     }
 }
 
-void RectRenderer::DrawRect(const Vector2& position, const Vector2& size, const Color& color)
+void RectRenderer::Draw(const Vector2& position, const Vector2& size, const Color& color)
 {
     _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color});
 }
 
-void RectRenderer::DrawRect(const Vector3& position, const Vector2& size, const Color& color)
+void RectRenderer::Draw(const Vector3& position, const Vector2& size, const Color& color)
 {
     _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), color});
 }

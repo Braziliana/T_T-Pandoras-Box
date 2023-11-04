@@ -9,3 +9,9 @@ struct Vertex
     Vector2 uv;
     Color color;
 };
+
+struct VertexPositionUv
+{
+    Vector3 position;
+    Vector2 uv;
+};

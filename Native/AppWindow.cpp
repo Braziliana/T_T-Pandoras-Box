@@ -1,5 +1,5 @@
 ﻿#include "AppWindow.h"
-#include <dwmapi.h>
+
 #include <chrono>
 #include <tchar.h>
 #include <random>

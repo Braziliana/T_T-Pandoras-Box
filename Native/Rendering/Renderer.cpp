@@ -77,12 +77,12 @@ void Renderer::Begin2D() const
 
 void Renderer::DrawRect(const Vector2& position, const Vector2& size, const Color& color)
 {
-    _rectRenderer->DrawRect(position, size, color);
+    _rectRenderer->Draw(position, size, color);
 }
 
 void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Color& color)
 {
-    _rectRenderer->DrawRect(position, size, color);
+    _rectRenderer->Draw(position, size, color);
 }
 
 void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color)
@@ -114,7 +114,10 @@ void Renderer::Render(float deltaTime)
     //DrawRect(Vector2(300, 100), Vector2(100, 20), Color(1.0f, 1.0f, 1.0f, 1.0f));
     _rectRenderer->Flush2D();
     
-    _textRenderer->Render("Test", Vector2(100, 100));
+    _textRenderer->Render("Test", Vector2(300, 300), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("WWW", Vector2(300, 400), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("TTT", Vector2(300, 500), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Flush2D();
     
     SwapBuffers(_hdc);
 }

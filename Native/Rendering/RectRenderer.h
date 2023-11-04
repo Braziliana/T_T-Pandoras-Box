@@ -21,8 +21,8 @@ public:
     ~RectRenderer();
     void Release();
     
-    void DrawRect(const Vector2& position, const Vector2& size, const Color& color);
-    void DrawRect(const Vector3& position, const Vector2& size, const Color& color);
+    void Draw(const Vector2& position, const Vector2& size, const Color& color);
+    void Draw(const Vector3& position, const Vector2& size, const Color& color);
     void Flush2D();
     void Flush3D();
 };
