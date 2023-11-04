@@ -3,8 +3,8 @@
 #include <string>
 #include <map>
 
-#include "../../Materials/Shader.h"
-#include "../../Materials/ShaderManager.h"
+#include "../Materials/Shader.h"
+#include "../Materials/ShaderManager.h"
 #include "Font.h"
 #include "FontRenderer.h"
 
@@ -13,6 +13,8 @@ class TextRenderer
 private:
     FontRenderer* _default; 
     std::map<std::string, FontRenderer*> _fonts;
+    int _fontSize = 21;
+    
 public:
     TextRenderer()
     {
@@ -36,7 +38,7 @@ public:
             return false;
         }
 
-        FT_Set_Pixel_Sizes(face, 0, 26);
+        FT_Set_Pixel_Sizes(face, 0, _fontSize);
         const auto font = new Font(face);
         const auto fontRenderer = new FontRenderer(font);
         _fonts[name] = fontRenderer;
@@ -47,9 +49,10 @@ public:
         return  true;
     }
 
-    void Render(const std::string& text, const Vector2& position, float scale, const Color& color)
+    void Render(const std::string& text, const Vector2& position, float size, const Color& color)
     {
-        _default->Draw(text, position, scale, color);
+        const float scaleFactor = size / static_cast<float>(_fontSize);
+        _default->Draw(text, position, scaleFactor, color);
     }
 
     void Release()

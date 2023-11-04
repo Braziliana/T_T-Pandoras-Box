@@ -97,11 +97,14 @@
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
-    <ClCompile Include="Materials\Material.cpp" />
-    <ClCompile Include="Materials\MaterialManager.cpp" />
-    <ClCompile Include="Materials\Shader.cpp" />
-    <ClCompile Include="Materials\ShaderManager.cpp" />
-    <ClCompile Include="Materials\TexturedMaterial.cpp" />
+    <ClCompile Include="Memory\MemoryBuffer.cpp" />
+    <ClCompile Include="Memory\Process.cpp" />
+    <ClCompile Include="Memory\ProcessMemory.cpp" />
+    <ClCompile Include="Rendering\Materials\Material.cpp" />
+    <ClCompile Include="Rendering\Materials\MaterialManager.cpp" />
+    <ClCompile Include="Rendering\Materials\Shader.cpp" />
+    <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
+    <ClCompile Include="Rendering\Materials\TexturedMaterial.cpp" />
     <ClCompile Include="Rendering\RectRenderer.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
     <ClCompile Include="Rendering\TextRendering\Font.cpp" />
@@ -183,11 +186,10 @@
     </ClCompile>
     <ClCompile Include="Rendering\Textures\Texture.cpp" />
     <ClCompile Include="Rendering\Textures\TextureAtlas.cpp" />
+    <ClCompile Include="Windows\WindowExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AppWindow.h" />
-    <ClInclude Include="Buffers\InstancedBatchBuffer.h" />
-    <ClInclude Include="Buffers\VertexAttribute.h" />
     <ClInclude Include="Glad\include\freetype\config\ftconfig.h" />
     <ClInclude Include="Glad\include\freetype\config\ftheader.h" />
     <ClInclude Include="Glad\include\freetype\config\ftmodule.h" />
@@ -666,14 +668,19 @@
     <ClInclude Include="Glad\include\GL\glxew.h" />
     <ClInclude Include="Glad\include\GL\wglew.h" />
     <ClInclude Include="Glad\include\KHR\khrplatform.h" />
-    <ClInclude Include="Materials\Material.h" />
-    <ClInclude Include="Materials\MaterialManager.h" />
-    <ClInclude Include="Materials\Shader.h" />
-    <ClInclude Include="Materials\ShaderManager.h" />
-    <ClInclude Include="Materials\TexturedMaterial.h" />
     <ClInclude Include="Math\Color.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Memory\MemoryBuffer.h" />
+    <ClInclude Include="Memory\Process.h" />
+    <ClInclude Include="Memory\ProcessMemory.h" />
+    <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
+    <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
+    <ClInclude Include="Rendering\Materials\Material.h" />
+    <ClInclude Include="Rendering\Materials\MaterialManager.h" />
+    <ClInclude Include="Rendering\Materials\Shader.h" />
+    <ClInclude Include="Rendering\Materials\ShaderManager.h" />
+    <ClInclude Include="Rendering\Materials\TexturedMaterial.h" />
     <ClInclude Include="Rendering\RectRenderer.h" />
     <ClInclude Include="Rendering\Renderer.h" />
     <ClInclude Include="Rendering\TextRendering\Font.h" />
@@ -682,6 +689,8 @@
     <ClInclude Include="Rendering\Textures\Texture.h" />
     <ClInclude Include="Rendering\Textures\TextureAtlas.h" />
     <ClInclude Include="Rendering\Vertex.h" />
+    <ClInclude Include="Windows\WindowExtensions.h" />
+    <ClInclude Include="Windows\WindowSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Glad\include\glm\CMakeLists.txt" />
@@ -705,9 +714,6 @@
     <None Include="Resources\Fonts\OpenSans-Regular.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Memory\" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

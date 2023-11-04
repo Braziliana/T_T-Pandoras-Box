@@ -117,9 +117,9 @@ void Renderer::Render(float deltaTime)
     //DrawRect(Vector2(300, 100), Vector2(100, 20), Color(1.0f, 1.0f, 1.0f, 1.0f));
     _rectRenderer->Flush2D();
     
-    _textRenderer->Render("Test", Vector2(100, 100), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Render("WWW", Vector2(300, 400), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Render("WabTcdGe`?,.=+-0", Vector2(300, 500), 2, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Render("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Flush2D();
     
     SwapBuffers(_hdc);

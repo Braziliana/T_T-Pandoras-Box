@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Material.h"
-#include "../Rendering/Textures/Texture.h"
+#include "../Textures/Texture.h"
 
 class TexturedMaterial : Material
 {

@@ -1,6 +1,6 @@
 ﻿#include "RectRenderer.h"
 
-#include "../Materials/MaterialManager.h"
+#include "Materials/MaterialManager.h"
 
 RectRenderer::RectRenderer()
 {

@@ -1,6 +1,6 @@
 ﻿#pragma once
 #include "Vertex.h"
-#include "../Buffers/InstancedBatchBuffer.h"
+#include "Buffers/InstancedBatchBuffer.h"
 #include "../Math/Color.h"
 #include "../Math/Vector3.h"
 

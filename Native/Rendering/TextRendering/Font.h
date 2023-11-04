@@ -5,8 +5,8 @@
 #include <freetype/freetype.h>
 #include <map>
 
-#include "../../Materials/Shader.h"
-#include "../../Materials/ShaderManager.h"
+#include "../Materials/Shader.h"
+#include "../Materials/ShaderManager.h"
 #include "../Textures/TextureAtlas.h"
 
 

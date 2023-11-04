@@ -7,15 +7,6 @@ extern "C"{
     typedef void (*AppWindowUpdateCallback)(float deltaTime);
 }
 
-struct WindowSettings
-{
-    int width;
-    int height;
-    int positionX;
-    int positionY;
-    int targetFps;
-};
-
 class AppWindow
 {
 private:
@@ -23,23 +14,35 @@ private:
     WNDCLASSEX _wc;
     HWND _hWnd;
     HGLRC _hGlRc;
+    HDC _hdc;
     Renderer* _renderer;
     bool _isRunning;
-    WindowSettings _windowSettings;
     AppWindowUpdateCallback _updateCallback = nullptr;
+
+    static AppWindow* _instance;
     
 public:
-    AppWindow(const WindowSettings& windowSettings);
+    AppWindow();
     ~AppWindow();
 
     void Run();
     void Close();
     Renderer* GetRenderer() const;
     void SetUpdateCallback(AppWindowUpdateCallback callback);
+
+    static AppWindow* Instance()
+    {
+        if(_instance == nullptr)
+        {
+            _instance = new AppWindow();
+        }
+        
+        return _instance;
+    }
 };
 
 extern "C" {
-    __declspec(dllexport) AppWindow* WindowCreate(const WindowSettings& windowSettings);
+    __declspec(dllexport) AppWindow* WindowCreate();
     __declspec(dllexport) void WindowDestroy(AppWindow* window);
     __declspec(dllexport) void WindowRun(AppWindow* window);
     __declspec(dllexport) void WindowClose(AppWindow* window);

@@ -2,22 +2,12 @@
 
 namespace Tests;
 
-[StructLayout(LayoutKind.Sequential)]
-public struct WindowSettings
-{
-    public int width;
-    public int height;
-    public int positionX;
-    public int positionY;
-    public int targetFps;
-}
-
 public class AppWindow
 {
     #region Imports
 
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
-    private static extern IntPtr WindowCreate(WindowSettings windowSettings);
+    private static extern IntPtr WindowCreate();
 
     [DllImport("Native.dll")]
     private static extern void WindowDestroy(IntPtr window);
@@ -45,9 +35,9 @@ public class AppWindow
 
     public event OnUpdateDelegate? OnUpdate;
 
-    public void Create(WindowSettings windowSettings)
+    public void Create()
     {
-        _windowPtr = WindowCreate(windowSettings);
+        _windowPtr = WindowCreate();
         RegisterAppWindowUpdateCallback(_windowPtr, OnWindowUpdate);
     }
 

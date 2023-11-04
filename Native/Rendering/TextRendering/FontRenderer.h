@@ -1,19 +1,10 @@
 ﻿#pragma once
-#include <iostream>
 #include <string>
-#include <ft2build.h>
-#include <map>
-
-#include <glm/vec2.hpp>
 
 #include "Font.h"
 #include "../Vertex.h"
-#include "../../Buffers/InstancedBatchBuffer.h"
-#include "../../Materials/Shader.h"
-#include "../../Materials/MaterialManager.h"
-#include "../../Materials/TexturedMaterial.h"
-#include "../../Materials/ShaderManager.h"
-#include "GL/glew.h"
+#include "../Buffers/InstancedBatchBuffer.h"
+#include "../Materials/TexturedMaterial.h"
 #include <string>
 
 class FontRenderer
