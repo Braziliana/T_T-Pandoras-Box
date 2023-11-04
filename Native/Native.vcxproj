@@ -97,6 +97,7 @@
     <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
     <ClCompile Include="Memory\ProcessMemory.cpp" />
@@ -667,6 +668,7 @@
     <ClInclude Include="Glad\include\GL\glxew.h" />
     <ClInclude Include="Glad\include\GL\wglew.h" />
     <ClInclude Include="Glad\include\KHR\khrplatform.h" />
+    <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Math\Color.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
@@ -709,6 +711,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Fonts\DroidSans.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\Fonts\OpenSans-Regular.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

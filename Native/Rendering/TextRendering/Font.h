@@ -42,7 +42,7 @@ public:
     Font(FT_Face face);
     FontCharacterInstance GetInstance(char c, Vector2& position, float scale, Color color);
     FontCharacterInstance GetInstance(char c, Vector3& position, float scale, Color color);
-    Vector2 CalculateTextSize(const std::string& text, float scale);
+    Vector2 GetTextSize(const std::string& text, float scale);
     void Release();
     TextureAtlas* GetFontTexture() const;
     std::string GetName();

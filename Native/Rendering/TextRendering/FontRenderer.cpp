@@ -47,6 +47,11 @@ FontRenderer::FontRenderer(Font* font)
     _buffer3D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts3D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
 }
 
+Vector2 FontRenderer::GetTextSize(const std::string& text, const float size) const
+{
+    return _font->GetTextSize(text, size);
+}
+
 void FontRenderer::Draw(const std::string& text, const Vector2& position, const float& scale, const Color& color) const
 {
     Vector2 characterPosition = position;

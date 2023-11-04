@@ -79,12 +79,12 @@ void Renderer::Begin2D() const
     ShaderManager::GetInstance().SetViewProjectionMatrix(projection);
 }
 
-void Renderer::DrawRect(const Vector2& position, const Vector2& size, const Color& color)
+void Renderer::DrawRect(const Vector2& position, const Vector2& size, const Color& color) const
 {
     _rectRenderer->Draw(position, size, color);
 }
 
-void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Color& color)
+void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Color& color) const
 {
     _rectRenderer->Draw(position, size, color);
 }
@@ -122,7 +122,7 @@ void Renderer::Destroy()
     }
 }
 
-void Renderer::Render(float deltaTime)
+void Renderer::Render(const float deltaTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
@@ -137,12 +137,13 @@ void Renderer::Render(float deltaTime)
     {
         _renderGuiCallback(deltaTime);
     }
-    DrawRect(Vector2(100, 100), Vector2(100, 100), Color(0.0f, 1.0f, 0.0f, 1.0f));
+    DrawRect(Vector2(100, 100), Vector2(100, 26), Color(0.0f, 1.0f, 0.0f, 1.0f));
     _rectRenderer->Flush2D();
     
-    _textRenderer->Render("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Render("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Render("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->DrawCenter("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->Draw("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    _textRenderer->DrawCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
+    _textRenderer->Draw("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Flush2D();
     
     SwapBuffers(_hdc);

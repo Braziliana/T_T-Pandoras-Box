@@ -45,8 +45,8 @@ public:
     void Begin3D() const;
     void Begin2D() const;
     
-    void DrawRect(const Vector2& position, const Vector2& size, const Color& color);
-    void DrawRect(const Vector3& position, const Vector2& size, const Color& color);
+    void DrawRect(const Vector2& position, const Vector2& size, const Color& color) const;
+    void DrawRect(const Vector3& position, const Vector2& size, const Color& color) const;
     void DrawCircle(const Vector2& position, const Vector2& size, const Color& color);
     void DrawCircle(const Vector3& position, const Vector2& size, const Color& color);
 

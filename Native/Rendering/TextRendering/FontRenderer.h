@@ -19,6 +19,7 @@ private:
 public:
     FontRenderer(Font* font);
 
+    Vector2 GetTextSize(const std::string& text, float size) const;
     void Draw(const std::string& text, const Vector2& position, const float& scale, const Color& color) const;
     void Draw(const std::string& text, const Vector3& position, const float& scale, const Color& color) const;
     void Flush2D() const;

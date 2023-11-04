@@ -119,7 +119,7 @@ FontCharacterInstance Font::GetInstance(char c, Vector3& position, const float s
         };
 }
 
-Vector2 Font::CalculateTextSize(const std::string& text, const float scale)
+Vector2 Font::GetTextSize(const std::string& text, const float scale)
 {
     float totalWidth = 0;
     float maxHeight = 0;

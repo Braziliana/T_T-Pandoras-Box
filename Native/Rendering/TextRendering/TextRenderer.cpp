@@ -2,7 +2,7 @@
 
 TextRenderer::TextRenderer()
 {
-    if(LoadFont("default", "Resources/Fonts/OpenSans-Regular.ttf"))
+    if(LoadFont("default", "Resources/Fonts/DroidSans.ttf"))
     {
         _default = _fontRenderers["default"];
     }
@@ -33,10 +33,37 @@ bool TextRenderer::LoadFont(const std::string& name, const std::string& fontFile
     return  true;
 }
 
-void TextRenderer::Render(const std::string& text, const Vector2& position, float size, const Color& color) const
+float TextRenderer::GetFontScale(const float size) const
 {
-    const float scaleFactor = size / static_cast<float>(_fontSize);
+    return size / static_cast<float>(_fontSize);
+}
+
+void TextRenderer::Draw(const std::string& text, const Vector2& position, const float size, const Color& color) const
+{
+    const float scaleFactor = GetFontScale(size);
     _default->Draw(text, position, scaleFactor, color);
+}
+
+void TextRenderer::Draw(const std::string& text, const Vector3& position, const float size, const Color& color) const
+{
+    const float scaleFactor = GetFontScale(size);
+    _default->Draw(text, position, scaleFactor, color);
+}
+
+void TextRenderer::DrawCenter(const std::string& text, const Vector2& position, const float size, const Color& color) const
+{
+    const float scaleFactor = GetFontScale(size);
+    const auto textSize = _default->GetTextSize(text, scaleFactor) / 2;
+    const auto drawPos = Vector2(position.x - textSize.x, position.y + textSize.y/2);
+    _default->Draw(text, drawPos, scaleFactor, color);
+}
+
+void TextRenderer::DrawCenter(const std::string& text, const Vector3& position, const float size, const Color& color) const
+{
+    const float scaleFactor = GetFontScale(size);
+    const auto textSize = _default->GetTextSize(text, scaleFactor) / 2;
+    const auto drawPos = Vector3(position.x - textSize.x, position.y, position.z - textSize.y);
+    _default->Draw(text, drawPos, scaleFactor, color);
 }
 
 void TextRenderer::Release()
