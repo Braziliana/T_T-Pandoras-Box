@@ -3,6 +3,9 @@
 #include <iostream>
 #include "Vertex.h"
 #include "../Math/Color.h"
+#include "glm/ext/matrix_clip_space.hpp"
+
+Renderer* Renderer::_instance = nullptr;
 
 void RegisterRenderCallback(Renderer* renderer, const RenderCallback callback)
 {
@@ -25,7 +28,7 @@ void RenderSetClearColor(Renderer* renderer, Color color)
     renderer->SetClearColor(color);
 }
 
-Renderer::Renderer(HDC hdc) : _hdc(hdc)
+Renderer::Renderer(const HDC hdc) : _hdc(hdc)
 {
 }
 
@@ -42,17 +45,14 @@ bool Renderer::Init(const int width, const int height)
     glewInit();
     if (glewInit() != GLEW_OK) {
         std::cerr << "Failed to initialize GLEW" << std::endl;
-        return -1;
+        return false;
     }
 
     _rectRenderer = new RectRenderer();
     _textRenderer = new TextRenderer();
     
-    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // glEnable(GL_ALPHA_TEST);
-    // glAlphaFunc(GL_GREATER, 0.05f);
     
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     return true;
@@ -98,6 +98,30 @@ void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Co
 {
 }
 
+Renderer* Renderer::CreateInstance(const HDC hdc, int width, int height)
+{
+    Destroy();
+        
+    _instance = new Renderer(hdc);
+    _instance->Init(width, height);
+    return _instance;
+}
+
+Renderer* Renderer::Instance()
+{
+    return _instance;
+}
+
+void Renderer::Destroy()
+{
+    if(_instance != nullptr)
+    {
+        _instance->Release();
+        delete _instance;
+        _instance=nullptr;
+    }
+}
+
 void Renderer::Render(float deltaTime)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -114,7 +138,6 @@ void Renderer::Render(float deltaTime)
         _renderGuiCallback(deltaTime);
     }
     DrawRect(Vector2(100, 100), Vector2(100, 100), Color(0.0f, 1.0f, 0.0f, 1.0f));
-    //DrawRect(Vector2(300, 100), Vector2(100, 20), Color(1.0f, 1.0f, 1.0f, 1.0f));
     _rectRenderer->Flush2D();
     
     _textRenderer->Render("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));

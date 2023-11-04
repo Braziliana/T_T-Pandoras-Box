@@ -7,41 +7,39 @@
 #include <dwmapi.h>
 #include "Windows/WindowExtensions.h"
 
+AppWindow* AppWindow::_instance = nullptr;
+
 AppWindow* WindowCreate() {
-    return new AppWindow();
+    return AppWindow::CreateInstance();
 }
 
-void WindowDestroy(const AppWindow* window)
+void WindowDestroy()
 {
-    delete window;
+    AppWindow::Destroy();
 }
 
-void WindowRun(AppWindow* window)
+void WindowRun()
 {
-    if(window == nullptr) return;
+    const auto window = AppWindow::Instance();
+    if(window == nullptr)
+    {
+        std::cout << "Window doesnt exist. Cant run." << std::endl;
+        return;
+    }
+    
     window->Run();
 }
 
-void WindowClose(AppWindow* window)
+void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback)
 {
-    if(window == nullptr) return;
-    window->Close();
-}
-
-Renderer* WindowGetRenderer(const AppWindow* appWindow)
-{
-    if(appWindow == nullptr)
+    const auto window = AppWindow::Instance();
+    if(window == nullptr)
     {
-        return nullptr;
+        std::cout << "Window doesnt exist. Cant add callback." << std::endl;
+        return;
     }
     
-    return appWindow->GetRenderer();
-}
-
-
-void RegisterAppWindowUpdateCallback(AppWindow* appWindow, AppWindowUpdateCallback callback)
-{
-    appWindow->SetUpdateCallback(callback);
+    window->SetUpdateCallback(callback);
 }
 
 
@@ -77,21 +75,16 @@ AppWindow::AppWindow() : _isRunning(false) {
     _wc = createWindowResult.wc;
     _hGlRc = createWindowResult.hGlRc;
     _hdc = createWindowResult.hdc;
-    
-    _renderer = new Renderer(createWindowResult.hdc);
-    auto res = _renderer->Init(createWindowResult.width, createWindowResult.height);
-}
-
-AppWindow::~AppWindow() {
-    _renderer->Release();
-    delete _renderer;
+    Renderer::CreateInstance(_hdc, createWindowResult.width, createWindowResult.height);
 }
 
 auto lastRenderTime = std::chrono::high_resolution_clock::now();
 void AppWindow::Run()
 {
     _isRunning = true;
-    MSG msg = { 0 };
+    MSG msg;
+    ZeroMemory(&msg, sizeof(MSG));
+    
     while (msg.message != WM_QUIT && _isRunning)
     {
         if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
@@ -109,13 +102,14 @@ void AppWindow::Run()
             {
                 _updateCallback(deltaTime);
             }
+
             
-            _renderer->Render(deltaTime);
+            Renderer::Instance()->Render(deltaTime);
         }
     }
     
     _isRunning = false;
-    _renderer->Release();
+    Renderer::Destroy();
     wglMakeCurrent(nullptr, nullptr);
     wglDeleteContext(_hGlRc);
     DestroyWindow(_hWnd);
@@ -125,10 +119,6 @@ void AppWindow::Run()
 void AppWindow::Close()
 {
     _isRunning=false;
-}
-
-Renderer* AppWindow::GetRenderer() const {
-    return _renderer;
 }
 
 void AppWindow::SetUpdateCallback(const AppWindowUpdateCallback callback)

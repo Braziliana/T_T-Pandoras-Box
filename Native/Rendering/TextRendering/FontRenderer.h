@@ -19,10 +19,10 @@ private:
 public:
     FontRenderer(Font* font);
 
-    void Draw(std::string text, const Vector2& position, const float& scale, const Color& color);
-    void Draw(std::string text, const Vector3& position, const Vector3& scale, const Color& color);
-    void Flush2D();
-    void Flush3D();
+    void Draw(const std::string& text, const Vector2& position, const float& scale, const Color& color) const;
+    void Draw(const std::string& text, const Vector3& position, const float& scale, const Color& color) const;
+    void Flush2D() const;
+    void Flush3D() const;
 
     void Release();
 };

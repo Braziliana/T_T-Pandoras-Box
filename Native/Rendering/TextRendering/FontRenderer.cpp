@@ -17,9 +17,9 @@ FontRenderer::FontRenderer(Font* font)
         {6, 4, GL_FLOAT, GL_FALSE, sizeof(FontCharacterInstance), reinterpret_cast<void*>(offsetof(FontCharacterInstance, color)), 1},
     };
     
-    std::vector<VertexPositionUv> verts2D;
     constexpr float size = 1.0f;
 
+    std::vector<VertexPositionUv> verts2D;
     // First Triangle
     verts2D.push_back({{ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }});
     verts2D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
@@ -29,14 +29,25 @@ FontRenderer::FontRenderer(Font* font)
     verts2D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
     verts2D.push_back({{ 0.0f, size, 0.0f }, { 0.0f, 1.0f }});
     verts2D.push_back({{ size, size, 0.0f }, { 1.0f, 1.0f }});
+
+    std::vector<VertexPositionUv> verts3D;
+    // First Triangle
+    verts3D.push_back({{ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }});
+    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
+    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 1.0f }});
+
+    // Second Triangle
+    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
+    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 1.0f }});
+    verts3D.push_back({{ size, 0.0f, size }, { 1.0f, 1.0f }});
     
-    auto shader = ShaderManager::GetInstance().CreateShader(L"Font");
+    const auto shader = ShaderManager::GetInstance().CreateShader(L"Font");
     _fontMaterial = new TexturedMaterial(_font->GetFontTexture(), shader);
     _buffer2D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
-    _buffer3D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts2D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
+    _buffer3D = new InstancedBuffer<VertexPositionUv, FontCharacterInstance>(verts3D, 1000, vertexAttributes, instanceAttributes, reinterpret_cast<Material*>(_fontMaterial));
 }
 
-void FontRenderer::Draw(std::string text, const Vector2& position, const float& scale, const Color& color)
+void FontRenderer::Draw(const std::string& text, const Vector2& position, const float& scale, const Color& color) const
 {
     Vector2 characterPosition = position;
     for(const auto& c : text)
@@ -46,22 +57,32 @@ void FontRenderer::Draw(std::string text, const Vector2& position, const float& 
     }
 }
 
-void FontRenderer::Draw(std::string text, const Vector3& position, const Vector3& scale, const Color& color)
+void FontRenderer::Draw(const std::string& text, const Vector3& position, const float& scale, const Color& color) const
 {
-    //_buffer3D->Add(FontCharacterInstance{position, Vector3(scale.x, 1.0f, scale.y), color});
+    Vector3 characterPosition = position;
+    for(const auto& c : text)
+    {
+        auto instanceData = _font->GetInstance(c, characterPosition, scale, color);
+        _buffer3D->Add(instanceData);
+    }
 }
 
-void FontRenderer::Flush2D()
+void FontRenderer::Flush2D() const
 {
     _buffer2D->Flush();
 }
 
-void FontRenderer::Flush3D()
+void FontRenderer::Flush3D() const
 {
     _buffer3D->Flush();
 }
 
 void FontRenderer::Release()
 {
-    _fontMaterial->Release();
+    if(_fontMaterial != nullptr)
+    {
+        _fontMaterial->Release();
+        delete _fontMaterial;
+        _fontMaterial = nullptr;
+    }
 }

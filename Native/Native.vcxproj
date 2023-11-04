@@ -101,7 +101,6 @@
     <ClCompile Include="Memory\Process.cpp" />
     <ClCompile Include="Memory\ProcessMemory.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
-    <ClCompile Include="Rendering\Materials\MaterialManager.cpp" />
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
     <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
     <ClCompile Include="Rendering\Materials\TexturedMaterial.cpp" />
@@ -677,7 +676,6 @@
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
     <ClInclude Include="Rendering\Materials\Material.h" />
-    <ClInclude Include="Rendering\Materials\MaterialManager.h" />
     <ClInclude Include="Rendering\Materials\Shader.h" />
     <ClInclude Include="Rendering\Materials\ShaderManager.h" />
     <ClInclude Include="Rendering\Materials\TexturedMaterial.h" />

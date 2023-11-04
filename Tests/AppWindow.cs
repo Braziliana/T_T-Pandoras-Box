@@ -10,22 +10,19 @@ public class AppWindow
     private static extern IntPtr WindowCreate();
 
     [DllImport("Native.dll")]
-    private static extern void WindowDestroy(IntPtr window);
+    private static extern void WindowDestroy();
 
     [DllImport("Native.dll")]
-    private static extern void WindowRun(IntPtr window);
+    private static extern void WindowRun();
 
     [DllImport("Native.dll")]
-    private static extern void WindowClose(IntPtr window);
-
-    [DllImport("Native.dll")]
-    private static extern IntPtr WindowGetRenderer(IntPtr appWindow);
+    private static extern void WindowClose();
     
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     private delegate void AppWindowUpdateCallback(float deltaTime);
     
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void RegisterAppWindowUpdateCallback(IntPtr windowPtr, AppWindowUpdateCallback callback);
+    private static extern void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback);
 
     #endregion
 
@@ -38,22 +35,17 @@ public class AppWindow
     public void Create()
     {
         _windowPtr = WindowCreate();
-        RegisterAppWindowUpdateCallback(_windowPtr, OnWindowUpdate);
+        RegisterAppWindowUpdateCallback(OnWindowUpdate);
     }
 
     public void Run()
     {
-        WindowRun(_windowPtr);
+        WindowRun();
     }
 
     public void Close()
     {
-        WindowClose(_windowPtr);
-    }
-
-    public IntPtr GetRenderer()
-    {
-        return WindowGetRenderer(_windowPtr);
+        WindowClose();
     }
 
     private void OnWindowUpdate(float deltaTime)

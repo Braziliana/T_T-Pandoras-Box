@@ -18,6 +18,8 @@ extern "C"{
 class Renderer
 {
 private:
+    static Renderer* _instance;
+    
     HDC _hdc;
     int _width = 0;
     int _height = 0;
@@ -47,6 +49,10 @@ public:
     void DrawRect(const Vector3& position, const Vector2& size, const Color& color);
     void DrawCircle(const Vector2& position, const Vector2& size, const Color& color);
     void DrawCircle(const Vector3& position, const Vector2& size, const Color& color);
+
+    static Renderer* CreateInstance(HDC hdc, int width, int height);
+    static Renderer* Instance();
+    static void Destroy();
 };
 
 extern "C" {

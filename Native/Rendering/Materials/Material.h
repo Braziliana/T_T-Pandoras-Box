@@ -6,99 +6,28 @@
 
 class Material
 {
+private:
+    const Shader* _shader = nullptr;
+    
 public:
-    const Shader* _shader;
 
-    Material(const Shader* shader)
-    {
-        _shader = shader;
-    }
-
-    virtual ~Material()
-    {
-        Material::Release();
-    }
-
-    virtual void Release()
-    {
-    }
-    
-    virtual void Begin() const
-    {
-        _shader->Use();
-    }
-
-    virtual void End() const
-    {
-    }
-    
-    void SetBool(const std::string& name, bool value) const
-    {
-        _shader->SetBool(name, value);
-    }
-
-    void SetInt(const std::string& name, int value) const
-    {
-        _shader->SetInt(name, value);
-    }
-
-    void SetFloat(const std::string& name, float value) const
-    {
-        _shader->SetFloat(name, value);
-    }
-
-    void SetVec2(const std::string& name, const Vector2& value) const
-    {
-        _shader->SetVec2(name, value);
-    }
-
-    void SetVec3(const std::string& name, const Vector3& value) const
-    {
-        _shader->SetVec3(name, value);
-    }
-
-    void SetColor(const std::string& name, const Color& value) const
-    {
-        _shader->SetColor(name, value);
-    }
-
-    void SetMat4(const std::string& name, const glm::mat4& value) const
-    {
-        _shader->SetMat4(name, value);
-    }
-
-    void SetBool(GLint location, bool value) const
-    {
-        _shader->SetBool(location, value);
-    }
-
-    void SetInt(GLint location, int value) const
-    {
-        _shader->SetInt(location, value);
-    }
-
-    void SetFloat(GLint location, float value) const
-    {
-        _shader->SetFloat(location, value);
-    }
-
-    void SetVec2(GLint location, const Vector2& value) const
-    {
-        _shader->SetVec2(location, value);
-    }
-
-    void SetVec3(GLint location, const Vector3& value) const
-    {
-        _shader->SetVec3(location, value);
-    }
-
-    void SetColor(GLint location, const Color& value) const
-    {
-        _shader->SetColor(location, value);
-    }
-
-    void SetMat4(GLint location, const glm::mat4& value) const
-    {
-        _shader->SetMat4(location, value);
-    }
+    Material(const Shader* shader);
+    virtual ~Material();
+    virtual void Release();
+    virtual void Begin() const;
+    virtual void End() const;
+    void SetBool(const std::string& name, bool value) const;
+    void SetInt(const std::string& name, int value) const;
+    void SetFloat(const std::string& name, float value) const;
+    void SetVec2(const std::string& name, const Vector2& value) const;
+    void SetVec3(const std::string& name, const Vector3& value) const;
+    void SetColor(const std::string& name, const Color& value) const;
+    void SetMat4(const std::string& name, const glm::mat4& value) const;
+    void SetBool(GLint location, bool value) const;
+    void SetInt(GLint location, int value) const;
+    void SetFloat(GLint location, float value) const;
+    void SetVec2(GLint location, const Vector2& value) const;
+    void SetVec3(GLint location, const Vector3& value) const;
+    void SetColor(GLint location, const Color& value) const;
+    void SetMat4(GLint location, const glm::mat4& value) const;
 };

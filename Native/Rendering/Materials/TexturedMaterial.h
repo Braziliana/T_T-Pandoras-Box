@@ -8,32 +8,13 @@ private:
     const Texture* _texture;
 public:
 
-    TexturedMaterial(const Texture* texture, const Shader* shader) : Material(shader)
-    {
-        _texture = texture;
-        shader->Use();
-        shader->SetInt("textureSampler", 0);
-    }
-    
-    ~TexturedMaterial() override
-    {
-        TexturedMaterial::Release();
-    }
+    TexturedMaterial(const Texture* texture, const Shader* shader);
 
-    void Begin() const override
-    {
-        Material::Begin();
-        _texture->Bind();
-    }
+    ~TexturedMaterial() override;
 
-    void End() const override
-    {
-        Material::End();
-        _texture->UnBind();
-    }
+    void Begin() const override;
 
-    void Release() override
-    {
-        Material::Release();
-    }
+    void End() const override;
+
+    void Release() override;
 };

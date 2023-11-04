@@ -10,20 +10,17 @@ public class Renderer
     private delegate void RenderCallback(float deltaTime);
     
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void RegisterRenderCallback(IntPtr windowPtr, RenderCallback callback);
+    private static extern void RegisterRenderCallback(RenderCallback callback);
     
     #endregion
-    
-    private readonly IntPtr _rendererPtr;
     
     public delegate void OnRenderDelegate(float deltaTime);
 
     public event OnRenderDelegate? OnRender;
     
-    public Renderer(IntPtr rendererPtr)
+    public Renderer()
     {
-        _rendererPtr = rendererPtr;
-        RegisterRenderCallback(_rendererPtr, OnRendererRender);
+        RegisterRenderCallback(OnRendererRender);
     }
     
     private void OnRendererRender(float deltaTime)

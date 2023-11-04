@@ -15,7 +15,6 @@ private:
     HWND _hWnd;
     HGLRC _hGlRc;
     HDC _hdc;
-    Renderer* _renderer;
     bool _isRunning;
     AppWindowUpdateCallback _updateCallback = nullptr;
 
@@ -23,30 +22,58 @@ private:
     
 public:
     AppWindow();
-    ~AppWindow();
+    ~AppWindow()
+    {
+        Release();
+        delete _instance;
+        _instance = nullptr;
+    }
 
     void Run();
     void Close();
-    Renderer* GetRenderer() const;
     void SetUpdateCallback(AppWindowUpdateCallback callback);
 
+    void Release()
+    {
+        _isRunning = false;
+        Renderer::Destroy();
+        wglMakeCurrent(nullptr, nullptr);
+        wglDeleteContext(_hGlRc);
+        DestroyWindow(_hWnd);
+        UnregisterClass(_wc.lpszClassName, _wc.hInstance);
+        delete _instance;
+        _instance = nullptr;
+    }
+    
     static AppWindow* Instance()
     {
-        if(_instance == nullptr)
+        return _instance;
+    }
+
+    static AppWindow* CreateInstance()
+    {
+        if(_instance != nullptr)
         {
-            _instance = new AppWindow();
         }
         
+        _instance = new AppWindow();
         return _instance;
+    }
+    
+    static void Destroy()
+    {
+        if(_instance != nullptr)
+        {
+            _instance->Release();
+            delete _instance;
+            _instance = nullptr;
+        }
     }
 };
 
 extern "C" {
     __declspec(dllexport) AppWindow* WindowCreate();
-    __declspec(dllexport) void WindowDestroy(AppWindow* window);
-    __declspec(dllexport) void WindowRun(AppWindow* window);
-    __declspec(dllexport) void WindowClose(AppWindow* window);
-    __declspec(dllexport) Renderer* WindowGetRenderer(AppWindow* appWindow);
-    
-    __declspec(dllexport) void RegisterAppWindowUpdateCallback(AppWindow* appWindow, AppWindowUpdateCallback callback);
+    __declspec(dllexport) void WindowDestroy();
+    __declspec(dllexport) void WindowRun();
+    __declspec(dllexport) void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback);
 }
