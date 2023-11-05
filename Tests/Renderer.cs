@@ -35,7 +35,7 @@ public class Renderer
     public static extern void RendererDrawCircle3D(ref Vector3 position, ref Vector2 size, ref Color color);
 
     [DllImport("Native.dll")]
-    public static extern void RendererText(string text, ref Vector3 position, float size, ref Color color);
+    public static extern void RendererText(string text, ref Vector2 position, float size, ref Color color);
 
     [DllImport("Native.dll")]
     public static extern void RendererTextCenter(string text, ref Vector2 position, float size, ref Color color);

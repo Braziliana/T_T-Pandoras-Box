@@ -1,10 +1,11 @@
 ﻿#pragma once
 #include <Windows.h>
 
-#include "RectRenderer.h"
+#include "Primitives/RectRenderer.h"
 #include "TextRendering/TextRenderer.h"
 #include "../Math/Color.h"
 #include "../Math/Vector2.h"
+#include "Primitives/CircleRenderer.h"
 
 
 extern "C"{
@@ -27,6 +28,7 @@ private:
     RenderCallback _renderGuiCallback = nullptr;
 
     RectRenderer* _rectRenderer = nullptr;
+    CircleRenderer* _circleRenderer = nullptr;
     TextRenderer* _textRenderer = nullptr;
     
     Renderer(HDC hdc);
@@ -46,10 +48,10 @@ public:
     
     void DrawRect(const Vector2& position, const Vector2& size, const Color& color) const;
     void DrawRect(const Vector3& position, const Vector2& size, const Color& color) const;
-    void DrawCircle(const Vector2& position, const Vector2& size, const Color& color);
-    void DrawCircle(const Vector3& position, const Vector2& size, const Color& color);
-    void Text(const std::string& text, const Vector3& position, const float size, const Color& color) const;
-    void TextCenter(const std::string& text, const Vector2& position, const float size, const Color& color) const;
+    void DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const;
+    void DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const;
+    void Text(const std::string& text, const Vector2& position, float size, const Color& color) const;
+    void TextCenter(const std::string& text, const Vector2& position, float size, const Color& color) const;
     
     
     static Renderer* CreateInstance(HDC hdc, int width, int height);
@@ -67,7 +69,7 @@ extern "C" {
     __declspec(dllexport) void RendererDrawRect3D(Vector3* position, Vector2* size, Color* color);
     __declspec(dllexport) void RendererDrawCircle2D(Vector2* position, Vector2* size, Color* color);
     __declspec(dllexport) void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color);
-    __declspec(dllexport) void RendererText(const char* text, Vector3* position, float size, Color* color);
+    __declspec(dllexport) void RendererText(const char* text, Vector2* position, float size, Color* color);
     __declspec(dllexport) void RendererTextCenter(const char* text, Vector2* position, float size, Color* color);
 
 }

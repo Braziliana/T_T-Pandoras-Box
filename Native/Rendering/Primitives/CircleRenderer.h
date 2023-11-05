@@ -1,25 +1,25 @@
 ﻿#pragma once
-#include "Vertex.h"
-#include "Buffers/InstancedBatchBuffer.h"
-#include "../Math/Color.h"
-#include "../Math/Vector3.h"
+#include "../Vertex.h"
+#include "../Buffers/InstancedBatchBuffer.h"
+#include "../../Math/Color.h"
+#include "../../Math/Vector3.h"
 
-struct RectData
+struct CircleData
 {
     Vector3 position;
     Vector3 scale;
     Color color;
 };
 
-class RectRenderer
+class CircleRenderer
 {
 private:
     Material* _material = nullptr;
-    InstancedBuffer<Vertex, RectData>* _buffer2D = nullptr;
-    InstancedBuffer<Vertex, RectData>* _buffer3D = nullptr;
+    InstancedBuffer<Vertex, CircleData>* _buffer2D = nullptr;
+    InstancedBuffer<Vertex, CircleData>* _buffer3D = nullptr;
 public:
-    RectRenderer();
-    ~RectRenderer();
+    CircleRenderer();
+    ~CircleRenderer();
     void Release();
     
     void Draw(const Vector2& position, const Vector2& size, const Color& color) const;

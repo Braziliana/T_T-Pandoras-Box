@@ -39,7 +39,7 @@ void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color) {
     Renderer::Instance()->DrawCircle(*position, *size, *color);
 }
 
-void RendererText(const char* text, Vector3* position, float size, Color* color) {
+void RendererText(const char* text, Vector2* position, float size, Color* color) {
     Renderer::Instance()->Text(std::string(text), *position, size, *color);
 }
 
@@ -68,12 +68,12 @@ bool Renderer::Init(const int width, const int height)
     }
 
     _rectRenderer = new RectRenderer();
+    _circleRenderer = new CircleRenderer();
     _textRenderer = new TextRenderer();
     
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     return true;
 }
 
@@ -108,15 +108,17 @@ void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Colo
     _rectRenderer->Draw(position, size, color);
 }
 
-void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color)
+void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const
 {
+    _circleRenderer->Draw(position, size, color);
 }
 
-void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Color& color)
+void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const
 {
+    _circleRenderer->Draw(position, size, color);
 }
 
-void Renderer::Text(const std::string& text, const Vector3& position, const float size, const Color& color) const
+void Renderer::Text(const std::string& text, const Vector2& position, const float size, const Color& color) const
 {
     _textRenderer->Draw(text, position, size, color);
 }
@@ -152,6 +154,7 @@ void Renderer::Destroy()
 
 void Renderer::Render(const float deltaTime)
 {
+    glClearColor(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     Begin3D();
@@ -167,15 +170,16 @@ void Renderer::Render(const float deltaTime)
     }
     DrawRect(Vector2(100, 100), Vector2(100, 26), Color(0.0f, 1.0f, 0.0f, 1.0f));
     _rectRenderer->Flush2D();
-
+    DrawCircle(Vector2(500, 500), Vector2(100, 100), Color(1.0f, 0.0f, 1.0f, 1.0f));
+    _circleRenderer->Flush2D();
     if(InputManager::GetInstance()->GetKeyState(VK_F1))
     {
-        _textRenderer->DrawCenter("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
-        _textRenderer->Draw("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
-        _textRenderer->DrawCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
-        _textRenderer->Draw("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
-        _textRenderer->Flush2D();
+        Text("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
+        Text("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
+        TextCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
+        Text("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
     }
+    _textRenderer->Flush2D();
     SwapBuffers(_hdc);
 }
 
@@ -188,6 +192,13 @@ void Renderer::Release()
         _rectRenderer = nullptr;
     }
 
+    if(_circleRenderer != nullptr)
+    {
+        _circleRenderer->Release();
+        delete _circleRenderer;
+        _circleRenderer=nullptr;
+    }
+    
     if(_textRenderer != nullptr)
     {
         _textRenderer->Release();

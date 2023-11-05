@@ -14,27 +14,30 @@ RectRenderer::RectRenderer()
         {5, 4, GL_FLOAT, GL_FALSE, sizeof(RectData), reinterpret_cast<void*>(offsetof(RectData, color)), 1},
     };
     
+    float size = 0.5f;
+
     std::vector<Vertex> verts2D;
     // First Triangle
-    verts2D.push_back({{ -0.5f, -0.5f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts2D.push_back({{  0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts2D.push_back({{ -0.5f,  0.5f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{ -size, -size, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{  size, -size, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{ -size,  size, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
 
     // Second Triangle
-    verts2D.push_back({{  0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts2D.push_back({{ -0.5f,  0.5f, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts2D.push_back({{  0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{  size, -size, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{ -size,  size, 0.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts2D.push_back({{  size,  size, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
 
     std::vector<Vertex> verts3D;
     // First Triangle
-    verts3D.push_back({{ -0.5f, 0.0f, -0.5f }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts3D.push_back({{  0.5f, 0.0f, -0.5f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts3D.push_back({{ -0.5f,  0.0f, 0.5f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{ -size, 0.0f, -size }, { 0.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{  size, 0.0f, -size }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{ -size, 0.0f,  size }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
 
     // Second Triangle
-    verts3D.push_back({{  0.5f, 0.0f, -0.5f }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts3D.push_back({{ -0.5f, 0.0f, 0.5f }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
-    verts3D.push_back({{  0.5f, 0.0f, 0.5f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{  size, 0.0f, -size }, { 1.0f, 0.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{ -size, 0.0f,  size }, { 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+    verts3D.push_back({{  size, 0.0f,  size }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }});
+
     
     const auto shader = ShaderManager::GetInstance().CreateShader(L"Rect");
     _material = new Material(shader);
