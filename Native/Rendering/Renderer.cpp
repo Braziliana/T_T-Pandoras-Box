@@ -172,13 +172,11 @@ void Renderer::Render(const float deltaTime)
     _rectRenderer->Flush2D();
     DrawCircle(Vector2(500, 500), Vector2(100, 100), Color(1.0f, 0.0f, 1.0f, 1.0f));
     _circleRenderer->Flush2D();
-    if(InputManager::GetInstance()->GetKeyState(VK_F1))
-    {
-        Text("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
-        Text("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
-        TextCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
-        Text("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    }
+
+    Text("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    Text("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    TextCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
+    Text("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Flush2D();
     SwapBuffers(_hdc);
 }
