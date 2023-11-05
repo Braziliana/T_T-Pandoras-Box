@@ -5,8 +5,17 @@
 
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "glew32s.lib")
+//#pragma comment(lib, "glew32s.lib")
+
+#ifdef _DEBUG
+#pragma comment(lib, "freetyped.lib")
+#pragma comment(lib, "glew32sd.lib")
+#else
 #pragma comment(lib, "freetype.lib")
+#pragma comment(lib, "glew32s.lib")
+#endif
+
+
 #pragma comment(lib, "Dwmapi.lib")
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)

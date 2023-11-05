@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "Vertex.h"
+#include "../Input/InputManager.h"
 #include "../Math/Color.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
@@ -139,13 +140,15 @@ void Renderer::Render(const float deltaTime)
     }
     DrawRect(Vector2(100, 100), Vector2(100, 26), Color(0.0f, 1.0f, 0.0f, 1.0f));
     _rectRenderer->Flush2D();
-    
-    _textRenderer->DrawCenter("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Draw("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->DrawCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
-    _textRenderer->Draw("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    _textRenderer->Flush2D();
-    
+
+    if(InputManager::GetInstance()->GetKeyState(VK_F1))
+    {
+        _textRenderer->DrawCenter("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
+        _textRenderer->Draw("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
+        _textRenderer->DrawCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
+        _textRenderer->Draw("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
+        _textRenderer->Flush2D();
+    }
     SwapBuffers(_hdc);
 }
 
