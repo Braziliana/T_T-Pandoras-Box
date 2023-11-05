@@ -101,6 +101,7 @@
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
     <ClCompile Include="Memory\ProcessMemory.cpp" />
+    <ClCompile Include="Menus\MenuItem.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
     <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
@@ -675,6 +676,7 @@
     <ClInclude Include="Memory\MemoryBuffer.h" />
     <ClInclude Include="Memory\Process.h" />
     <ClInclude Include="Memory\ProcessMemory.h" />
+    <ClInclude Include="Menus\MenuItem.h" />
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
     <ClInclude Include="Rendering\Materials\Material.h" />
