@@ -23,7 +23,7 @@ private:
     int _width = 0;
     int _height = 0;
     
-    Color _clearColor = {0, 0, 0, 1.0};
+    Color _clearColor = {0, 0, 0, 0.0};
     RenderCallback _renderCallback = nullptr;
     RenderCallback _renderGuiCallback = nullptr;
 
