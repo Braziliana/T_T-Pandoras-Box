@@ -1,6 +1,33 @@
 ﻿#include "InputManager.h"
 #include <Windows.h>
 
+
+bool InputManagerGetKeyState(unsigned vkCode)
+{
+    return InputManager::GetInstance()->GetKeyState(vkCode);
+}
+
+Vector2 InputManagerGetMousePosition()
+{
+    return InputManager::GetInstance()->GetMousePosition();
+}
+
+void InputManagerSetOnMouseMoveEvent(void(* handler)(MouseMoveEvent))
+{
+    auto lambda = [handler](MouseMoveEvent event) {
+        handler(event);
+    };
+    InputManager::GetInstance()->SetOnMouseMoveEvent(lambda);
+}
+
+void InputManagerSetKeyStateEvent(void(* handler)(KeyStateEvent))
+{
+    auto lambda = [handler](KeyStateEvent event) {
+        handler(event);
+    };
+    InputManager::GetInstance()->SetKeyStateEvent(lambda);
+}
+
 InputManager* InputManager::_instance = nullptr;
 std::once_flag InputManager::_initInstanceFlag;
 

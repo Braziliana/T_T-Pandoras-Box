@@ -79,3 +79,12 @@ public:
 
     ~InputManager();
 };
+
+
+extern "C" {
+    __declspec(dllexport) bool InputManagerGetKeyState(unsigned int vkCode);
+    __declspec(dllexport) Vector2 InputManagerGetMousePosition();
+    
+    __declspec(dllexport) void InputManagerSetOnMouseMoveEvent(void(*handler)(MouseMoveEvent));
+    __declspec(dllexport) void InputManagerSetKeyStateEvent(void(*handler)(KeyStateEvent));
+}

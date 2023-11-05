@@ -9,5 +9,6 @@ var window = new AppWindow();
 Console.WriteLine("Create window");
 window.Create();
 
+InputManager.RegisterEvents();
 Console.WriteLine("Run window");
 window.Run();
