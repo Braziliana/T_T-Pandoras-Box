@@ -138,6 +138,13 @@ void WindowExtensions::SetTransparentBlur(const HWND hWnd)
         return;
     }
 
+    //Windows7
+    /*
+        DWM_BLURBEHIND blurBehind = {0};
+        bb.dwFlags = DWM_BB_ENABLE;
+        DwmEnableBlurBehindWindow(hWnd, &blurBehind);
+     */
+    
     // Windows >= 8
     const HRGN region = CreateRectRgn(0, 0, -1, -1);
     DWM_BLURBEHIND blurBehind;

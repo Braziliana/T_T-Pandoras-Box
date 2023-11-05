@@ -95,14 +95,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AppWindow.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
-    <ClCompile Include="Memory\ProcessMemory.cpp" />
-    <ClCompile Include="Menus\MenuItem.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
     <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
@@ -114,10 +111,10 @@
     <ClCompile Include="Rendering\TextRendering\TextRenderer.cpp" />
     <ClCompile Include="Rendering\Textures\Texture.cpp" />
     <ClCompile Include="Rendering\Textures\TextureAtlas.cpp" />
+    <ClCompile Include="Windows\AppWindow.cpp" />
     <ClCompile Include="Windows\WindowExtensions.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AppWindow.h" />
     <ClInclude Include="Glad\include\freetype\config\ftconfig.h" />
     <ClInclude Include="Glad\include\freetype\config\ftheader.h" />
     <ClInclude Include="Glad\include\freetype\config\ftmodule.h" />
@@ -602,8 +599,6 @@
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Memory\MemoryBuffer.h" />
     <ClInclude Include="Memory\Process.h" />
-    <ClInclude Include="Memory\ProcessMemory.h" />
-    <ClInclude Include="Menus\MenuItem.h" />
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
     <ClInclude Include="Rendering\Materials\Material.h" />
@@ -618,6 +613,7 @@
     <ClInclude Include="Rendering\Textures\Texture.h" />
     <ClInclude Include="Rendering\Textures\TextureAtlas.h" />
     <ClInclude Include="Rendering\Vertex.h" />
+    <ClInclude Include="Windows\AppWindow.h" />
     <ClInclude Include="Windows\WindowExtensions.h" />
     <ClInclude Include="Windows\WindowSettings.h" />
   </ItemGroup>

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <Windows.h>
 #include <string>
-#include "Rendering/Renderer.h"
 
 extern "C"{
     typedef void (*AppWindowUpdateCallback)(float deltaTime);
@@ -33,18 +32,8 @@ public:
     void Close();
     void SetUpdateCallback(AppWindowUpdateCallback callback);
 
-    void Release()
-    {
-        _isRunning = false;
-        Renderer::Destroy();
-        wglMakeCurrent(nullptr, nullptr);
-        wglDeleteContext(_hGlRc);
-        DestroyWindow(_hWnd);
-        UnregisterClass(_wc.lpszClassName, _wc.hInstance);
-        delete _instance;
-        _instance = nullptr;
-    }
-    
+    void Release();
+
     static AppWindow* Instance()
     {
         return _instance;
@@ -54,6 +43,7 @@ public:
     {
         if(_instance != nullptr)
         {
+            return _instance;
         }
         
         _instance = new AppWindow();

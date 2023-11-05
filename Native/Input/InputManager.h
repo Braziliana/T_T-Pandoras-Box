@@ -63,8 +63,8 @@ private:
     void PostMouseMoveEvent(const MouseMoveEvent& event);
 
 public:
-    InputManager(InputManager const&) = delete; // Prevent copying
-    void operator=(InputManager const&) = delete; // Prevent assignment
+    InputManager(InputManager const&) = delete;
+    void operator=(InputManager const&) = delete;
 
     static InputManager* GetInstance();
     

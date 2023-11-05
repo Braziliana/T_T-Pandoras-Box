@@ -6,8 +6,9 @@
 #include <iostream>
 #include <dwmapi.h>
 
-#include "Input/InputManager.h"
-#include "Windows/WindowExtensions.h"
+#include "../Input/InputManager.h"
+#include "../Rendering/Renderer.h"
+#include "WindowExtensions.h"
 
 AppWindow* AppWindow::_instance = nullptr;
 
@@ -129,4 +130,16 @@ void AppWindow::Close()
 void AppWindow::SetUpdateCallback(const AppWindowUpdateCallback callback)
 {
     _updateCallback = callback;
+}
+
+void AppWindow::Release()
+{
+    _isRunning = false;
+    Renderer::Destroy();
+    wglMakeCurrent(nullptr, nullptr);
+    wglDeleteContext(_hGlRc);
+    DestroyWindow(_hWnd);
+    UnregisterClass(_wc.lpszClassName, _wc.hInstance);
+    delete _instance;
+    _instance = nullptr;
 }
