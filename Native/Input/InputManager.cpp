@@ -7,9 +7,14 @@ bool InputManagerGetKeyState(unsigned vkCode)
     return InputManager::GetInstance()->GetKeyState(vkCode);
 }
 
-Vector2 InputManagerGetMousePosition()
+void InputManagerGetMousePosition(Vector2* vector)
 {
-    return InputManager::GetInstance()->GetMousePosition();
+    if(vector == nullptr)
+    {
+        return;
+    }
+    
+    *vector = InputManager::GetInstance()->GetMousePosition();
 }
 
 void InputManagerSetOnMouseMoveEvent(void(* handler)(MouseMoveEvent))
