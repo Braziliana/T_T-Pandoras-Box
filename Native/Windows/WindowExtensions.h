@@ -17,7 +17,7 @@ struct WindowCreateResult
 class WindowExtensions
 {
 public:
-    static void PrintLastError(std::wstring message);
+    static void PrintLastError(const std::wstring& message);
     static WindowCreateResult Create(const std::wstring& name, DWORD exStyle, DWORD style, int x, int y, int width, int height);
     static WindowCreateResult CreateOverlay(const std::wstring& name);
     static DWORD GetWindowStyle(HWND hWnd);

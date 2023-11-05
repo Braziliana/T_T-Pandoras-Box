@@ -20,6 +20,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     default:
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
+    
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
 
@@ -61,7 +63,7 @@ HGLRC CreateOpenGlContext(HDC hdc)
 }
 
 
-void WindowExtensions::PrintLastError(std::wstring message)
+void WindowExtensions::PrintLastError(const std::wstring& message)
 {
     const DWORD dwError = GetLastError();
     LPVOID lpMsgBuf;
@@ -144,7 +146,7 @@ void WindowExtensions::SetTransparentBlur(const HWND hWnd)
 
     if (FAILED(DwmIsCompositionEnabled(&composition)) || !composition)
     {
-        std::cerr << "DwmIsCompositionEnabled returned false" << std::endl;
+        PrintLastError(L"DwmIsCompositionEnabled returned false");
         return;
     }
 
@@ -166,7 +168,7 @@ void WindowExtensions::SetTransparentBlur(const HWND hWnd)
             
     if (FAILED(DwmEnableBlurBehindWindow(hWnd, &blurBehind)))
     {
-        std::cerr << "Failed to enable blur" << std::endl;
+        PrintLastError(L"Failed to enable blur");
     }
     DeleteObject(region);
 }
