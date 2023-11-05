@@ -1,14 +1,24 @@
 ﻿#include "WindowExtensions.h"
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg)
     {
     case WM_CLOSE:
         PostQuitMessage(0);
         return 0;
         
+    case WM_ACTIVATE:
+        if (wParam != WA_INACTIVE) {
+            SetWindowPos(hWnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+            return 0;
+        }
+        break;
+        
+    case WM_MOUSEACTIVATE:
+        return MA_NOACTIVATE;
+    
     default:
-        return DefWindowProc(hwnd, msg, wParam, lParam);
+        return DefWindowProc(hWnd, msg, wParam, lParam);
     }
 }
 
@@ -104,7 +114,7 @@ WindowCreateResult WindowExtensions::Create(const std::wstring& name, const DWOR
 
 WindowCreateResult WindowExtensions::CreateOverlay(const std::wstring& name)
 {
-    constexpr DWORD exStyle = WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED;
+    constexpr DWORD exStyle = WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_NOACTIVATE;
     constexpr DWORD style = WS_POPUP;
     const int width = GetSystemMetrics(SM_CXSCREEN);
     const int height = GetSystemMetrics(SM_CYSCREEN);
