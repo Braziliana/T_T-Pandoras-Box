@@ -42,12 +42,12 @@ public class InputManager
 
     public static void OnMouseMove(MouseMoveEvent evt)
     {
-        Console.WriteLine($"{evt.position.x} {evt.position.y} - {evt.delta.x} {evt.delta.y}");
+        //Console.WriteLine($"{evt.position.x} {evt.position.y} - {evt.delta.x} {evt.delta.y}");
     }
 
     public static void OnKeyState(KeyStateEvent evt)
     {
-        Console.WriteLine($"{evt.key} {evt.isDown}");
+        //Console.WriteLine($"{evt.key} {evt.isDown}");
     }
 
     public static void RegisterEvents()

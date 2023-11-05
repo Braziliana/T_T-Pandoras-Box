@@ -8,25 +8,43 @@
 
 Renderer* Renderer::_instance = nullptr;
 
-void RegisterRenderCallback(Renderer* renderer, const RenderCallback callback)
+void RegisterRenderCallback(const RenderCallback callback)
 {
-    if(renderer == nullptr) return;
-    
-    renderer->SetRenderCallback(callback);
+    Renderer::Instance()->SetRenderCallback(callback);
 }
 
-void RegisterRenderGuiCallback(Renderer* renderer, const RenderCallback callback)
+void RegisterRenderHudCallback(const RenderCallback callback)
 {
-    if(renderer == nullptr) return;
-    
-    renderer->SetRenderGuiCallback(callback);
+    Renderer::Instance()->SetRenderHudCallback(callback);
 }
 
-void RenderSetClearColor(Renderer* renderer, Color color)
+void RenderSetClearColor(const Color& color)
 {
-    if(renderer == nullptr) return;
-    
-    renderer->SetClearColor(color);
+    Renderer::Instance()->SetClearColor(color);
+}
+
+void RendererDrawRect2D(Vector2* position, Vector2* size, Color* color) {
+    Renderer::Instance()->DrawRect(*position, *size, *color);
+}
+
+void RendererDrawRect3D(Vector3* position, Vector2* size, Color* color) {
+    Renderer::Instance()->DrawRect(*position, *size, *color);
+}
+
+void RendererDrawCircle2D(Vector2* position, Vector2* size, Color* color) {
+    Renderer::Instance()->DrawCircle(*position, *size, *color);
+}
+
+void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color) {
+    Renderer::Instance()->DrawCircle(*position, *size, *color);
+}
+
+void RendererText(const char* text, Vector3* position, float size, Color* color) {
+    Renderer::Instance()->Text(std::string(text), *position, size, *color);
+}
+
+void RendererTextCenter(const char* text, Vector2* position, float size, Color* color) {
+    Renderer::Instance()->TextCenter(std::string(text), *position, size, *color);
 }
 
 Renderer::Renderer(const HDC hdc) : _hdc(hdc)
@@ -64,7 +82,7 @@ void Renderer::SetRenderCallback(const RenderCallback callback)
     _renderCallback = callback;
 }
 
-void Renderer::SetRenderGuiCallback(RenderCallback callback)
+void Renderer::SetRenderHudCallback(RenderCallback callback)
 {
     _renderGuiCallback = callback;
 }
@@ -92,11 +110,20 @@ void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Colo
 
 void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color)
 {
-    DrawCircle(Vector3(position.x, position.y, 0.0f), size, color);
 }
 
 void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Color& color)
 {
+}
+
+void Renderer::Text(const std::string& text, const Vector3& position, const float size, const Color& color) const
+{
+    _textRenderer->Draw(text, position, size, color);
+}
+
+void Renderer::TextCenter(const std::string& text, const Vector2& position, const float size, const Color& color) const
+{
+    _textRenderer->DrawCenter(text, position, size, color);
 }
 
 Renderer* Renderer::CreateInstance(const HDC hdc, int width, int height)

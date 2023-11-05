@@ -82,6 +82,7 @@ public:
 
 
 extern "C" {
+    __declspec(dllexport) void InputManagerReset();
     __declspec(dllexport) bool InputManagerGetKeyState(unsigned int vkCode);
     __declspec(dllexport) void InputManagerGetMousePosition(Vector2* vector);
     

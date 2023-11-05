@@ -1,6 +1,6 @@
 ﻿#include "MemoryBuffer.h"
 
-MemoryBuffer::MemoryBuffer(size_t bufferSize)
+MemoryBuffer::MemoryBuffer(unsigned int bufferSize)
 {
     size = bufferSize;
     bytes = new unsigned char[bufferSize];
@@ -12,7 +12,7 @@ void MemoryBuffer::Release()
     bytes = nullptr;
 }
 
-MemoryBuffer* Create(size_t size)
+MemoryBuffer* Create(unsigned int size)
 {
     return new MemoryBuffer(size);
 }

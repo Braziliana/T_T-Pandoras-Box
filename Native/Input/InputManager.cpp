@@ -2,6 +2,11 @@
 #include <Windows.h>
 
 
+void InputManagerReset()
+{
+    InputManager::GetInstance()->Reset();
+}
+
 bool InputManagerGetKeyState(unsigned vkCode)
 {
     return InputManager::GetInstance()->GetKeyState(vkCode);
@@ -243,9 +248,9 @@ void InputManager::ProcessInputEvents()
             const auto event = _mouseMoveEventQueue.front();
             _mouseMoveEventQueue.pop();
             
-            mouseMoveLock.unlock(); // Unlock while processing to prevent blocking other threads
+            mouseMoveLock.unlock();
             _onMouseMoveEvent(event);
-            mouseMoveLock.lock(); // Re-lock to check the queue
+            mouseMoveLock.lock();
         }
     }
 
@@ -256,9 +261,9 @@ void InputManager::ProcessInputEvents()
             const auto event = _keyStateEventQueue.front();
             _keyStateEventQueue.pop();
             
-            keyStateLock.unlock(); // Unlock while processing to prevent blocking other threads
+            keyStateLock.unlock();
             _onKeyStateEvent(event);
-            keyStateLock.lock(); // Re-lock to check the queue
+            keyStateLock.lock();
         }
     }
 }

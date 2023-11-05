@@ -1,11 +1,12 @@
 ﻿#include "Process.h"
 
+#include <iostream>
 #include <tlhelp32.h>
 
 Process* Process::_instance = nullptr;
 std::once_flag Process::_initInstanceFlag;
 
-bool ProcessRead(const uintptr_t address, const size_t size, unsigned char* result)
+bool ProcessRead(const uintptr_t address, const unsigned int size, unsigned char* result)
 {
     return Process::GetInstance()->Read(address, size, result);
 }
@@ -15,27 +16,34 @@ bool ProcessReadBuffer(const uintptr_t address, MemoryBuffer* memoryBuffer)
     return Process::GetInstance()->Read(address, memoryBuffer);
 }
 
-bool ProcessReadModule(const size_t offset, const size_t size, unsigned char* result)
+bool ProcessReadModule(const unsigned int offset, const unsigned int size, unsigned char* result)
 {
     return Process::GetInstance()->ReadModule(offset, size, result);
 }
 
-bool ProcessReadModuleBuffer(const size_t offset, MemoryBuffer* memoryBuffer)
+bool ProcessReadModuleBuffer(const unsigned int offset, MemoryBuffer* memoryBuffer)
 {
     return Process::GetInstance()->ReadModuleBuffer(offset, memoryBuffer);
 }
 
-void ProcessSetTargetProcessName(const std::wstring& processName)
+void ProcessSetTargetProcessName(const wchar_t* processName)
 {
     Process::GetInstance()->SetTargetProcessName(processName);
 }
 
-bool ProcessIsRunning()
+bool ProcessHook()
 {
-    return Process::GetInstance()->IsRunning();
+    auto r = Process::GetInstance()->Hook();
+    return r;
 }
 
-bool ProcessGetId()
+bool ProcessIsRunning()
+{
+    auto r =  Process::GetInstance()->IsRunning();
+    return r;
+}
+
+DWORD ProcessGetId()
 {
     return Process::GetInstance()->GetId();
 }
@@ -63,7 +71,7 @@ void Process::SetTargetProcessName(const std::wstring& processName)
     _processName = processName;
 }
 
-bool Process::Read(const uintptr_t address, const size_t size, unsigned char* result) const
+bool Process::Read(const uintptr_t address, const unsigned int size, unsigned char* result) const
 {
     size_t bytesRead;
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(address), result, size, &bytesRead);
@@ -75,13 +83,13 @@ bool Process::ReadBuffer(const uintptr_t address, MemoryBuffer* memoryBuffer) co
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(address), memoryBuffer, memoryBuffer->size, &bytesRead);
 }
 
-bool Process::ReadModule(const size_t offset, const size_t size, unsigned char* result) const
+bool Process::ReadModule(const unsigned int offset, const unsigned int size, unsigned char* result) const
 {
     size_t bytesRead;
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(_moduleBase + offset), result, size, &bytesRead);
 }
 
-bool Process::ReadModuleBuffer(const size_t offset, MemoryBuffer* memoryBuffer) const
+bool Process::ReadModuleBuffer(const unsigned int offset, MemoryBuffer* memoryBuffer) const
 {
     size_t bytesRead;
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(_moduleBase + offset), memoryBuffer, memoryBuffer->size, &bytesRead);
@@ -113,7 +121,7 @@ bool Process::IsRunning()
     return isRunning;
 }
 
-bool Process::GetProcess()
+bool Process::Hook()
 {
     _processId = GetProcessId(_processName);
     if(_processId == 0)

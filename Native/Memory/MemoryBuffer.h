@@ -3,21 +3,21 @@
 struct MemoryBuffer
 {
 public:
-    size_t size;
+    unsigned int size;
     unsigned char* bytes = nullptr;
 
-    MemoryBuffer(size_t bufferSize);
+    MemoryBuffer(unsigned int bufferSize);
 
     void Release();
 
     template <typename T>
-    T Read(const size_t offset)
+    T Read(const unsigned int offset)
     {
         return static_cast<T>(bytes + offset);
     }
 };
 
 extern "C" {
-    __declspec(dllexport) MemoryBuffer* Create(size_t size);
+    __declspec(dllexport) MemoryBuffer* Create(unsigned int size);
     __declspec(dllexport) void Release(MemoryBuffer* memoryBuffer);
 }
