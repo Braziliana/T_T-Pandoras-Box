@@ -5,6 +5,8 @@
 #include <random>
 #include <iostream>
 #include <dwmapi.h>
+
+#include "Input/InputManager.h"
 #include "Windows/WindowExtensions.h"
 
 AppWindow* AppWindow::_instance = nullptr;
@@ -81,6 +83,8 @@ AppWindow::AppWindow() : _isRunning(false) {
 auto lastRenderTime = std::chrono::high_resolution_clock::now();
 void AppWindow::Run()
 {
+    InputManager::GetInstance()->Start();
+    
     _isRunning = true;
     MSG msg;
     ZeroMemory(&msg, sizeof(MSG));
@@ -102,8 +106,8 @@ void AppWindow::Run()
             {
                 _updateCallback(deltaTime);
             }
-
             
+            InputManager::GetInstance()->ProcessInputEvents();
             Renderer::Instance()->Render(deltaTime);
         }
     }
@@ -114,6 +118,7 @@ void AppWindow::Run()
     wglDeleteContext(_hGlRc);
     DestroyWindow(_hWnd);
     UnregisterClass(_wc.lpszClassName, _wc.hInstance);
+    InputManager::GetInstance()->Stop();
 }
 
 void AppWindow::Close()
