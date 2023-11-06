@@ -105,6 +105,7 @@
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
     <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
     <ClCompile Include="Rendering\Materials\TexturedMaterial.cpp" />
+    <ClCompile Include="Rendering\Menus\MenuRenderer.cpp" />
     <ClCompile Include="Rendering\Primitives\CircleRenderer.cpp" />
     <ClCompile Include="Rendering\Primitives\RectRenderer.cpp" />
     <ClCompile Include="Rendering\Renderer.cpp" />
@@ -608,6 +609,7 @@
     <ClInclude Include="Rendering\Materials\Shader.h" />
     <ClInclude Include="Rendering\Materials\ShaderManager.h" />
     <ClInclude Include="Rendering\Materials\TexturedMaterial.h" />
+    <ClInclude Include="Rendering\Menus\MenuRenderer.h" />
     <ClInclude Include="Rendering\Primitives\CircleRenderer.h" />
     <ClInclude Include="Rendering\Primitives\RectRenderer.h" />
     <ClInclude Include="Rendering\Renderer.h" />

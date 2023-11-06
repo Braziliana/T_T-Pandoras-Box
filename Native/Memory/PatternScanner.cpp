@@ -44,13 +44,12 @@ DWORD64 PatternScanner::PatternScan(const DWORD64 begin, const DWORD64 end, cons
 
     for (DWORD64 i = begin; i < scanEnd; i += chunkSize)
     {
-        
-        DWORD oldprotect;
+        DWORD oldProtect;
         const unsigned int currentChunkSize = (i + chunkSize + overlapSize > scanEnd) ? static_cast<unsigned int>(scanEnd - i) : chunkSize + overlapSize;
         
-        VirtualProtect(reinterpret_cast<LPVOID>(i), currentChunkSize, PROCESS_VM_READ, &oldprotect);
+        VirtualProtect(reinterpret_cast<LPVOID>(i), currentChunkSize, PROCESS_VM_READ, &oldProtect);
         const bool read = Process::GetInstance()->Read(i, currentChunkSize, buffer); 
-	    VirtualProtect(reinterpret_cast<LPVOID>(i), currentChunkSize, oldprotect, &oldprotect);
+	    VirtualProtect(reinterpret_cast<LPVOID>(i), currentChunkSize, oldProtect, &oldProtect);
         if(read)
         {
             for (unsigned int j = 0; j < currentChunkSize; ++j) {

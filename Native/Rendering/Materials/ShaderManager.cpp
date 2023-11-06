@@ -37,11 +37,6 @@ Shader* ShaderManager::GetShader(const std::wstring& shaderName)
     return nullptr;
 }
 
-void ShaderManager::SetViewProjectionMatrix(const glm::mat4& matrix) const
-{
-    UpdateViewProjectionMatrixInShaders(matrix);
-}
-
 void ShaderManager::Release()
 {
     for (auto& pair : _shaders)
@@ -62,13 +57,4 @@ ShaderManager::ShaderManager()
         delete shader;
     }
     _shaders.clear();
-}
-
-void ShaderManager::UpdateViewProjectionMatrixInShaders(const glm::mat4& matrix) const
-{
-    for (auto& pair : _shaders) {
-        const auto& shader = pair.second;
-        shader->Use();
-        shader->SetMat4("viewProjectionMatrix", matrix);
-    }
 }

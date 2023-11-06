@@ -18,7 +18,7 @@ class Shader
 private:
     GLuint _program;
     mutable std::unordered_map<std::string, GLint> _uniformLocations;
-    
+
 public:
 
     Shader(const std::wstring& shaderPath, const std::wstring& shaderName);

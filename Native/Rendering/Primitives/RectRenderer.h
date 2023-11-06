@@ -9,6 +9,8 @@ struct RectData
     Vector3 position;
     Vector3 scale;
     Color color;
+    Color borderColor;
+    float borderSize;
 };
 
 class RectRenderer
@@ -22,8 +24,13 @@ public:
     ~RectRenderer();
     void Release();
     
-    void Draw(const Vector2& position, const Vector2& size, const Color& color) const;
-    void Draw(const Vector3& position, const Vector2& size, const Color& color) const;
+    void Filled(const Vector2& position, const Vector2& size, const Color& color) const;
+    void Filled(const Vector3& position, const Vector2& size, const Color& color) const;
+    void FilledBordered(const Vector2& position, const Vector2& size, const Color& color, const Color& borderColor, float borderSize) const;
+    void FilledBordered(const Vector3& position, const Vector2& size, const Color& color, const Color& borderColor, float borderSize) const;
+    void Border(const Vector2& position, const Vector2& size, const Color& color, float borderSize) const;
+    void Border(const Vector3& position, const Vector2& size, const Color& color, float borderSize) const;
+    
     void Flush2D() const;
     void Flush3D() const;
 };

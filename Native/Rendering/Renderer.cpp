@@ -5,8 +5,10 @@
 #include "../Input/InputManager.h"
 #include "../Math/Color.h"
 #include "glm/ext/matrix_clip_space.hpp"
+#include "Menus/MenuRenderer.h"
 
 Renderer* Renderer::_instance = nullptr;
+std::once_flag Renderer::_initInstanceFlag;
 
 void RegisterRenderCallback(const RenderCallback callback)
 {
@@ -24,11 +26,11 @@ void RenderSetClearColor(const Color& color)
 }
 
 void RendererDrawRect2D(Vector2* position, Vector2* size, Color* color) {
-    Renderer::Instance()->DrawRect(*position, *size, *color);
+    Renderer::Instance()->RectFilled(*position, *size, *color);
 }
 
 void RendererDrawRect3D(Vector3* position, Vector2* size, Color* color) {
-    Renderer::Instance()->DrawRect(*position, *size, *color);
+    Renderer::Instance()->RectFilled(*position, *size, *color);
 }
 
 void RendererDrawCircle2D(Vector2* position, Vector2* size, Color* color) {
@@ -70,9 +72,14 @@ bool Renderer::Init(const int width, const int height)
     _rectRenderer = new RectRenderer();
     _circleRenderer = new CircleRenderer();
     _textRenderer = new TextRenderer();
-    
+
+    glEnable(GL_MULTISAMPLE);
+
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+    
+    glDisable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
     
     return true;
 }
@@ -85,27 +92,6 @@ void Renderer::SetRenderCallback(const RenderCallback callback)
 void Renderer::SetRenderHudCallback(RenderCallback callback)
 {
     _renderGuiCallback = callback;
-}
-
-void Renderer::Begin3D() const
-{
-   
-}
-
-void Renderer::Begin2D() const
-{
-    const glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, -1.0f, 1.0f);
-    ShaderManager::GetInstance().SetViewProjectionMatrix(projection);
-}
-
-void Renderer::DrawRect(const Vector2& position, const Vector2& size, const Color& color) const
-{
-    _rectRenderer->Draw(position, size, color);
-}
-
-void Renderer::DrawRect(const Vector3& position, const Vector2& size, const Color& color) const
-{
-    _rectRenderer->Draw(position, size, color);
 }
 
 void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const
@@ -152,31 +138,40 @@ void Renderer::Destroy()
     }
 }
 
+glm::mat4 Renderer::Get2DMatrix() const
+{
+    return glm::ortho(0.0f, static_cast<float>(_width), static_cast<float>(_height), 0.0f, -1.0f, 1.0f);    
+}
+
+glm::mat4 Renderer::Get3DMatrix() const
+{
+    return _viewProjectionMatrix;    
+}
+
+void Renderer::Set3DMatrix(const glm::mat4& matrix)
+{
+    _viewProjectionMatrix = matrix;
+}
+
 void Renderer::Render(const float deltaTime)
 {
     glClearColor(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
-    Begin3D();
     if(_renderCallback != nullptr)
     {
         _renderCallback(deltaTime);
     }
     
-    Begin2D();    
     if(_renderGuiCallback != nullptr)
     {
         _renderGuiCallback(deltaTime);
     }
-    DrawRect(Vector2(100, 100), Vector2(100, 26), Color(0.0f, 1.0f, 0.0f, 1.0f));
+    
+    TextCenter("Test", Vector2(100, 100), 32, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    
     _rectRenderer->Flush2D();
-    DrawCircle(Vector2(500, 500), Vector2(100, 100), Color(1.0f, 0.0f, 1.0f, 1.0f));
     _circleRenderer->Flush2D();
-
-    Text("Test", Vector2(100, 100), 21, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    Text("WWW", Vector2(300, 400), 36, Color(1.0f, 0.0f, 0.0f, 1.0f));
-    TextCenter("WWW", Vector2(300, 400), 36, Color(0.0f, 1.0f, 0.0f, 1.0f));
-    Text("WabTcdGe`?,.=+-0", Vector2(300, 500), 48, Color(1.0f, 0.0f, 0.0f, 1.0f));
     _textRenderer->Flush2D();
     SwapBuffers(_hdc);
 }
@@ -208,4 +203,36 @@ void Renderer::Release()
 void Renderer::SetClearColor(const Color color)
 {
     _clearColor = color;
+}
+
+void Renderer::RectFilled(const Vector2& position, const Vector2& size, const Color& color) const
+{
+    _rectRenderer->Filled(position, size, color);
+}
+
+void Renderer::RectFilled(const Vector3& position, const Vector2& size, const Color& color) const
+{
+    _rectRenderer->Filled(position, size, color);
+}
+
+void Renderer::RectFilledBordered(const Vector2& position, const Vector2& size, const Color& color,
+    const Color& borderColor, const float borderSize) const
+{
+    _rectRenderer->FilledBordered(position, size, color, borderColor, borderSize);
+}
+
+void Renderer::RectFilledBordered(const Vector3& position, const Vector2& size, const Color& color,
+    const Color& borderColor, const float borderSize) const
+{
+    _rectRenderer->FilledBordered(position, size, color, borderColor, borderSize);
+}
+
+void Renderer::RectBorder(const Vector2& position, const Vector2& size, const Color& color, const float borderSize) const
+{
+    _rectRenderer->Border(position, size, color, borderSize);
+}
+
+void Renderer::RectBorder(const Vector3& position, const Vector2& size, const Color& color, const float borderSize) const
+{
+    _rectRenderer->Border(position, size, color, borderSize);
 }

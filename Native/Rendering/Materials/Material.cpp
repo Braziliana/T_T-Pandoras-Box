@@ -106,3 +106,8 @@ void Material::SetMat4(const GLint location, const glm::mat4& value) const
     _shader->Use();
     Shader::SetMat4(location, value);
 }
+
+void Material::BindShader() const
+{
+    _shader->Use();
+}

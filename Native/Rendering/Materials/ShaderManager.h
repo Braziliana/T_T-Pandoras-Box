@@ -15,15 +15,9 @@ public:
     Shader* CreateShader(const std::wstring& shaderName);
 
     Shader* GetShader(const std::wstring& shaderName);
-
-    void SetViewProjectionMatrix(const glm::mat4& matrix) const;
-
     void Release();
 
 private:
     ShaderManager();
-
-    void UpdateViewProjectionMatrixInShaders(const glm::mat4& matrix) const;
-
     std::unordered_map<std::wstring, Shader*> _shaders;
 };

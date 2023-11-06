@@ -8,12 +8,15 @@ layout(location = 2) in vec4 inColor;
 layout(location = 3) in vec3 instancePosition;
 layout(location = 4) in vec3 instanceScale;
 layout(location = 5) in vec4 instanceColor;
-
+layout(location = 6) in vec4 instanceBorderColor;
+layout(location = 7) in float instanceBorderSize;
 //GLOBAL
 uniform mat4 viewProjectionMatrix;
 
 out vec2 UV;
 out vec4 Color;
+out vec4 BorderColor;
+out vec2 BorderSize;
 
 void main() {
     mat4 model = mat4(1.0); // Initialize model matrix to identity
@@ -26,4 +29,24 @@ void main() {
     gl_Position = viewProjectionMatrix * model * vec4(inPosition, 1.0);
     UV = inUV;
     Color = inColor * instanceColor;
+    
+    BorderColor = instanceBorderColor;
+    
+    float x = instanceScale.x;
+    float y = max(instanceScale.y, instanceScale.z);
+    
+    if(x > y)
+    {
+        float aspect = x / y;
+        BorderSize = vec2(instanceBorderSize / aspect, instanceBorderSize);
+    }
+    else if(y < x)
+    {
+        float aspect = y / x;
+        BorderSize = vec2(instanceBorderSize, instanceBorderSize / aspect);
+    }
+    else
+    {
+        BorderSize = vec2(instanceBorderSize, instanceBorderSize);
+    }
 }

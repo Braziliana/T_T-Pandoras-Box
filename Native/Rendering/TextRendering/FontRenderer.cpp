@@ -1,5 +1,5 @@
 ﻿#include "FontRenderer.h"
-
+#include "../Renderer.h"
 
 FontRenderer::FontRenderer(Font* font)
 {
@@ -74,11 +74,13 @@ void FontRenderer::Draw(const std::string& text, const Vector3& position, const 
 
 void FontRenderer::Flush2D() const
 {
+    _fontMaterial->SetMat4("viewProjectionMatrix", Renderer::Instance()->Get2DMatrix());
     _buffer2D->Flush();
 }
 
 void FontRenderer::Flush3D() const
 {
+    _fontMaterial->SetMat4("viewProjectionMatrix", Renderer::Instance()->Get3DMatrix());
     _buffer3D->Flush();
 }
 

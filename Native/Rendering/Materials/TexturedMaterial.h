@@ -2,7 +2,7 @@
 #include "Material.h"
 #include "../Textures/Texture.h"
 
-class TexturedMaterial : Material
+class TexturedMaterial : public Material
 {
 private:
     const Texture* _texture;

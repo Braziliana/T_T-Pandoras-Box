@@ -30,4 +30,5 @@ public:
     void SetVec3(GLint location, const Vector3& value) const;
     void SetColor(GLint location, const Color& value) const;
     void SetMat4(GLint location, const glm::mat4& value) const;
+    void BindShader() const;
 };

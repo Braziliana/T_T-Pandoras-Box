@@ -1,4 +1,5 @@
 ﻿#include "CircleRenderer.h"
+#include "../Renderer.h"
 
 CircleRenderer::CircleRenderer()
 {
@@ -97,10 +98,12 @@ void CircleRenderer::Draw(const Vector3& position, const Vector2& size, const Co
 
 void CircleRenderer::Flush2D() const
 {
+    _material->SetMat4("viewProjectionMatrix", Renderer::Instance()->Get2DMatrix());
     _buffer2D->Flush();
 }
 
 void CircleRenderer::Flush3D() const
 {
+    _material->SetMat4("viewProjectionMatrix", Renderer::Instance()->Get3DMatrix());
     _buffer3D->Flush();
 }

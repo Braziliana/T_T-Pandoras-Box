@@ -5,6 +5,7 @@
 #include "TextRendering/TextRenderer.h"
 #include "../Math/Color.h"
 #include "../Math/Vector2.h"
+#include "glm/ext/matrix_clip_space.hpp"
 #include "Primitives/CircleRenderer.h"
 
 
@@ -30,6 +31,7 @@ private:
     RectRenderer* _rectRenderer = nullptr;
     CircleRenderer* _circleRenderer = nullptr;
     TextRenderer* _textRenderer = nullptr;
+    glm::mat4 _viewProjectionMatrix;
     
     Renderer(HDC hdc);
 public:
@@ -42,12 +44,17 @@ public:
     void Release();
 
     void SetClearColor(Color color);
-
-    void Begin3D() const;
-    void Begin2D() const;
     
-    void DrawRect(const Vector2& position, const Vector2& size, const Color& color) const;
-    void DrawRect(const Vector3& position, const Vector2& size, const Color& color) const;
+    // void DrawRect(const Vector2& position, const Vector2& size, const Color& color) const;
+    // void DrawRect(const Vector3& position, const Vector2& size, const Color& color) const;
+
+    void RectFilled(const Vector2& position, const Vector2& size, const Color& color) const;
+    void RectFilled(const Vector3& position, const Vector2& size, const Color& color) const;
+    void RectFilledBordered(const Vector2& position, const Vector2& size, const Color& color, const Color& borderColor, float borderSize) const;
+    void RectFilledBordered(const Vector3& position, const Vector2& size, const Color& color, const Color& borderColor, float borderSize) const;
+    void RectBorder(const Vector2& position, const Vector2& size, const Color& color, float borderSize) const;
+    void RectBorder(const Vector3& position, const Vector2& size, const Color& color, float borderSize) const;
+    
     void DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const;
     void DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const;
     void Text(const std::string& text, const Vector2& position, float size, const Color& color) const;
@@ -57,6 +64,10 @@ public:
     static Renderer* CreateInstance(HDC hdc, int width, int height);
     static Renderer* Instance();
     static void Destroy();
+
+    glm::mat4 Get2DMatrix() const;
+    glm::mat4 Get3DMatrix() const;
+    void Set3DMatrix(const glm::mat4& matrix);
 };
 
 extern "C" {

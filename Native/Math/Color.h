@@ -28,6 +28,21 @@ struct Color
     {
     }
 
+    static Color FromByte(unsigned char r, unsigned char g, unsigned char b)
+    {
+        return FromByte(r, g, b, 255);
+    }
+
+    static Color FromByte(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+    {
+        return {
+            static_cast<float>(r)/255.0f,
+            static_cast<float>(g)/255.0f,
+            static_cast<float>(b)/255.0f,
+            static_cast<float>(a)/255.0f,
+        };
+    }
+    
     Color& operator*=(const float scalar)
     {
         r *= scalar;
