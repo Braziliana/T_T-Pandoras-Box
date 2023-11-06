@@ -97,6 +97,13 @@ public unsafe class GameProcess
 
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr ProcessGetModuleBase();
+    
+    [DllImport("Native.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr PatternScannerFindOffset(string patternStr, int pos);
+
+    [DllImport("Native.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+    public static extern IntPtr PatternScannerFindOffsetWithMask(byte[] pattern, string mask, uint patternSize, int pos);
+
 
     public void SetTargetProcessName(string processName)
     {
@@ -131,5 +138,15 @@ public unsafe class GameProcess
     public bool ReadModule(uint offset, MemoryBuffer memoryBuffer)
     {
         return ProcessReadModuleBuffer(offset, memoryBuffer.GetInternalBuffer());
+    }
+
+    public IntPtr FindOffset(string patternStr, int pos)
+    {
+        return PatternScannerFindOffset(patternStr, pos);
+    }
+
+    public IntPtr FindOffset(byte[] pattern, string mask, uint patternSize, int pos)
+    {
+        return PatternScannerFindOffsetWithMask(pattern, mask, patternSize, pos);
     }
 }

@@ -99,6 +99,7 @@
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
+    <ClCompile Include="Memory\PatternScanner.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
@@ -599,6 +600,7 @@
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Memory\MemoryBuffer.h" />
+    <ClInclude Include="Memory\PatternScanner.h" />
     <ClInclude Include="Memory\Process.h" />
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />

@@ -1,7 +1,6 @@
 ﻿#include "Process.h"
 
 #include <iostream>
-#include <tlhelp32.h>
 
 Process* Process::_instance = nullptr;
 std::once_flag Process::_initInstanceFlag;
@@ -108,6 +107,29 @@ HANDLE Process::GetHandle() const
 uintptr_t Process::GetModuleBase() const
 {
     return _moduleBase;
+}
+
+MODULEENTRY32 Process::GetModuleInfo(const std::wstring& moduleName) const
+{
+    const HANDLE hSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, _processId);
+    if (hSnap != INVALID_HANDLE_VALUE)
+    {
+        MODULEENTRY32 modEntry;
+        modEntry.dwSize = sizeof(modEntry);
+        if (Module32First(hSnap, &modEntry))
+        {
+            do
+            {
+                if (modEntry.szModule == moduleName)
+                {
+                    return modEntry;
+                }
+            } while (Module32Next(hSnap, &modEntry));
+        }
+    }
+    
+    CloseHandle(hSnap);
+    return {};
 }
 
 bool Process::IsRunning()

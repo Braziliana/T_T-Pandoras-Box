@@ -2,8 +2,8 @@
 #include <mutex>
 #include <string>
 #include <Windows.h>
-
 #include "MemoryBuffer.h"
+#include <tlhelp32.h>
 
 class Process
 {
@@ -36,7 +36,7 @@ public:
     DWORD GetId() const;
     HANDLE GetHandle() const;
     uintptr_t GetModuleBase() const;
-    
+    MODULEENTRY32 GetModuleInfo(const std::wstring& moduleName) const;
     bool IsRunning();
     bool Hook();
     static DWORD GetProcessId(const std::wstring& processName);
