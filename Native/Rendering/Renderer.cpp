@@ -42,11 +42,11 @@ void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color) {
 }
 
 void RendererText(const char* text, Vector2* position, float size, Color* color) {
-    Renderer::Instance()->Text(std::string(text), *position, size, *color);
+    //Renderer::Instance()->Text(std::string(text), *position, size, *color);
 }
 
 void RendererTextCenter(const char* text, Vector2* position, float size, Color* color) {
-    Renderer::Instance()->TextCenter(std::string(text), *position, size, *color);
+    //Renderer::Instance()->TextCenter(std::string(text), *position, size, *color);
 }
 
 Renderer::Renderer(const HDC hdc) : _hdc(hdc)
@@ -104,14 +104,15 @@ void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Co
     _circleRenderer->Draw(position, size, color);
 }
 
-void Renderer::Text(const std::string& text, const Vector2& position, const float size, const Color& color) const
+void Renderer::Text(const std::string& text, const Vector2& position, const float size, const Color& color, const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const
 {
-    _textRenderer->Draw(text, position, size, color);
+    _textRenderer->Draw(text, position, size, color, textHorizontalOffset, textVerticalOffset);
 }
 
-void Renderer::TextCenter(const std::string& text, const Vector2& position, const float size, const Color& color) const
+auto Renderer::Text(const std::string& text, const Vector2& start, const Vector2& end, const float size, const Color& color,
+                    const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const -> void
 {
-    _textRenderer->DrawCenter(text, position, size, color);
+    _textRenderer->Draw(text, start, end, size, color, textHorizontalOffset, textVerticalOffset);
 }
 
 Renderer* Renderer::CreateInstance(const HDC hdc, int width, int height)
@@ -168,7 +169,12 @@ void Renderer::Render(const float deltaTime)
         _renderGuiCallback(deltaTime);
     }
     
-    TextCenter("Test", Vector2(100, 100), 32, Color(1.0f, 0.0f, 0.0f, 1.0f));
+    //TextCenter("Test", Vector2(100, 100), 32, Color(1.0f, 0.0f, 0.0f, 1.0f));
+
+    MenuRenderer::GetInstance()->Begin();
+    MenuRenderer::GetInstance()->DrawItem("Test");
+    MenuRenderer::GetInstance()->DrawSubMenu("Test", false);
+    MenuRenderer::GetInstance()->End();
     
     _rectRenderer->Flush2D();
     _circleRenderer->Flush2D();

@@ -37,14 +37,32 @@ void MenuRenderer::End()
     _menuOffset--;
 }
 
-void MenuRenderer::DrawItem(const std::string& text)
+Vector2 MenuRenderer::DrawItem(const std::string& text)
 {
+    const auto position = _nextPosition;
     const auto renderer = Renderer::Instance();
-    renderer->RectFilledBordered(_nextPosition, _itemSize, _itemColor, _borderColor, _borderWidth);
+    renderer->RectFilledBordered(position, _itemSize, _itemColor, _borderColor, _borderWidth);
 
-    auto textPosition = _nextPosition;
-    textPosition.x -= _itemSize.x / 2 - 10;
-    textPosition.y += _itemSize.y / 2 - _fontSize / 2;
-    renderer->Text(text, textPosition, _fontSize, _textColor);
+    DrawItemText(text, position, TextHorizontalOffset::Left, TextVerticalOffset::Center);
+    
     _nextPosition.y += _itemSize.y - _borderWidth;
+    return position;
+}
+
+Vector2 MenuRenderer::DrawSubMenu(const std::string& text, bool opened)
+{
+    const auto position = DrawItem(text);
+
+    DrawItemText(opened ? "<" : ">", position, TextHorizontalOffset::Right, TextVerticalOffset::Center);
+    
+    return position;
+}
+
+void MenuRenderer::DrawItemText(const std::string& text, const Vector2 position, const TextHorizontalOffset textHorizontalOffset,
+                                const TextVerticalOffset textVerticalOffset) const
+{
+    const auto halfSize = _itemSize/2;
+    const auto start = position - halfSize + Vector2(10, 10);
+    const auto end = position + halfSize - Vector2(10, 10);
+    Renderer::Instance()->Text(text, start, end, _fontSize, _textColor, textHorizontalOffset, textVerticalOffset);
 }

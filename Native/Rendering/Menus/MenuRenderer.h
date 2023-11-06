@@ -3,6 +3,7 @@
 #include <string>
 #include <stack>
 
+#include "../TextRendering/TextRenderer.h"
 #include "../../Math/Color.h"
 #include "../../Math/Vector2.h"
 
@@ -33,5 +34,8 @@ public:
     
     void Begin();
     void End();
-    void DrawItem(const std::string& text);
+    Vector2 DrawItem(const std::string& text);
+    Vector2 DrawSubMenu(const std::string& text, bool opened);
+
+    void DrawItemText(const std::string& text, Vector2 position, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
 };

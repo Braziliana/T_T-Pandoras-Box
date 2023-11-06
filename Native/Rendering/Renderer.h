@@ -57,9 +57,8 @@ public:
     
     void DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const;
     void DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const;
-    void Text(const std::string& text, const Vector2& position, float size, const Color& color) const;
-    void TextCenter(const std::string& text, const Vector2& position, float size, const Color& color) const;
-    
+    void Text(const std::string& text, const Vector2& position, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
+    void Text(const std::string& text, const Vector2& start, const Vector2& end, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
     
     static Renderer* CreateInstance(HDC hdc, int width, int height);
     static Renderer* Instance();

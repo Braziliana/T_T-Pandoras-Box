@@ -38,32 +38,99 @@ float TextRenderer::GetFontScale(const float size) const
     return size / static_cast<float>(_fontSize);
 }
 
-void TextRenderer::Draw(const std::string& text, const Vector2& position, const float size, const Color& color) const
+Vector2 TextRenderer::CalculatePosition(const std::string& text, const Vector2& position, float scaleFactor, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
+{
+    const Vector2 textSize = _default->GetTextSize(text, scaleFactor);
+    const Vector2 textHalfSize = textSize / 2.0f;
+    Vector2 finalPosition = position;
+
+    switch (textHorizontalOffset)
+    {
+    case TextHorizontalOffset::Center:
+        finalPosition.x -= textHalfSize.x;
+        break;
+    case TextHorizontalOffset::Right:
+        finalPosition.x -= textSize.x;
+        break;
+    case TextHorizontalOffset::Left:
+    case TextHorizontalOffset::None:
+        // No adjustment needed
+        break;
+    }
+
+    // Adjust for vertical offset
+    switch (textVerticalOffset)
+    {
+    case TextVerticalOffset::Center:
+        finalPosition.y += textHalfSize.y/2;
+        break;
+    case TextVerticalOffset::Top:
+        finalPosition.y -= textSize.y;
+        break;
+    case TextVerticalOffset::Bottom:
+    case TextVerticalOffset::None:
+        // No adjustment needed
+        break;
+    }
+    
+    return finalPosition;
+}
+
+Vector2 TextRenderer::CalculatePosition(const std::string& text, const Vector2& start, const Vector2& end, float scaleFactor, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
+{
+    Vector2 textSize = _default->GetTextSize(text, scaleFactor);
+    Vector2 textHalfSize = textSize / 2.0f;
+    Vector2 midpoint = (start + end) / 2.0f;
+    Vector2 finalPosition = midpoint;
+
+    switch (textHorizontalOffset) {
+    case TextHorizontalOffset::Center:
+        finalPosition.x -= textHalfSize.x;
+        break;
+    case TextHorizontalOffset::Right:
+        finalPosition.x = end.x - textSize.x;
+        break;
+    case TextHorizontalOffset::Left:
+        finalPosition.x = start.x;
+        break;
+    case TextHorizontalOffset::None:
+        break;
+    }
+
+    switch (textVerticalOffset) {
+    case TextVerticalOffset::Center:
+        finalPosition.y += textHalfSize.y / 2; //position.y + textSize.y/2
+        break;
+    case TextVerticalOffset::Top:
+        finalPosition.y = start.y - textSize.y;
+        break;
+    case TextVerticalOffset::Bottom:
+        finalPosition.y = end.y;
+        break;
+    case TextVerticalOffset::None:
+        break;
+    }
+
+    return finalPosition;
+}
+
+void TextRenderer::Draw(const std::string& text, const Vector2& position, const float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
+{
+    const float scaleFactor = GetFontScale(size);
+    _default->Draw(text, CalculatePosition(text, position, scaleFactor, textHorizontalOffset, textVerticalOffset), scaleFactor, color);
+}
+
+void TextRenderer::Draw(const std::string& text, const Vector2& start, const Vector2& end, float size,
+    const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
+{
+    const float scaleFactor = GetFontScale(size);
+    _default->Draw(text, CalculatePosition(text, start, end, scaleFactor, textHorizontalOffset, textVerticalOffset), scaleFactor, color);
+}
+
+void TextRenderer::Draw(const std::string& text, const Vector3& position, const float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
 {
     const float scaleFactor = GetFontScale(size);
     _default->Draw(text, position, scaleFactor, color);
-}
-
-void TextRenderer::Draw(const std::string& text, const Vector3& position, const float size, const Color& color) const
-{
-    const float scaleFactor = GetFontScale(size);
-    _default->Draw(text, position, scaleFactor, color);
-}
-
-void TextRenderer::DrawCenter(const std::string& text, const Vector2& position, const float size, const Color& color) const
-{
-    const float scaleFactor = GetFontScale(size);
-    const auto textSize = _default->GetTextSize(text, scaleFactor) / 2;
-    const auto drawPos = Vector2(position.x - textSize.x, position.y + textSize.y/2);
-    _default->Draw(text, drawPos, scaleFactor, color);
-}
-
-void TextRenderer::DrawCenter(const std::string& text, const Vector3& position, const float size, const Color& color) const
-{
-    const float scaleFactor = GetFontScale(size);
-    const auto textSize = _default->GetTextSize(text, scaleFactor) / 2;
-    const auto drawPos = Vector3(position.x - textSize.x, position.y, position.z - textSize.y);
-    _default->Draw(text, drawPos, scaleFactor, color);
 }
 
 void TextRenderer::Release()
