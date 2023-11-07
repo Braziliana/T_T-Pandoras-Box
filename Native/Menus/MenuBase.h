@@ -20,7 +20,7 @@ protected:
 public:
     MenuBase(const std::string& title, const Rect rect) : MenuItem(title, rect)
     {
-        _nextChildPosition = Vector2(_rect.x + ItemSize.x - BorderWidth, _rect.y);
+        _nextChildPosition = Vector2(_rect.x + ItemSize.x - BorderWidth, rect.y + rect.height - BorderWidth);
     }
     
     MenuBase(const MenuBase&) = delete;

@@ -24,13 +24,23 @@ void MenuBase::Render()
 {
     const auto mr = MenuRenderer::GetInstance();
 
-    mr->DrawSubMenu(_rect, _title, _open);
-    
+    if(!_items.empty())
+    {
+        mr->DrawSubMenu(_rect, _title, _open);
+    }
+    else
+    {
+        mr->DrawItem(_rect, _title);
+        return;
+    }
     if(!_open)
     {
         return;
     }
     
+    auto headerRect = _rect;
+    headerRect.Move(Vector2(ItemSize.x-BorderWidth, 0));
+    mr->DrawHeader(headerRect, _title);
     for(const auto item : _items)
     {
         item->Render();

@@ -12,7 +12,8 @@ private:
     
     static Menu* _instance;
     static std::once_flag _initInstanceFlag;
-    
+
+    bool _isMoving;
     int _mouseMoveHandlerId;
     int _keyStateEventHandlerId;
     Menu(const std::string& title, Rect rect);
@@ -41,7 +42,7 @@ public:
             return false;
         }
         
-        if(InputManager::GetInstance()->GetKeyState(VK_LBUTTON) && Contains(event.position))
+        if(_isMoving)
         {
             Move(event.delta);    
             return true;
@@ -57,10 +58,20 @@ public:
             _open = !_open;
             return true;
         }
-        if(event.key == VK_LBUTTON && event.isDown && Contains(InputManager::GetInstance()->GetMousePosition()))
+        if(event.key == VK_LBUTTON)
         {
-            return true;
+            if(_isMoving && !event.isDown)
+            {
+                _isMoving = false;
+            }
+            if(event.isDown && Contains(InputManager::GetInstance()->GetMousePosition()))
+            {
+                _isMoving = true;
+                return true;
+            }
         }
         return MenuBase::OnKeyStateEvent(event);
     }
+
+    void Render() override;
 };

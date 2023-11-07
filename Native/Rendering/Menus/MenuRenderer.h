@@ -32,6 +32,7 @@ public:
     void operator=(MenuRenderer const&) = delete;
     static MenuRenderer* GetInstance();
     
+    void DrawHeader(const Rect& rect, const std::string& text);
     void DrawItem(const Rect& rect, const std::string& text) const;
     void DrawSubMenu(const Rect& rect, const std::string& text, bool opened) const;
     void DrawToggle(const Rect& rect, const std::string& text, bool toggled) const;

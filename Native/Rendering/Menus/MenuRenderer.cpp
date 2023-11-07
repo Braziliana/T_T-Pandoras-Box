@@ -26,6 +26,14 @@ MenuRenderer* MenuRenderer::GetInstance()
     return _instance;
 }
 
+void MenuRenderer::DrawHeader(const Rect& rect, const std::string& text)
+{
+    const auto renderer = Renderer::Instance();
+    renderer->RectFilledBordered(rect.Center(), rect.Size(), _itemColor, _borderColor, MenuItem::BorderWidth);
+    const auto itemsRect = rect.Padding(MenuItem::BorderWidth + 3, 0);
+    DrawItemText(text, itemsRect, TextHorizontalOffset::Center, TextVerticalOffset::Center);
+}
+
 void MenuRenderer::DrawItem(const Rect& rect, const std::string& text) const
 {
     const auto renderer = Renderer::Instance();

@@ -9,10 +9,11 @@ private:
     float _maxValue;
     float _step;
     int _precision;
+    bool _isSliding;
     
 public:
     FloatSlider(const std::string& title, const Rect& rect, const float value, const float minValue, const float maxValue, const float step, const int precision)
-        : MenuItem(title, rect), _value(value), _minValue(minValue), _maxValue(maxValue), _step(step), _precision(precision)
+        : MenuItem(title, rect), _value(value), _minValue(minValue), _maxValue(maxValue), _step(step), _precision(precision), _isSliding(false)
     {
     }
 
@@ -49,7 +50,7 @@ public:
     static Rect GetSlideAreaRect(const Rect& rect)
     {
         const auto bottomSlot = GetMenuSlotRect(rect, 1);
-        return bottomSlot.Padding(MenuItem::BorderWidth + 10, 5);
+        return bottomSlot.Padding(MenuItem::BorderWidth + 10, BorderWidth + 4);
     }
 
     Rect GetSlideAreaRect() const
@@ -93,27 +94,42 @@ public:
     
     void Render() override;
 
-    bool OnMouseMoveEvent(MouseMoveEvent mouseMoveEvent) override
+    bool OnMouseMoveEvent(const MouseMoveEvent mouseMoveEvent) override
     {
-        if(!InputManager::GetInstance()->GetKeyState(VK_LBUTTON))
+        if(!_isSliding)
         {
             return false;
         }
-        
-        auto slidingArea = GetSlideAreaRect();
+
+        const auto slidingArea = GetSlideAreaRect();
         auto knobRect = GetKnobRect(slidingArea);
 
-        if(knobRect.Contains(mouseMoveEvent.position))
-        {
-            knobRect.Move(Vector2(mouseMoveEvent.delta.x, 0));
-            _value = CalculateValueFromKnobPosition(knobRect, slidingArea);
-        }
+        knobRect.Move(Vector2(mouseMoveEvent.delta.x, 0));
+        _value = CalculateValueFromKnobPosition(knobRect, slidingArea);
         
         return false;
     }
 
-    bool OnKeyStateEvent(KeyStateEvent event) override
+    bool OnKeyStateEvent(const KeyStateEvent event) override
     {
+        if(event.key == VK_LBUTTON)
+        {
+            if(_isSliding && !event.isDown)
+            {
+                _isSliding = false;
+            }
+            else
+            {
+                const auto slidingArea = GetSlideAreaRect();
+                const auto knobRect = GetKnobRect(slidingArea);
+                if(knobRect.Contains(InputManager::GetInstance()->GetMousePosition()))
+                {
+                    _isSliding = true;
+                    return true;
+                }
+            }
+        }
+        
         const auto decreasePosition = GetElementRect(0);
         if(event.key == VK_LBUTTON && event.isDown && decreasePosition.Contains(InputManager::GetInstance()->GetMousePosition()))
         {
@@ -124,6 +140,7 @@ public:
             }
             return true;
         }
+        
         const auto increasePosition = GetElementRect(1);
         if(event.key == VK_LBUTTON && event.isDown && increasePosition.Contains(InputManager::GetInstance()->GetMousePosition()))
         {
@@ -134,6 +151,7 @@ public:
             }
             return true;
         }
+
         return false;
     }
 };
