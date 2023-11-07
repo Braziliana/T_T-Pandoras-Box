@@ -4,6 +4,8 @@
 #include "Vertex.h"
 #include "../Input/InputManager.h"
 #include "../Math/Color.h"
+#include "../Menus/Menu.h"
+#include "../Menus/SubMenu.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "Menus/MenuRenderer.h"
 
@@ -154,6 +156,7 @@ void Renderer::Set3DMatrix(const glm::mat4& matrix)
     _viewProjectionMatrix = matrix;
 }
 
+bool t1;
 void Renderer::Render(const float deltaTime)
 {
     glClearColor(_clearColor.r, _clearColor.g, _clearColor.b, _clearColor.a);
@@ -169,12 +172,18 @@ void Renderer::Render(const float deltaTime)
         _renderGuiCallback(deltaTime);
     }
     
-    //TextCenter("Test", Vector2(100, 100), 32, Color(1.0f, 0.0f, 0.0f, 1.0f));
-
-    MenuRenderer::GetInstance()->Begin();
-    MenuRenderer::GetInstance()->DrawItem("Test");
-    MenuRenderer::GetInstance()->DrawSubMenu("Test", false);
-    MenuRenderer::GetInstance()->End();
+    if(!t1)
+    {
+        auto m = Menu::GetInstance();
+        m->AddSubMenu("Test sub menu 1");
+        auto mm = m->AddSubMenu("Test sub menu 2");
+        mm->AddSubMenu("Sub sub menu 1");
+        mm->AddToggle("Test toggle", false);
+        m->AddSubMenu("Test sub menu 3");
+        t1=true;
+    }
+    auto m = Menu::GetInstance();
+    m->Render();
     
     _rectRenderer->Flush2D();
     _circleRenderer->Flush2D();

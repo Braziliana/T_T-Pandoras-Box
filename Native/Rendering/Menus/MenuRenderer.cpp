@@ -1,5 +1,7 @@
 ﻿#include "MenuRenderer.h"
 #include "../Renderer.h"
+#include "../../Input/InputManager.h"
+#include "../../Menus/MenuItem.h"
 
 MenuRenderer* MenuRenderer::_instance = nullptr;
 std::once_flag MenuRenderer::_initInstanceFlag;
@@ -14,55 +16,32 @@ MenuRenderer* MenuRenderer::GetInstance()
     return _instance;
 }
 
-void MenuRenderer::Begin()
+void MenuRenderer::DrawItem(const Rect& rect, const std::string& text) const
 {
-    if(_menuOffset == 0)
-    {
-        _nextPosition = _position;
-        _prevPositionLayer.push(_nextPosition);
-    }
-    else
-    {
-        _prevPositionLayer.push(_nextPosition);
-        _nextPosition.x += _itemSize.x - _borderWidth;
-        _nextPosition.y -= _itemSize.y - _borderWidth;
-    }
-    _menuOffset++;
-}
-
-void MenuRenderer::End()
-{
-    _nextPosition = _prevPositionLayer.top();
-    _prevPositionLayer.pop();
-    _menuOffset--;
-}
-
-Vector2 MenuRenderer::DrawItem(const std::string& text)
-{
-    const auto position = _nextPosition;
     const auto renderer = Renderer::Instance();
-    renderer->RectFilledBordered(position, _itemSize, _itemColor, _borderColor, _borderWidth);
-
-    DrawItemText(text, position, TextHorizontalOffset::Left, TextVerticalOffset::Center);
-    
-    _nextPosition.y += _itemSize.y - _borderWidth;
-    return position;
+    renderer->RectFilledBordered(rect.Center(), rect.Size(), _itemColor, _borderColor, MenuItem::BorderWidth);
+    const auto itemsRect = rect.Padding(MenuItem::BorderWidth + 3, 0);
+    DrawItemText(text, itemsRect, TextHorizontalOffset::Left, TextVerticalOffset::Center);
 }
 
-Vector2 MenuRenderer::DrawSubMenu(const std::string& text, bool opened)
+void MenuRenderer::DrawSubMenu(const Rect& rect, const std::string& text, const bool opened) const
 {
-    const auto position = DrawItem(text);
-
-    DrawItemText(opened ? "<" : ">", position, TextHorizontalOffset::Right, TextVerticalOffset::Center);
-    
-    return position;
+    DrawItem(rect, text);
+    const auto elementPosition = MenuItem::GetElementRect(rect, 0);
+    DrawItemText(opened ? "<" : ">", elementPosition, TextHorizontalOffset::Center, TextVerticalOffset::Center);
 }
 
-void MenuRenderer::DrawItemText(const std::string& text, const Vector2 position, const TextHorizontalOffset textHorizontalOffset,
+void MenuRenderer::DrawToggle(const Rect& rect, const std::string& text, const bool toggled) const
+{
+    const auto renderer = Renderer::Instance();
+    DrawItem(rect, text);
+
+    const auto elementPosition = MenuItem::GetElementRect(rect, 0);
+    renderer->RectFilledBordered(elementPosition.Center(), elementPosition.Size(), toggled ? _borderColor : _itemColor, _borderColor, MenuItem::BorderWidth);
+}
+
+void MenuRenderer::DrawItemText(const std::string& text, const Rect& rect, const TextHorizontalOffset textHorizontalOffset,
                                 const TextVerticalOffset textVerticalOffset) const
 {
-    const auto halfSize = _itemSize/2;
-    const auto start = position - halfSize + Vector2(10, 10);
-    const auto end = position + halfSize - Vector2(10, 10);
-    Renderer::Instance()->Text(text, start, end, _fontSize, _textColor, textHorizontalOffset, textVerticalOffset);
+    Renderer::Instance()->Text(text, rect.GetStart(), rect.GetEnd(), _fontSize, _textColor, textHorizontalOffset, textVerticalOffset);
 }

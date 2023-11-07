@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-public class InputManager
+public class InputManager : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Vector2
@@ -25,37 +25,76 @@ public class InputManager
         public bool isDown;
     }
     
-    [DllImport("Native.dll")]
-    public static extern void InputManagerSetOnMouseMoveEvent(IntPtr handler);
-
-    [DllImport("Native.dll")]
-    public static extern void InputManagerSetKeyStateEvent(IntPtr handler);
-    
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void MouseMoveEventDelegate(MouseMoveEvent evt);
-
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void KeyStateEventDelegate(KeyStateEvent evt);
+    
+    
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int InputManagerAddMouseMoveHandler(IntPtr handler);
 
-    private static MouseMoveEventDelegate? _mouseMoveHandler;
-    private static KeyStateEventDelegate? _keyStateHandler;
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void InputManagerRemoveMouseMoveHandler(int key);
 
-    public static void OnMouseMove(MouseMoveEvent evt)
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern int InputManagerAddKeyStateEventHandler(IntPtr handler);
+
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void InputManagerRemoveKeyStateEventHandler(int key);
+    
+    public event MouseMoveEventDelegate? MouseMoveHandler;
+    public event KeyStateEventDelegate? KeyStateHandler;
+
+    private MouseMoveEventDelegate _mouseMoveEventDelegate;
+    private KeyStateEventDelegate _keyStateEventDelegate;
+    private int _mouseMoveHandlerId = -1;
+    private int _keyStateHandlerId = -1;
+
+    public InputManager()
     {
-        //Console.WriteLine($"{evt.position.x} {evt.position.y} - {evt.delta.x} {evt.delta.y}");
+        RegisterEvents();
     }
 
-    public static void OnKeyState(KeyStateEvent evt)
+    public void RegisterEvents()
     {
-        //Console.WriteLine($"{evt.key} {evt.isDown}");
+        _mouseMoveEventDelegate = new MouseMoveEventDelegate(OnMouseMoveHandler);
+        _keyStateEventDelegate = new KeyStateEventDelegate(OnKeyStateHandler);
+
+        _mouseMoveHandlerId = InputManagerAddMouseMoveHandler(Marshal.GetFunctionPointerForDelegate(_mouseMoveEventDelegate));
+        _keyStateHandlerId = InputManagerAddKeyStateEventHandler(Marshal.GetFunctionPointerForDelegate(_keyStateEventDelegate));
     }
 
-    public static void RegisterEvents()
+    private void OnMouseMoveHandler(MouseMoveEvent evt)
     {
-        _mouseMoveHandler = new MouseMoveEventDelegate(OnMouseMove);
-        _keyStateHandler = new KeyStateEventDelegate(OnKeyState);
+        MouseMoveHandler?.Invoke(evt);
+    }
 
-        InputManagerSetOnMouseMoveEvent(Marshal.GetFunctionPointerForDelegate(_mouseMoveHandler));
-        InputManagerSetKeyStateEvent(Marshal.GetFunctionPointerForDelegate(_keyStateHandler));
+    private void OnKeyStateHandler(KeyStateEvent evt)
+    {
+        KeyStateHandler?.Invoke(evt);
+    }
+
+    private void ReleaseUnmanagedResources()
+    {
+        if (_mouseMoveHandlerId > -1)
+        {
+            InputManagerRemoveMouseMoveHandler(_mouseMoveHandlerId);
+            _mouseMoveHandlerId = -1;
+        }
+        if (_keyStateHandlerId > -1)
+        {
+            InputManagerRemoveKeyStateEventHandler(_keyStateHandlerId);
+            _keyStateHandlerId = -1;
+        }
+    }
+
+    public void Dispose()
+    {
+        ReleaseUnmanagedResources();
+        GC.SuppressFinalize(this);
+    }
+
+    ~InputManager()
+    {
+        ReleaseUnmanagedResources();
     }
 }

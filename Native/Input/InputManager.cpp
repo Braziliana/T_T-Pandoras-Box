@@ -1,6 +1,8 @@
 ﻿#include "InputManager.h"
 #include <Windows.h>
 
+#include <utility>
+
 
 void InputManagerReset()
 {
@@ -22,20 +24,25 @@ void InputManagerGetMousePosition(Vector2* vector)
     *vector = InputManager::GetInstance()->GetMousePosition();
 }
 
-void InputManagerSetOnMouseMoveEvent(void(* handler)(MouseMoveEvent))
+
+int InputManagerAddMouseMoveHandler(MouseMoveEventHandler handler)
 {
-    auto lambda = [handler](MouseMoveEvent event) {
-        handler(event);
-    };
-    InputManager::GetInstance()->SetOnMouseMoveEvent(lambda);
+    return InputManager::GetInstance()->AddMouseMoveHandler(handler);
 }
 
-void InputManagerSetKeyStateEvent(void(* handler)(KeyStateEvent))
+void InputManagerRemoveMouseMoveHandler(int key)
 {
-    auto lambda = [handler](KeyStateEvent event) {
-        handler(event);
-    };
-    InputManager::GetInstance()->SetKeyStateEvent(lambda);
+    InputManager::GetInstance()->RemoveMouseMoveHandler(key);
+}
+
+int InputManagerAddKeyStateEventHandler(KeyStateEventHandler handler)
+{
+    return InputManager::GetInstance()->AddKeyStateEventHandler(handler);
+}
+
+void InputManagerRemoveKeyStateEventHandler(int key)
+{
+    InputManager::GetInstance()->RemoveKeyStateEventHandler(key);
 }
 
 InputManager* InputManager::_instance = nullptr;
@@ -241,7 +248,7 @@ Vector2 InputManager::GetMousePosition() const
 
 void InputManager::ProcessInputEvents()
 {
-    if(_onMouseMoveEvent)
+    if(!_onMouseMoveEvent.empty())
     {
         std::unique_lock<std::mutex> mouseMoveLock(_mouseMoveEventQueueMutex);
         while (!_mouseMoveEventQueue.empty()) {
@@ -249,12 +256,14 @@ void InputManager::ProcessInputEvents()
             _mouseMoveEventQueue.pop();
             
             mouseMoveLock.unlock();
-            _onMouseMoveEvent(event);
+            for (const auto handler: _onMouseMoveEvent) {
+                handler.second(event);
+            }
             mouseMoveLock.lock();
         }
     }
 
-    if(_onKeyStateEvent)
+    if(!_onKeyStateEvent.empty())
     {
         std::unique_lock<std::mutex> keyStateLock(_keyStateEventQueueMutex);
         while (!_keyStateEventQueue.empty()) {
@@ -262,23 +271,59 @@ void InputManager::ProcessInputEvents()
             _keyStateEventQueue.pop();
             
             keyStateLock.unlock();
-            _onKeyStateEvent(event);
+            for (const auto handler : _onKeyStateEvent) {
+                handler.second(event);
+            }
             keyStateLock.lock();
         }
     }
 }
 
-void InputManager::SetOnMouseMoveEvent(MouseMoveEventHandler handler)
+int InputManager::AddMouseMoveHandler(MouseMoveEventHandler handler)
 {
-    _onMouseMoveEvent = std::move(handler);
+    const auto key = _mouseEventListenerId;
+    _onMouseMoveEvent[key] = handler;
+    _mouseEventListenerId++;
+    return key;
 }
 
-void InputManager::SetKeyStateEvent(KeyStateEventHandler handler)
+int InputManager::AddMouseMoveHandler(std::function<void(MouseMoveEvent)> handler)
 {
-    _onKeyStateEvent = std::move(handler);
+    const auto key = _mouseEventListenerId;
+    _onMouseMoveEvent[key] = std::move(handler);
+    _mouseEventListenerId++;
+    return key;
+}
+
+void InputManager::RemoveMouseMoveHandler(const int key)
+{
+    _onMouseMoveEvent.erase(key);
+}
+
+int InputManager::AddKeyStateEventHandler(KeyStateEventHandler handler)
+{
+    const auto key = keyStateEventId;
+    _onKeyStateEvent[key] = handler;
+    keyStateEventId++;
+    return key;
+}
+
+int InputManager::AddKeyStateEventHandler(std::function<void(KeyStateEvent)> handler)
+{
+    const auto key = keyStateEventId;
+    _onKeyStateEvent[key] = std::move(handler);
+    keyStateEventId++;
+    return key;
+}
+
+void InputManager::RemoveKeyStateEventHandler(int key)
+{
+    _onKeyStateEvent.erase(key);
 }
 
 InputManager::~InputManager()
 {
     Stop();
 }
+
+

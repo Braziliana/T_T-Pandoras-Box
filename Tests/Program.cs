@@ -15,6 +15,8 @@ Console.WriteLine("hook: " + gp.Hook());
 Console.WriteLine("isRunning: " + gp.IsProcessRunning());
 
 Console.WriteLine(gp.FindOffset("48 8B 05 ? ? ? ? 4C 8B D2 4C 8B C1", 3).ToString("X"));
-InputManager.RegisterEvents();
+var im = new InputManager();
+//im.KeyStateHandler += delegate(InputManager.KeyStateEvent evt) { Console.WriteLine($"{evt.key} {evt.isDown}"); };
+//im.MouseMoveHandler += delegate(InputManager.MouseMoveEvent evt) { Console.WriteLine($"{evt.position.x} {evt.position.y} - {evt.delta.x} {evt.delta.y}"); };
 Console.WriteLine("Run window");
 window.Run();

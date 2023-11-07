@@ -69,6 +69,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -86,6 +87,7 @@
       <PreprocessorDefinitions>NDEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -98,9 +100,15 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Math\Rect.cpp" />
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
     <ClCompile Include="Memory\PatternScanner.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
+    <ClCompile Include="Menus\Menu.cpp" />
+    <ClCompile Include="Menus\MenuBase.cpp" />
+    <ClCompile Include="Menus\MenuItem.cpp" />
+    <ClCompile Include="Menus\SubMenu.cpp" />
+    <ClCompile Include="Menus\Toggle.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
     <ClCompile Include="Rendering\Materials\Shader.cpp" />
     <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
@@ -598,11 +606,17 @@
     <ClInclude Include="Glad\include\KHR\khrplatform.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Math\Color.h" />
+    <ClInclude Include="Math\Rect.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Memory\MemoryBuffer.h" />
     <ClInclude Include="Memory\PatternScanner.h" />
     <ClInclude Include="Memory\Process.h" />
+    <ClInclude Include="Menus\Menu.h" />
+    <ClInclude Include="Menus\MenuBase.h" />
+    <ClInclude Include="Menus\MenuItem.h" />
+    <ClInclude Include="Menus\SubMenu.h" />
+    <ClInclude Include="Menus\Toggle.h" />
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
     <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
     <ClInclude Include="Rendering\Materials\Material.h" />
@@ -628,6 +642,9 @@
     <Content Include="Glad\lib\freetype.lib" />
     <Content Include="Glad\lib\glew32.lib" />
     <Content Include="Glad\lib\glew32s.lib" />
+    <Content Include="Resources\Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Shaders\Circle.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -648,9 +665,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Fonts\DroidSans.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\Fonts\OpenSans-Regular.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

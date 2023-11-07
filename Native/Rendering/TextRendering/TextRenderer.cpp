@@ -2,7 +2,7 @@
 
 TextRenderer::TextRenderer()
 {
-    if(LoadFont("default", "Resources/Fonts/DroidSans.ttf"))
+    if(LoadFont("default", "Resources/Fonts/Roboto-Regular.ttf"))
     {
         _default = _fontRenderers["default"];
     }

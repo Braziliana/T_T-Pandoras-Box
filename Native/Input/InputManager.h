@@ -6,6 +6,7 @@
 #include <functional>
 #include <mutex>
 #include <queue>
+#include <map>
 
 #include "../Math/Vector2.h"
 
@@ -21,12 +22,15 @@ struct KeyStateEvent
     bool isDown;
 };
 
+
+extern "C"{
+    typedef void (*MouseMoveEventHandler)(MouseMoveEvent mouseMoveEvent);
+    typedef void (*KeyStateEventHandler)(KeyStateEvent mouseMoveEvent);
+}
+
+
 class InputManager
 {
-public:
-    using MouseMoveEventHandler = std::function<void(MouseMoveEvent)>;
-    using KeyStateEventHandler = std::function<void(KeyStateEvent)>;
-    
 private:
     static InputManager* _instance;
     static std::once_flag _initInstanceFlag;
@@ -36,9 +40,12 @@ private:
     std::array<std::atomic<bool>, 256> _keyStates; 
     std::atomic<Vector2> _mousePosition{Vector2(0, 0)};
     std::atomic<Vector2> _mouseMoveDelta{Vector2(0, 0)};
+
+    int _mouseEventListenerId = 1;
+    std::map<int, std::function<void(MouseMoveEvent)>> _onMouseMoveEvent;
     
-    MouseMoveEventHandler _onMouseMoveEvent;
-    KeyStateEventHandler _onKeyStateEvent;
+    int keyStateEventId = 1;
+    std::map<int, std::function<void(KeyStateEvent)>> _onKeyStateEvent;
     
     HHOOK _keyboardHook;
     HHOOK _mouseHook;
@@ -74,8 +81,13 @@ public:
     bool GetKeyState(unsigned int vkCode) const;
     Vector2 GetMousePosition() const;
     void ProcessInputEvents();
-    void SetOnMouseMoveEvent(MouseMoveEventHandler handler);
-    void SetKeyStateEvent(KeyStateEventHandler handler);
+
+    int AddMouseMoveHandler(MouseMoveEventHandler handler);
+    int AddMouseMoveHandler(std::function<void(MouseMoveEvent)> handler);
+    void RemoveMouseMoveHandler(int key);
+    int AddKeyStateEventHandler(KeyStateEventHandler handler);
+    int AddKeyStateEventHandler(std::function<void(KeyStateEvent)> handler);
+    void RemoveKeyStateEventHandler(int key);
 
     ~InputManager();
 };
@@ -86,6 +98,8 @@ extern "C" {
     __declspec(dllexport) bool InputManagerGetKeyState(unsigned int vkCode);
     __declspec(dllexport) void InputManagerGetMousePosition(Vector2* vector);
     
-    __declspec(dllexport) void InputManagerSetOnMouseMoveEvent(void(*handler)(MouseMoveEvent));
-    __declspec(dllexport) void InputManagerSetKeyStateEvent(void(*handler)(KeyStateEvent));
+    __declspec(dllexport) int InputManagerAddMouseMoveHandler(MouseMoveEventHandler handler);
+    __declspec(dllexport) void InputManagerRemoveMouseMoveHandler(int key);
+    __declspec(dllexport) int InputManagerAddKeyStateEventHandler(KeyStateEventHandler handler);
+    __declspec(dllexport) void InputManagerRemoveKeyStateEventHandler(int key);
 }

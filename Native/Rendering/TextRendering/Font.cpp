@@ -5,7 +5,7 @@ Font::Font(const FT_Face face)
     int maxWidth = 0;
     int maxHeight = 0;
     int numGlyphs = 0;
-    for (unsigned char c = 32; c < 127; ++c) {
+    for (unsigned char c = 0; c < 127; ++c) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             std::cerr << "Failed to load Glyph" << std::endl;
             continue;
@@ -23,7 +23,7 @@ Font::Font(const FT_Face face)
     memset(data, 0, dataSize);
         
     unsigned int x = 0, y = 0;
-    for (char c = 32; c < 127; ++c) {
+    for (char c = 0; c < 127; ++c) {
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) continue;
 
         const auto& glyph = face->glyph;
@@ -76,7 +76,7 @@ Font::Font(const FT_Face face)
 
 FontCharacterInstance Font::GetInstance(char c, Vector2& position, float scale, Color color)
 {
-    if(c < 32 || c >= 127)
+    if(c < 0 || c >= 127)
     {
         c = '?';
     }
@@ -99,7 +99,7 @@ FontCharacterInstance Font::GetInstance(char c, Vector2& position, float scale, 
 
 FontCharacterInstance Font::GetInstance(char c, Vector3& position, const float scale, const Color color)
 {
-    if(c < 32 || c >= 127)
+    if(c < 0 || c >= 127)
     {
         c = '?';
     }
@@ -124,7 +124,7 @@ Vector2 Font::GetTextSize(const std::string& text, const float scale)
     float totalWidth = 0;
     float maxHeight = 0;
     for (char c : text) {
-        if(c < 32 || c >= 127)
+        if(c < 0 || c >= 127)
         {
             c = '?';
         }
