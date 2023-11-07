@@ -39,6 +39,11 @@ struct Vector2
         return {x * scalar, y * scalar};
     }
 
+    Vector2 operator*(const Vector2& other) const
+    {
+        return {x * other.x, y * other.y};
+    }
+    
     Vector2 operator/(const float scalar) const
     {
         if (scalar == 0.0f)

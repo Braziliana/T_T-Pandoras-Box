@@ -33,11 +33,6 @@ public:
     }
 
     static Menu* GetInstance();
-
-    Rect GetChildRect() const override
-    {
-        return {_rect.x, _rect.y + static_cast<float>(_items.size() + 1) * (ItemSize.y - BorderWidth), ItemSize.x, ItemSize.y};
-    }
     
     bool OnMouseMoveEvent(MouseMoveEvent event) override
     {

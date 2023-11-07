@@ -9,6 +9,7 @@ Menu::Menu(const std::string& title, const Rect rect): MenuBase(title, rect), _m
     const auto im = InputManager::GetInstance();
     _mouseMoveHandlerId = im->AddMouseMoveHandler([this](const MouseMoveEvent event) { this->OnMouseMoveEvent(event); });
     _keyStateEventHandlerId = im->AddKeyStateEventHandler([this](const KeyStateEvent event) { this->OnKeyStateEvent(event); });
+    _nextChildPosition = Vector2(_rect.x, _rect.y + _rect.height - BorderWidth);
 }
 
 Menu* Menu::GetInstance()

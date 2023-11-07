@@ -4,6 +4,7 @@
 #include "../../Input/InputManager.h"
 #include "MenuItem.h"
 
+class FloatSlider;
 class Toggle;
 class SubMenu;
 
@@ -13,11 +14,13 @@ protected:
     bool _open = false;
     std::vector<MenuItem*> _items;
 
-    virtual Rect GetChildRect() const;
+    Vector2 _nextChildPosition;
+    virtual Rect GetChildRect(float slots) const;
+    virtual void UpdateNextChildPosition();
 public:
     MenuBase(const std::string& title, const Rect rect) : MenuItem(title, rect)
     {
-        
+        _nextChildPosition = Vector2(_rect.x + ItemSize.x - BorderWidth, _rect.y);
     }
     
     MenuBase(const MenuBase&) = delete;
@@ -57,9 +60,11 @@ public:
 
     SubMenu* AddSubMenu(const std::string& title);
     Toggle* AddToggle(const std::string& title, bool toggled);
+    FloatSlider* AddFloatSlider(const std::string& title, float value, float minValue, float maxValue, float step, int precision);
 
     void AddItem(MenuItem* item) {
         _items.push_back(item);
+        UpdateNextChildPosition();
     }
 
     void RemoveItem(const MenuItem* itemToRemove) {

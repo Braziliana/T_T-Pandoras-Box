@@ -104,6 +104,7 @@
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
     <ClCompile Include="Memory\PatternScanner.cpp" />
     <ClCompile Include="Memory\Process.cpp" />
+    <ClCompile Include="Menus\FloatSlider.cpp" />
     <ClCompile Include="Menus\Menu.cpp" />
     <ClCompile Include="Menus\MenuBase.cpp" />
     <ClCompile Include="Menus\MenuItem.cpp" />
@@ -612,6 +613,7 @@
     <ClInclude Include="Memory\MemoryBuffer.h" />
     <ClInclude Include="Memory\PatternScanner.h" />
     <ClInclude Include="Memory\Process.h" />
+    <ClInclude Include="Menus\FloatSlider.h" />
     <ClInclude Include="Menus\Menu.h" />
     <ClInclude Include="Menus\MenuBase.h" />
     <ClInclude Include="Menus\MenuItem.h" />

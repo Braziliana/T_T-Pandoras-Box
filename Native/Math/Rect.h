@@ -66,6 +66,6 @@ public:
     }
     Rect Padding(const float paddingX, const float paddingY) const
     {
-        return {x + paddingX, y + paddingY, width-paddingX, height-paddingY};
+        return {x + paddingX, y + paddingY, width-paddingX*2, height-paddingY*2};
     }
 };

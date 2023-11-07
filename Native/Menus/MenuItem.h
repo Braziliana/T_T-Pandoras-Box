@@ -69,5 +69,14 @@ public:
 
         return {x, itemsRect.y, ElementSize, ElementSize};
     }
+    
+    Rect GetMenuSlotRect(const int slot) const
+    {
+        return GetMenuSlotRect(_rect, slot);
+    }
 
+    static Rect GetMenuSlotRect(Rect rect, const int slot)
+    {
+        return {rect.x, rect.y + (ItemSize.y - BorderWidth) * static_cast<float>(slot), ItemSize.x, ItemSize.y};
+    }
 };
