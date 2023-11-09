@@ -1,5 +1,5 @@
 ﻿#include "MenuBase.h"
-#include "../Rendering/Menus/MenuRenderer.h"
+#include "../Rendering/Renderer.h"
 #include "SubMenu.h"
 #include "Toggle.h"
 #include "FloatSlider.h"
@@ -9,38 +9,34 @@ Rect MenuBase::GetChildRect(float slots) const
     float extra = 0.0f;
     if(slots>1)
     {
-        extra = (slots-1)*BorderWidth;
+        extra = (slots-1)*DefaultMenuStyle.Border;
     }
-    return {_nextChildPosition.x, _nextChildPosition.y, ItemSize.x, ItemSize.y * slots - extra};
+    return {_nextChildPosition.x, _nextChildPosition.y, DefaultMenuStyle.ItemSize.x, DefaultMenuStyle.ItemSize.y * slots - extra};
 }
 
 void MenuBase::UpdateNextChildPosition()
 {
-    auto rect = _items.back()->GetRect();
-    _nextChildPosition.y = rect.y + rect.height - BorderWidth;
+    const auto rect = _items.back()->GetRect();
+    _nextChildPosition.y = rect.y + rect.height - DefaultMenuStyle.Border;
+}
+
+void MenuBase::DrawHeader() const
+{
+    const auto renderer = Renderer::Instance();
+    renderer->RectFilledBordered(_headerRect.Center(), _headerRect.Size(), DefaultMenuStyle.ItemColor, DefaultMenuStyle.BorderColor, DefaultMenuStyle.Border);
+    const auto itemsRect = _headerRect.Padding(DefaultMenuStyle.ContentPadding);
+    renderer->Text(_title, itemsRect.GetStart(), itemsRect.GetEnd(), DefaultMenuStyle.FontSize, DefaultMenuStyle.TextColor, TextHorizontalOffset::Center, TextVerticalOffset::Center);
 }
 
 void MenuBase::Render()
 {
-    const auto mr = MenuRenderer::GetInstance();
-
-    if(!_items.empty())
-    {
-        mr->DrawSubMenu(_rect, _title, _open);
-    }
-    else
-    {
-        mr->DrawItem(_rect, _title);
-        return;
-    }
     if(!_open)
     {
         return;
     }
+
+    DrawHeader();
     
-    auto headerRect = _rect;
-    headerRect.Move(Vector2(ItemSize.x-BorderWidth, 0));
-    mr->DrawHeader(headerRect, _title);
     for(const auto item : _items)
     {
         item->Render();

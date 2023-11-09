@@ -34,19 +34,6 @@ void main() {
     
     float x = instanceScale.x;
     float y = max(instanceScale.y, instanceScale.z);
-    
-    if(x > y)
-    {
-        float aspect = x / y;
-        BorderSize = vec2(instanceBorderSize / aspect, instanceBorderSize);
-    }
-    else if(y < x)
-    {
-        float aspect = y / x;
-        BorderSize = vec2(instanceBorderSize, instanceBorderSize / aspect);
-    }
-    else
-    {
-        BorderSize = vec2(instanceBorderSize, instanceBorderSize);
-    }
+
+    BorderSize = vec2(instanceBorderSize / x, instanceBorderSize / y);
 }

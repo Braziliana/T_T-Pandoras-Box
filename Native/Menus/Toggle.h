@@ -1,21 +1,22 @@
 ﻿#pragma once
 #include "MenuItem.h"
-#include "../Rendering/Menus/MenuRenderer.h"
 
 class Toggle : public MenuItem
 {
-private:
+protected:
     bool _toggled;
+    Rect _toggleElement;
+    
 public:
-    Toggle(const std::string& title, const Rect& rect, bool toggled)
+    Toggle(const std::string& title, const Rect& rect, const bool toggled)
         : MenuItem(title, rect), _toggled(toggled)
     {
+        _toggleElement =  DefaultMenuStyle.GetElementRect(_rect, 0);
     }
 
-    bool OnKeyStateEvent(KeyStateEvent event) override
+    bool OnKeyStateEvent(const KeyStateEvent event) override
     {
-        const auto togglePosition = GetElementRect(0);
-        if(event.key == VK_LBUTTON && event.isDown && togglePosition.Contains(InputManager::GetInstance()->GetMousePosition()))
+        if(event.key == VK_LBUTTON && event.isDown && _toggleElement.Contains(InputManager::GetInstance()->GetMousePosition()))
         {
             _toggled = !_toggled;
             return true;
@@ -24,8 +25,17 @@ public:
         return false;
     }
 
-    void Render() override
+    void Render() override;
+
+    void Move(const Vector2& position) override
     {
-        MenuRenderer::GetInstance()->DrawToggle(_rect, _title, _toggled);
+        MenuItem::Move(position);
+        _toggleElement =  DefaultMenuStyle.GetElementRect(_rect, 0);
+    }
+
+    void UpdatePosition(const Rect& rect) override
+    {
+        MenuItem::UpdatePosition(rect);
+        _toggleElement =  DefaultMenuStyle.GetElementRect(_rect, 0);
     }
 };

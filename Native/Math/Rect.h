@@ -11,6 +11,8 @@ public:
     float width;
     float height;
 
+    Rect() : Rect(0, 0, 0, 0) {  }
+    
     Rect(const float x, const float y, const float width, const float height) : x(x), y(y), width(width), height(height)
     {
         
@@ -67,5 +69,10 @@ public:
     Rect Padding(const float paddingX, const float paddingY) const
     {
         return {x + paddingX, y + paddingY, width-paddingX*2, height-paddingY*2};
+    }
+    
+    Rect Padding(const Vector2& padding) const
+    {
+        return Padding(padding.x, padding.y);
     }
 };

@@ -13,14 +13,16 @@ class MenuBase : public MenuItem
 protected:
     bool _open = false;
     std::vector<MenuItem*> _items;
-
+    Rect _headerRect;
     Vector2 _nextChildPosition;
     virtual Rect GetChildRect(float slots) const;
     virtual void UpdateNextChildPosition();
+    void DrawHeader() const;
 public:
     MenuBase(const std::string& title, const Rect rect) : MenuItem(title, rect)
     {
-        _nextChildPosition = Vector2(_rect.x + ItemSize.x - BorderWidth, rect.y + rect.height - BorderWidth);
+        _headerRect = Rect(_rect.x + DefaultMenuStyle.ItemSize.x - DefaultMenuStyle.Border, rect.y, DefaultMenuStyle.ItemSize.x, DefaultMenuStyle.ItemSize.y);
+        _nextChildPosition = Vector2(_headerRect.x, _headerRect.y + _headerRect.height - DefaultMenuStyle.Border);
     }
     
     MenuBase(const MenuBase&) = delete;
@@ -42,16 +44,17 @@ public:
     {
         const auto movePosition = Vector2(rect.x - _rect.x, rect.y - _rect.y);
         MenuItem::UpdatePosition(rect);
-
+        _headerRect.Move(movePosition);
         for (const auto item : _items)
         {
             item->Move(movePosition);
         }
     }
 
-    void Move(const Vector2 position) override
+    void Move(const Vector2& position) override
     {
         MenuItem::Move(position);
+        _headerRect.Move(position);
         for (const auto item : _items)
         {
             item->Move(position);

@@ -7,7 +7,6 @@
 #include "../Menus/Menu.h"
 #include "../Menus/SubMenu.h"
 #include "glm/ext/matrix_clip_space.hpp"
-#include "Menus/MenuRenderer.h"
 
 Renderer* Renderer::_instance = nullptr;
 std::once_flag Renderer::_initInstanceFlag;

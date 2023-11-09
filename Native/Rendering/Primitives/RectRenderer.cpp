@@ -106,23 +106,23 @@ float BorderSize(const Vector2& size, const float borderSize)
 void RectRenderer::FilledBordered(const Vector2& position, const Vector2& size, const Color& color, const Color& borderColor,
                                   const float borderSize) const
 {
-    _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color, borderColor, BorderSize(size, borderSize)});
+    _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color, borderColor, borderSize});
 }
 
 void RectRenderer::FilledBordered(const Vector3& position, const Vector2& size, const Color& color, const Color& borderColor,
                                   const float borderSize) const
 {
-    _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), color, borderColor, BorderSize(size, borderSize)});
+    _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), color, borderColor, borderSize});
 }
 
 void RectRenderer::Border(const Vector2& position, const Vector2& size, const Color& color, const float borderSize) const
 {
-    _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, BorderSize(size, borderSize)});
+    _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, borderSize});
 }
 
 void RectRenderer::Border(const Vector3& position, const Vector2& size, const Color& color, const float borderSize) const
 {
-    _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, BorderSize(size, borderSize)});
+    _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, borderSize});
 }
 
 void RectRenderer::Flush2D() const

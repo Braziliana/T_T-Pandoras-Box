@@ -47,6 +47,7 @@ void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback)
 
 
 std::wstring GenerateRandomName(const int length) {
+    static constexpr wchar_t Alpha[] = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static constexpr wchar_t Alphanum[] = L"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     static std::random_device rd;
@@ -54,6 +55,7 @@ std::wstring GenerateRandomName(const int length) {
     static std::uniform_int_distribution<> dist(0, lstrlenW(Alphanum));
 
     std::wstring result;
+    result += Alpha[dist(gen)];
     for (int i = 0; i < length; i++) {
         result += Alphanum[dist(gen)];
     }

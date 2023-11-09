@@ -72,6 +72,4 @@ public:
         }
         return MenuBase::OnKeyStateEvent(event);
     }
-
-    void Render() override;
 };
