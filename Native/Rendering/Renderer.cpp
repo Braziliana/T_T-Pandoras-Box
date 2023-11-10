@@ -166,34 +166,21 @@ void Renderer::Render(const float deltaTime)
         _renderCallback(deltaTime);
     }
     
+    _rectRenderer->Flush3D();
+    _circleRenderer->Flush3D();
+    _textRenderer->Flush3D();
+    
     if(_renderGuiCallback != nullptr)
     {
         _renderGuiCallback(deltaTime);
     }
     
-    if(!t1)
-    {
-        auto m = Menu::GetInstance();
-        m->AddSubMenu("Test sub menu 1");
-        auto mm = m->AddSubMenu("Test sub menu 2");
-        mm->AddSubMenu("Sub sub menu 1");
-        mm->AddToggle("Test toggle", false);
-        mm->AddSubMenu("Sub sub menu 1");
-        mm->AddToggle("Test toggle", false);
-        mm->AddSubMenu("Sub sub menu 1");
-        mm->AddToggle("Test toggle", false);
-        m->AddSubMenu("Test sub menu - 3");
-        m->AddFloatSlider("Test float slider", 0.532, 0.0f, 1.0f, 0.05f, 2);
-        m->AddSubMenu("Test sub menu - 3");
-        m->AddSubMenu("Test sub menu - 3");
-        t1=true;
-    }
-    auto m = Menu::GetInstance();
-    m->Render();
+    Menu::GetInstance()->Render();
     
     _rectRenderer->Flush2D();
     _circleRenderer->Flush2D();
     _textRenderer->Flush2D();
+    
     SwapBuffers(_hdc);
 }
 

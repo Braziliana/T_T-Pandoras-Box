@@ -5,7 +5,7 @@
 class SubMenu : public MenuBase
 {
 public:
-    SubMenu(const std::string& title, const Rect rect) : MenuBase(title, rect) {  }
+    SubMenu(const std::string& title, const Rect rect);
 
     void Render() override;
 };

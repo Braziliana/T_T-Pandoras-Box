@@ -1,28 +1,21 @@
 ﻿#pragma once
 #include "MenuItem.h"
+#include "HotkeyType.h"
 
-enum class HotkeyType
-{
-    Press,
-    Toggle,
-};
-
-class Hotkey : MenuItem
+class Hotkey : public MenuItem
 {
 private:
     unsigned int _hotkey;
     HotkeyType _hotkeyType;
     bool _toggled;
+    
 public:
-    Hotkey(const std::string& title, const Rect& rect, const unsigned int hotkey, const HotkeyType hotkeyType, bool toggled)
-        : MenuItem(title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
-    {
-    }
-
-    bool* GetToggledPointer()
-    {
-        return &_toggled;
-    }
-
+    Hotkey(const std::string& title, const Rect& rect, unsigned int hotkey, HotkeyType hotkeyType, bool toggled);
+    bool* GetToggledPointer();
     void Render() override;
+    bool OnKeyStateEvent(KeyStateEvent event) override;
 };
+
+extern "C" {
+    __declspec(dllexport) bool* HotkeyGetToggledPointer(Hotkey* instance);
+}

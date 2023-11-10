@@ -618,6 +618,7 @@
     <ClInclude Include="Menus\ComboBox.h" />
     <ClInclude Include="Menus\FloatSlider.h" />
     <ClInclude Include="Menus\Hotkey.h" />
+    <ClInclude Include="Menus\HotkeyType.h" />
     <ClInclude Include="Menus\Menu.h" />
     <ClInclude Include="Menus\MenuBase.h" />
     <ClInclude Include="Menus\MenuItem.h" />

@@ -5,6 +5,31 @@
 
 #include "../Rendering/Renderer.h"
 
+float* FloatSliderGetValuePointer(FloatSlider* instance)
+{
+    return instance->GetValuePointer();
+}
+
+float* FloatSliderGetMinValuePointer(FloatSlider* instance)
+{
+    return instance->GetMinValuePointer();
+}
+
+float* FloatSliderGetMaxValuePointer(FloatSlider* instance)
+{
+    return instance->GetMaxValuePointer();
+}
+
+float* FloatSliderGetStepValuePointer(FloatSlider* instance)
+{
+    return instance->GetStepPointer();
+}
+
+int* FloatSliderGetPrecisionPointer(FloatSlider* instance)
+{
+    return instance->GetPrecisionPointer();
+}
+
 std::string FloatString(const std::string& str, const float value, const int precision) {
     std::ostringstream out;
     out << str << ' ' << std::fixed << std::setprecision(precision) << value;

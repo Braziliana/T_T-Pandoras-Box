@@ -1,6 +1,9 @@
 ﻿#include "SubMenu.h"
 #include "../Rendering/Renderer.h"
 
+SubMenu::SubMenu(const std::string& title, const Rect rect): MenuBase(title, rect)
+{  }
+
 void SubMenu::Render()
 {
     const auto renderer = Renderer::Instance();

@@ -46,7 +46,27 @@ public:
     {
         return &_value; 
     }
-
+    
+    float* GetMinValuePointer()
+    {
+        return &_minValue; 
+    }
+    
+    float* GetMaxValuePointer()
+    {
+        return &_maxValue; 
+    }
+    
+    float* GetStepPointer()
+    {
+        return &_step; 
+    }
+    
+    int* GetPrecisionPointer()
+    {
+        return &_precision; 
+    }
+    
     float GetValue() const
     {
         return _value;
@@ -194,3 +214,12 @@ public:
         UpdateContentPositions();
     }
 };
+
+
+extern "C" {
+    __declspec(dllexport) float* FloatSliderGetValuePointer(FloatSlider* instance);
+    __declspec(dllexport) float* FloatSliderGetMinValuePointer(FloatSlider* instance);
+    __declspec(dllexport) float* FloatSliderGetMaxValuePointer(FloatSlider* instance);
+    __declspec(dllexport) float* FloatSliderGetStepValuePointer(FloatSlider* instance);
+    __declspec(dllexport) int* FloatSliderGetPrecisionPointer(FloatSlider* instance);
+}

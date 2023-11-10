@@ -3,8 +3,33 @@
 #include "SubMenu.h"
 #include "Toggle.h"
 #include "FloatSlider.h"
+#include "Hotkey.h"
 
-Rect MenuBase::GetChildRect(float slots) const
+SubMenu* MenuBaseAddSubMenu(MenuBase* instance, const char* title)
+{
+    return instance->AddSubMenu(std::string(title));
+}
+
+Toggle* MenuBaseAddToggle(MenuBase* instance, const char* title, const bool toggled)
+{
+    return instance->AddToggle(std::string(title), toggled);
+}
+
+FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, const float value, const float minValue, const float maxValue,
+                                    const float step, const int precision)
+{
+    return instance->AddFloatSlider(std::string(title), value, minValue, maxValue, step, precision);
+}
+
+Hotkey* MenuBaseAddHotkey(MenuBase* instance, const std::string& title, const unsigned hotkey, const HotkeyType hotkeyType, const bool toggled)
+{
+    return instance->AddHotkey(title, hotkey, hotkeyType, toggled);
+}
+
+
+//----------------------
+
+Rect MenuBase::GetChildRect(const float slots) const
 {
     float extra = 0.0f;
     if(slots>1)
@@ -28,6 +53,20 @@ void MenuBase::DrawHeader() const
     renderer->Text(_title, itemsRect.GetStart(), itemsRect.GetEnd(), DefaultMenuStyle.FontSize, DefaultMenuStyle.TextColor, TextHorizontalOffset::Center, TextVerticalOffset::Center);
 }
 
+MenuBase::MenuBase(const std::string& title, const Rect rect): MenuItem(title, rect)
+{
+    _headerRect = Rect(_rect.x + DefaultMenuStyle.ItemSize.x - DefaultMenuStyle.Border, rect.y, DefaultMenuStyle.ItemSize.x, DefaultMenuStyle.ItemSize.y);
+    _nextChildPosition = Vector2(_headerRect.x, _headerRect.y + _headerRect.height - DefaultMenuStyle.Border);
+}
+
+MenuBase::~MenuBase()
+{
+    for (const MenuItem* item : _items) {
+        delete item;
+    }
+    _items.clear();
+}
+
 void MenuBase::Render()
 {
     if(!_open)
@@ -40,6 +79,27 @@ void MenuBase::Render()
     for(const auto item : _items)
     {
         item->Render();
+    }
+}
+
+void MenuBase::UpdatePosition(const Rect& rect)
+{
+    const auto movePosition = Vector2(rect.x - _rect.x, rect.y - _rect.y);
+    MenuItem::UpdatePosition(rect);
+    _headerRect.Move(movePosition);
+    for (const auto item : _items)
+    {
+        item->Move(movePosition);
+    }
+}
+
+void MenuBase::Move(const Vector2& position)
+{
+    MenuItem::Move(position);
+    _headerRect.Move(position);
+    for (const auto item : _items)
+    {
+        item->Move(position);
     }
 }
 
@@ -63,4 +123,68 @@ FloatSlider* MenuBase::AddFloatSlider(const std::string& title, const float valu
     const auto item = new FloatSlider(title, GetChildRect(2), value, minValue, maxValue, step, precision);
     AddItem(item);
     return item;
+}
+
+Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned hotkey, const HotkeyType hotkeyType, bool toggled)
+{
+    const auto item = new Hotkey(title, GetChildRect(2), hotkey, hotkeyType, toggled);
+    AddItem(item);
+    return item;
+}
+
+void MenuBase::AddItem(MenuItem* item)
+{
+    _items.push_back(item);
+    UpdateNextChildPosition();
+}
+
+void MenuBase::RemoveItem(const MenuItem* itemToRemove)
+{
+    const auto it = std::find(_items.begin(), _items.end(), itemToRemove);
+    if (it != _items.end()) {
+        delete *it;
+        _items.erase(it);
+    }
+}
+
+bool MenuBase::OnMouseMoveEvent(const MouseMoveEvent event)
+{
+    if(!_open)
+    {
+        return false;
+    }
+        
+    for (const auto item : _items)
+    {
+        if(item->OnMouseMoveEvent(event))
+        {
+            return true;
+        }
+    }
+        
+    return false;
+}
+
+bool MenuBase::OnKeyStateEvent(const KeyStateEvent event)
+{
+    if(event.isDown && event.key == VK_LBUTTON && _rect.Contains(InputManager::GetInstance()->GetMousePosition()))
+    {
+        _open = !_open;
+        return true;
+    }
+        
+    if(!_open)
+    {
+        return false;
+    }
+
+    for (const auto item : _items)
+    {
+        if(item->OnKeyStateEvent(event))
+        {
+            return true;
+        }
+    }
+        
+    return false;
 }
