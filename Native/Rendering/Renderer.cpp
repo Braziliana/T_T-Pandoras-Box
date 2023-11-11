@@ -21,36 +21,65 @@ void RegisterRenderHudCallback(const RenderCallback callback)
     Renderer::Instance()->SetRenderHudCallback(callback);
 }
 
-void RenderSetClearColor(const Color& color)
+void RenderSetClearColor(const Color* color)
 {
-    Renderer::Instance()->SetClearColor(color);
+    Renderer::Instance()->SetClearColor(*color);
 }
 
-void RendererDrawRect2D(Vector2* position, Vector2* size, Color* color) {
+void RendererRectFilled2D(const Vector2* position, const Vector2* size, const Color* color)
+{
     Renderer::Instance()->RectFilled(*position, *size, *color);
 }
 
-void RendererDrawRect3D(Vector3* position, Vector2* size, Color* color) {
+void RendererRectFilled3D(const Vector3* position, const Vector2* size, const Color* color)
+{
     Renderer::Instance()->RectFilled(*position, *size, *color);
 }
 
-void RendererDrawCircle2D(Vector2* position, Vector2* size, Color* color) {
+void RendererRectFilledBordered2D(const Vector2* position, const Vector2* size, const Color* color, const Color* borderColor, const float borderSize)
+{
+    Renderer::Instance()->RectFilledBordered(*position, *size, *color, *borderColor, borderSize);
+}
+
+void RendererRectFilledBordered3D(const Vector3* position, const Vector2* size, const Color* color, const Color* borderColor, const float borderSize)
+{
+    Renderer::Instance()->RectFilledBordered(*position, *size, *color, *borderColor, borderSize);
+}
+
+void RendererRectBorder2D(const Vector2* position, const Vector2* size, const Color* color, const float borderSize)
+{
+    Renderer::Instance()->RectBorder(*position, *size, *color, borderSize);
+}
+
+void RendererRectBorder3D(const Vector3* position, const Vector2* size, const Color* color, const float borderSize)
+{
+    Renderer::Instance()->RectBorder(*position, *size, *color, borderSize);
+}
+
+void RendererDrawCircle2D(const Vector2* position, const Vector2* size, const Color* color)
+{
     Renderer::Instance()->DrawCircle(*position, *size, *color);
 }
 
-void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color) {
+void RendererDrawCircle3D(const Vector3* position, const Vector2* size, const Color* color)
+{
     Renderer::Instance()->DrawCircle(*position, *size, *color);
 }
 
-void RendererText(const char* text, Vector2* position, float size, Color* color) {
-    //Renderer::Instance()->Text(std::string(text), *position, size, *color);
+void RendererText2D(const char* text, const Vector2* position, const float size, const Color* color,
+                    const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset)
+{
+    Renderer::Instance()->Text(text, *position, size, *color, textHorizontalOffset, textVerticalOffset);
 }
 
-void RendererTextCenter(const char* text, Vector2* position, float size, Color* color) {
-    //Renderer::Instance()->TextCenter(std::string(text), *position, size, *color);
+void RendererTextRect2D(const char* text, const Vector2* start, const Vector2* end, const float size, const Color* color,
+                    const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset)
+{
+    Renderer::Instance()->Text(text, *start, *end, size, *color, textHorizontalOffset, textVerticalOffset);
 }
 
-Renderer::Renderer(const HDC hdc) : _hdc(hdc)
+
+Renderer::Renderer(const HDC hdc) : _hdc(hdc), _viewProjectionMatrix()
 {
 }
 
@@ -115,6 +144,7 @@ auto Renderer::Text(const std::string& text, const Vector2& start, const Vector2
 {
     _textRenderer->Draw(text, start, end, size, color, textHorizontalOffset, textVerticalOffset);
 }
+
 
 Renderer* Renderer::CreateInstance(const HDC hdc, int width, int height)
 {

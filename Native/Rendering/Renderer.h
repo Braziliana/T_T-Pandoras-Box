@@ -59,7 +59,7 @@ public:
     void DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const;
     void Text(const std::string& text, const Vector2& position, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
     void Text(const std::string& text, const Vector2& start, const Vector2& end, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
-    
+
     static Renderer* CreateInstance(HDC hdc, int width, int height);
     static Renderer* Instance();
     static void Destroy();
@@ -73,13 +73,18 @@ extern "C" {
     __declspec(dllexport) void RegisterRenderCallback(RenderCallback callback);
     __declspec(dllexport) void RegisterRenderHudCallback(RenderCallback callback);
     
-    __declspec(dllexport) void RenderSetClearColor(const Color& color);
+    __declspec(dllexport) void RenderSetClearColor(const Color* color);
 
-    __declspec(dllexport) void RendererDrawRect2D(Vector2* position, Vector2* size, Color* color);
-    __declspec(dllexport) void RendererDrawRect3D(Vector3* position, Vector2* size, Color* color);
-    __declspec(dllexport) void RendererDrawCircle2D(Vector2* position, Vector2* size, Color* color);
-    __declspec(dllexport) void RendererDrawCircle3D(Vector3* position, Vector2* size, Color* color);
-    __declspec(dllexport) void RendererText(const char* text, Vector2* position, float size, Color* color);
-    __declspec(dllexport) void RendererTextCenter(const char* text, Vector2* position, float size, Color* color);
+    __declspec(dllexport) void RendererRectFilled2D(const Vector2* position, const Vector2* size, const Color* color);
+    __declspec(dllexport) void RendererRectFilled3D(const Vector3* position, const Vector2* size, const Color* color);
+    __declspec(dllexport) void RendererRectFilledBordered2D(const Vector2* position, const Vector2* size, const Color* color, const Color* borderColor, float borderSize);
+    __declspec(dllexport) void RendererRectFilledBordered3D(const Vector3* position, const Vector2* size, const Color* color, const Color* borderColor, float borderSize);
+    __declspec(dllexport) void RendererRectBorder2D(const Vector2* position, const Vector2* size, const Color* color, float borderSize);
+    __declspec(dllexport) void RendererRectBorder3D(const Vector3* position, const Vector2* size, const Color* color, float borderSize);
+    
+    __declspec(dllexport) void RendererDrawCircle2D(const Vector2* position, const Vector2* size, const Color* color);
+    __declspec(dllexport) void RendererDrawCircle3D(const Vector3* position, const Vector2* size, const Color* color);
+    __declspec(dllexport) void RendererText2D(const char* text, const Vector2* position, float size, const Color* color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
+    __declspec(dllexport) void RendererTextRect2D(const char* text, const Vector2* start, const Vector2* end, float size, const Color* color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
 
 }
