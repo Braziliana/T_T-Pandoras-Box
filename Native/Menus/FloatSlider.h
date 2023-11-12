@@ -36,7 +36,7 @@ private:
     }
     
 public:
-    FloatSlider(const std::string& title, const Rect& rect, const float value, const float minValue, const float maxValue, const float step, const int precision);
+    FloatSlider(MenuItem* parent, const std::string& title, const Rect& rect, const float value, const float minValue, const float maxValue, const float step, const int precision);
 
     float* GetValuePointer()
     {

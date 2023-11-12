@@ -36,8 +36,9 @@ std::string FloatString(const std::string& str, const float value, const int pre
     return out.str();
 }
 
-FloatSlider::FloatSlider(const std::string& title, const Rect& rect, const float value, const float minValue,
-    const float maxValue, const float step, const int precision): MenuItem(MenuItemType::FloatSlider, title, rect), _value(value), _minValue(minValue), _maxValue(maxValue), _step(step), _precision(precision), _isSliding(false)
+FloatSlider::FloatSlider(MenuItem* parent, const std::string& title, const Rect& rect, const float value, const float minValue,
+                        const float maxValue, const float step, const int precision)
+    : MenuItem(parent, MenuItemType::FloatSlider, title, rect), _value(value), _minValue(minValue), _maxValue(maxValue), _step(step), _precision(precision), _isSliding(false)
 {
     UpdateContentPositions();
 }

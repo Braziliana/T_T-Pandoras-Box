@@ -1,7 +1,7 @@
 ﻿#include "SubMenu.h"
 #include "../Rendering/Renderer.h"
 
-SubMenu::SubMenu(const std::string& title, const Rect rect): MenuBase(MenuItemType::SubMenu, title, rect)
+SubMenu::SubMenu(MenuItem* parent, const std::string& title, const Rect rect): MenuBase(parent, MenuItemType::SubMenu, title, rect)
 {  }
 
 void SubMenu::Render()

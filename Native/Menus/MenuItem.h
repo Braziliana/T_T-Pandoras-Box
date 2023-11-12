@@ -12,19 +12,21 @@ enum class MenuItemType
     Toggle,
     Hotkey,
     FloatSlider,
-    ComboBox
+    ComboBox,
+    HotkeySelector
 };
 
 class MenuItem
 {
 protected:
+    MenuItem* _parent;
     MenuItemType _menuItemType;
     std::string _title;
     Rect _rect;
     
 public:
     
-    MenuItem(MenuItemType menuItemType, std::string title, Rect rect);
+    MenuItem(MenuItem* parent, MenuItemType menuItemType, std::string title, Rect rect);
     virtual ~MenuItem() = default;
 
     bool Contains(const Vector2& position) const;
@@ -37,6 +39,9 @@ public:
     virtual bool OnMouseMoveEvent(MouseMoveEvent mouseMoveEvent);
     virtual bool OnKeyStateEvent(KeyStateEvent event);
     MenuItemType GetType() const;
+
+    virtual void Close();
+    virtual void Open();
 };
 
 extern "C" {

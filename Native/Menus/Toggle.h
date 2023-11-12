@@ -8,7 +8,7 @@ protected:
     Rect _toggleElement;
     
 public:
-    Toggle(const std::string& title, const Rect& rect, const bool toggled);
+    Toggle(MenuItem* parent, const std::string& title, const Rect& rect, const bool toggled);
 
     bool OnKeyStateEvent(KeyStateEvent event) override;
     void Render() override;

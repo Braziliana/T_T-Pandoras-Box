@@ -93,6 +93,10 @@ public class CaitlynScript : IChampionScript
 
     public void OnRender(float deltaTime)
     { 
+        if (_gameCamera.WorldToScreen(_localPlayer.Position, out var sp))
+        {
+            _renderer.Text(_localPlayer.IsDead ? "Dead" : "Alive", sp, 18, Color.Cyan);
+        }
         var target = _targetSelector.GetTarget(_localPlayer.Q.Range);
         if (target == null)
         {

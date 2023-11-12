@@ -53,7 +53,7 @@ void MenuBase::DrawHeader() const
     renderer->Text(_title, itemsRect.GetStart(), itemsRect.GetEnd(), DefaultMenuStyle.FontSize, DefaultMenuStyle.TextColor, TextHorizontalOffset::Center, TextVerticalOffset::Center);
 }
 
-MenuBase::MenuBase(MenuItemType menuItemType, const std::string& title, const Rect rect): MenuItem(menuItemType, title, rect)
+MenuBase::MenuBase(MenuItem* parent, MenuItemType menuItemType, const std::string& title, const Rect rect): MenuItem(parent, menuItemType, title, rect)
 {
     _headerRect = Rect(_rect.x + DefaultMenuStyle.ItemSize.x - DefaultMenuStyle.Border, rect.y, DefaultMenuStyle.ItemSize.x, DefaultMenuStyle.ItemSize.y);
     _nextChildPosition = Vector2(_headerRect.x, _headerRect.y + _headerRect.height - DefaultMenuStyle.Border);
@@ -107,7 +107,7 @@ void MenuBase::Move(const Vector2& position)
 
 SubMenu* MenuBase::AddSubMenu(const std::string& title)
 {
-    const auto item = new SubMenu(title, GetChildRect(1));
+    const auto item = new SubMenu(this, title, GetChildRect(1));
     AddItem(item);
     _menus.push_back(item);
     return item;
@@ -115,7 +115,7 @@ SubMenu* MenuBase::AddSubMenu(const std::string& title)
 
 Toggle* MenuBase::AddToggle(const std::string& title, bool toggled)
 {
-    const auto item = new Toggle(title, GetChildRect(1), toggled);
+    const auto item = new Toggle(this, title, GetChildRect(1), toggled);
     AddItem(item);
     return item;
 }
@@ -123,14 +123,14 @@ Toggle* MenuBase::AddToggle(const std::string& title, bool toggled)
 FloatSlider* MenuBase::AddFloatSlider(const std::string& title, const float value, const float minValue,
     const float maxValue, const float step, const int precision)
 {
-    const auto item = new FloatSlider(title, GetChildRect(2), value, minValue, maxValue, step, precision);
+    const auto item = new FloatSlider(this, title, GetChildRect(2), value, minValue, maxValue, step, precision);
     AddItem(item);
     return item;
 }
 
 Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned short hotkey, const HotkeyType hotkeyType, bool toggled)
 {
-    const auto item = new Hotkey(title, GetChildRect(2), hotkey, hotkeyType, toggled);
+    const auto item = new Hotkey(this, title, GetChildRect(1), hotkey, hotkeyType, toggled);
     AddItem(item);
     _hotkeys.push_back(item);
     return item;
@@ -169,11 +169,31 @@ bool MenuBase::OnMouseMoveEvent(const MouseMoveEvent event)
     return false;
 }
 
+void MenuBase::ChildOpened(MenuItem* menuItem)
+{
+    for (const auto item : _items)
+    {
+        if(item != menuItem)
+        {
+            item->Close();
+        }
+    }
+}
+
 bool MenuBase::OnKeyStateEvent(const KeyStateEvent event)
 {
     if(event.isDown && event.key == VK_LBUTTON && _rect.Contains(InputManager::GetInstance()->GetMousePosition()))
     {
         _open = !_open;
+        if(_open && _parent != nullptr)
+        {
+            auto parentType =  _parent->GetType();
+            if(parentType == MenuItemType::Menu || parentType == MenuItemType::SubMenu)
+            {
+                auto menuBase = static_cast<MenuBase*>(_parent);
+                menuBase->ChildOpened(this);
+            }
+        }
         return true;
     }
         
@@ -199,4 +219,10 @@ void MenuBase::HandleHotkeys(const KeyStateEvent event) const
     {
         item->OnKeyStateEvent(event);
     }
+}
+
+void MenuBase::Close()
+{
+    MenuItem::Close();
+    _open = false;
 }

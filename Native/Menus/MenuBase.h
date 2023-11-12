@@ -24,7 +24,7 @@ protected:
     void DrawHeader() const;
     
 public:
-    MenuBase(MenuItemType menuItemType, const std::string& title, Rect rect);
+    MenuBase(MenuItem* parent, MenuItemType menuItemType, const std::string& title, Rect rect);
 
     MenuBase(const MenuBase&) = delete;
     MenuBase& operator=(const MenuBase&) = delete;
@@ -43,9 +43,12 @@ public:
     void AddItem(MenuItem* item);
     void RemoveItem(const MenuItem* itemToRemove);
     bool OnMouseMoveEvent(MouseMoveEvent event) override;
+    void ChildOpened(MenuItem* menuItem);
     bool OnKeyStateEvent(KeyStateEvent event) override;
     
     void HandleHotkeys(KeyStateEvent event) const;
+
+    void Close() override;
 };
 
 

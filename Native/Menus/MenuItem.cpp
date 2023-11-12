@@ -13,7 +13,8 @@ void MenuItemRender(MenuItem* instance)
     instance->Render();
 }
 
-MenuItem::MenuItem(const MenuItemType menuItemType, std::string title, const Rect rect): _menuItemType(menuItemType), _title(std::move(title)), _rect(rect)
+MenuItem::MenuItem(MenuItem* parent, const MenuItemType menuItemType, std::string title, const Rect rect)
+    : _parent(parent), _menuItemType(menuItemType), _title(std::move(title)), _rect(rect)
 {  }
 
 bool MenuItem::Contains(const Vector2& position) const
@@ -68,4 +69,12 @@ bool MenuItem::OnKeyStateEvent(KeyStateEvent event)
 MenuItemType MenuItem::GetType() const
 {
     return _menuItemType;
+}
+
+void MenuItem::Close()
+{
+}
+
+void MenuItem::Open()
+{
 }

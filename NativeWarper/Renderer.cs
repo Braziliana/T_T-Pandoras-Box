@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Runtime.InteropServices;
 using Api;
+using Api.Game.Objects;
 
 namespace NativeWarper;
 
@@ -70,9 +71,10 @@ public class Renderer : IRenderer
     public delegate void OnRenderDelegate(float deltaTime);
     
     private readonly OnRenderDelegate _onRenderDelegate;
-
-    public Renderer()
+    private readonly IGameCamera _gameCamera;
+    public Renderer(IGameCamera gameCamera)
     {
+        _gameCamera = gameCamera;
         _onRenderDelegate = new OnRenderDelegate(OnRendererRender);
     }
 
@@ -170,7 +172,8 @@ public class Renderer : IRenderer
 
     public bool IsOnScreen(Vector2 position)
     {
-        return true;
+        return position.X > 0 && position.X <= _gameCamera.RendererWidth && 
+               position.Y > 0 && position.Y <= _gameCamera.RendererHeight;
     }
 
     public void SetProjectionViewMatrix(Matrix4x4 matrix4X4)

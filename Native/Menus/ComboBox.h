@@ -4,5 +4,5 @@
 class ComboBox : MenuItem
 {
 public:
-    ComboBox(const std::string& title, const Rect& rect);
+    ComboBox(MenuItem* parent, const std::string& title, const Rect& rect);
 };

@@ -111,6 +111,7 @@
     <ClCompile Include="Menus\MenuBase.cpp" />
     <ClCompile Include="Menus\MenuItem.cpp" />
     <ClCompile Include="Menus\MenuStyle.cpp" />
+    <ClCompile Include="Menus\SelectionList.cpp" />
     <ClCompile Include="Menus\SubMenu.cpp" />
     <ClCompile Include="Menus\Toggle.cpp" />
     <ClCompile Include="Rendering\Materials\Material.cpp" />
@@ -623,6 +624,7 @@
     <ClInclude Include="Menus\MenuBase.h" />
     <ClInclude Include="Menus\MenuItem.h" />
     <ClInclude Include="Menus\MenuStyle.h" />
+    <ClInclude Include="Menus\SelectionList.h" />
     <ClInclude Include="Menus\SubMenu.h" />
     <ClInclude Include="Menus\Toggle.h" />
     <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
