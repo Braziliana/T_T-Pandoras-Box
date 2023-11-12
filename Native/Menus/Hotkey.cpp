@@ -6,7 +6,18 @@ bool* HotkeyGetToggledPointer(Hotkey* instance)
     return instance->GetToggledPointer();
 }
 
-Hotkey::Hotkey(const std::string& title, const Rect& rect, const unsigned hotkey, const HotkeyType hotkeyType,
+HotkeyType* HotkeyGetHotkeyTypePointer(Hotkey* instance)
+{
+    return instance->GetHotkeyTypePointer();
+}
+
+unsigned short* HotkeyGetHotkeyPointer(Hotkey* instance)
+{
+    return instance->GetHotkeyPointer();
+}
+
+
+Hotkey::Hotkey(const std::string& title, const Rect& rect, const unsigned short hotkey, const HotkeyType hotkeyType,
     bool toggled): MenuItem(MenuItemType::Hotkey, title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
 {
 }
@@ -14,6 +25,16 @@ Hotkey::Hotkey(const std::string& title, const Rect& rect, const unsigned hotkey
 bool* Hotkey::GetToggledPointer()
 {
     return &_toggled;
+}
+
+HotkeyType* Hotkey::GetHotkeyTypePointer()
+{
+    return &_hotkeyType;
+}
+
+unsigned short* Hotkey::GetHotkeyPointer()
+{
+    return &_hotkey;
 }
 
 void Hotkey::Render()

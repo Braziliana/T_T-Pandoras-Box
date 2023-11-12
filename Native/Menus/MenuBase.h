@@ -38,7 +38,7 @@ public:
     SubMenu* AddSubMenu(const std::string& title);
     Toggle* AddToggle(const std::string& title, bool toggled);
     FloatSlider* AddFloatSlider(const std::string& title, float value, float minValue, float maxValue, float step, int precision);
-    Hotkey* AddHotkey(const std::string& title, unsigned int hotkey, HotkeyType hotkeyType, bool toggled);
+    Hotkey* AddHotkey(const std::string& title, unsigned short hotkey, HotkeyType hotkeyType, bool toggled);
     
     void AddItem(MenuItem* item);
     void RemoveItem(const MenuItem* itemToRemove);
@@ -53,5 +53,5 @@ extern "C" {
     __declspec(dllexport) SubMenu* MenuBaseAddSubMenu(MenuBase* instance, const char* title);
     __declspec(dllexport) Toggle* MenuBaseAddToggle(MenuBase* instance, const char* title, bool toggled);
     __declspec(dllexport) FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, float value, float minValue, float maxValue, float step, int precision);
-    __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, unsigned int hotkey, int hotkeyType, bool toggled);
+    __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, unsigned short hotkey, int hotkeyType, bool toggled);
 }

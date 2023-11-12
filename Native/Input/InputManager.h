@@ -18,7 +18,7 @@ struct MouseMoveEvent
 
 struct KeyStateEvent
 {
-    unsigned int key;
+    unsigned short key;
     bool isDown;
 };
 
@@ -64,7 +64,7 @@ private:
     InputManager();
     
     void HookThreadFunction();
-    void UpdateKeyState(unsigned int vkCode, bool isPressed, bool isInjected);
+    void UpdateKeyState(unsigned short vkCode, bool isPressed, bool isInjected);
     void PostKeyStateEvent(const KeyStateEvent& event);
     void UpdateMousePosition(float x, float y, bool isInjected);
     void PostMouseMoveEvent(const MouseMoveEvent& event);

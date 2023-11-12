@@ -48,6 +48,8 @@ public struct Input
 
 public class InputManager : IInputManager, IDisposable
 {
+    #region NATIVE
+    
     [StructLayout(LayoutKind.Sequential)]
     private struct MouseMoveEvent
     {
@@ -58,7 +60,8 @@ public class InputManager : IInputManager, IDisposable
     [StructLayout(LayoutKind.Sequential)]
     private struct KeyStateEvent
     {
-        public uint key;
+        public ushort key;
+        [MarshalAs(UnmanagedType.I1)]
         public bool isDown;
     }
     
@@ -121,8 +124,10 @@ public class InputManager : IInputManager, IDisposable
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void InputManagerSendInputs(Input[] inputs, uint count);
     
-    private MouseMoveEventDelegate _mouseMoveEventDelegate;
-    private KeyStateEventDelegate _keyStateEventDelegate;
+    #endregion
+    
+    private readonly MouseMoveEventDelegate _mouseMoveEventDelegate;
+    private readonly KeyStateEventDelegate _keyStateEventDelegate;
     private int _mouseMoveHandlerId = -1;
     private int _keyStateHandlerId = -1;
     
@@ -131,14 +136,14 @@ public class InputManager : IInputManager, IDisposable
     
     public InputManager()
     {
+        _mouseMoveEventDelegate = new MouseMoveEventDelegate(OnMouseMoveHandler);
+        _keyStateEventDelegate = new KeyStateEventDelegate(OnKeyStateHandler);
+        
         RegisterEvents();
     }
 
     public void RegisterEvents()
     {
-        _mouseMoveEventDelegate = new MouseMoveEventDelegate(OnMouseMoveHandler);
-        _keyStateEventDelegate = new KeyStateEventDelegate(OnKeyStateHandler);
-
         _mouseMoveHandlerId = InputManagerAddMouseMoveHandler(Marshal.GetFunctionPointerForDelegate(_mouseMoveEventDelegate));
         _keyStateHandlerId = InputManagerAddKeyStateEventHandler(Marshal.GetFunctionPointerForDelegate(_keyStateEventDelegate));
     }
@@ -154,10 +159,12 @@ public class InputManager : IInputManager, IDisposable
         if (evt.isDown)
         {
             KeyDown?.Invoke((VirtualKey)evt.key);
+            Console.WriteLine((VirtualKey)evt.key + " down");
         }
         else
         {
             KeyUp?.Invoke((VirtualKey)evt.key);
+            Console.WriteLine((VirtualKey)evt.key + " up");
         }
     }
 
@@ -185,7 +192,7 @@ public class InputManager : IInputManager, IDisposable
     {
         ReleaseUnmanagedResources();
     }
-    
+
     public KeyState GetKeyState(VirtualKey virtualKey)
     {
         return InputManagerGetKeyState((ushort)virtualKey) ? KeyState.KeyDown : KeyState.KeyUp;

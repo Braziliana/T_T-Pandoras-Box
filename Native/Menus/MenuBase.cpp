@@ -21,7 +21,7 @@ FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, const
     return instance->AddFloatSlider(std::string(title), value, minValue, maxValue, step, precision);
 }
 
-Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, const unsigned hotkey, const int hotkeyType, const bool toggled)
+Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, const unsigned short hotkey, const int hotkeyType, const bool toggled)
 {
     return instance->AddHotkey(title, hotkey, static_cast<HotkeyType>(hotkeyType), toggled);
 }
@@ -128,7 +128,7 @@ FloatSlider* MenuBase::AddFloatSlider(const std::string& title, const float valu
     return item;
 }
 
-Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned hotkey, const HotkeyType hotkeyType, bool toggled)
+Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned short hotkey, const HotkeyType hotkeyType, bool toggled)
 {
     const auto item = new Hotkey(title, GetChildRect(2), hotkey, hotkeyType, toggled);
     AddItem(item);

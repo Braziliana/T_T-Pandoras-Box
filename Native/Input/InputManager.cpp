@@ -3,6 +3,8 @@
 
 #include <utility>
 
+#include "../Rendering/Renderer.h"
+
 
 void InputManagerReset()
 {
@@ -152,7 +154,7 @@ InputManager::InputManager(): _running(false), _keyboardHook(nullptr), _mouseHoo
 
 }
 
-void InputManager::UpdateKeyState(const unsigned vkCode, const bool isPressed, const bool isInjected)
+void InputManager::UpdateKeyState(const unsigned short vkCode, const bool isPressed, const bool isInjected)
 {
     //TODO Test if we want store injected states
     const bool wasPressed = _keyStates[vkCode].exchange(isPressed, std::memory_order_relaxed);
@@ -256,7 +258,7 @@ void InputManager::ProcessInputEvents()
             _mouseMoveEventQueue.pop();
             
             mouseMoveLock.unlock();
-            for (const auto handler: _onMouseMoveEvent) {
+            for (const auto& handler: _onMouseMoveEvent) {
                 handler.second(event);
             }
             mouseMoveLock.lock();
@@ -270,8 +272,10 @@ void InputManager::ProcessInputEvents()
             const auto event = _keyStateEventQueue.front();
             _keyStateEventQueue.pop();
             
+            std::cout << "KeyEvent: " << event.key << " " << event.isDown << std::endl;
+            
             keyStateLock.unlock();
-            for (const auto handler : _onKeyStateEvent) {
+            for (const auto& handler : _onKeyStateEvent) {
                 handler.second(event);
             }
             keyStateLock.lock();
@@ -335,13 +339,15 @@ INPUT InputManager::CreateMouseClickInput(unsigned short vkCode, bool down)
 
 INPUT InputManager::CreateMouseMoveInput(const Vector2& position)
 {
+    static auto screenWidth = static_cast<float>(GetSystemMetrics(SM_CXSCREEN));
+    static auto screenHeight = static_cast<float>(GetSystemMetrics(SM_CYSCREEN));
     INPUT input;
     ZeroMemory(&input, sizeof(INPUT));
 
     input.type = INPUT_MOUSE;
-    input.mi.dx = static_cast<int>(position.x);
-    input.mi.dy = static_cast<int>(position.y);
-    input.mi.dwFlags = MOUSEEVENTF_MOVE;
+    input.mi.dx = static_cast<int>((position.x * 65535) / screenWidth);
+    input.mi.dy = static_cast<int>((position.y * 65535) / screenHeight);
+    input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
     return input;
 }
 

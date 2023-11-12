@@ -41,7 +41,7 @@ public unsafe class MenuBase : MenuItem
 
     public IHotkey AddHotkey(string title, VirtualKey hotkey, HotkeyType hotkeyType, bool toggled)
     {
-        var hotkeyItem = MenuBaseAddHotkey(menuPointer, title, (uint)hotkey, (int)hotkeyType, toggled);
+        var hotkeyItem = MenuBaseAddHotkey(menuPointer, title, (ushort)hotkey, (int)hotkeyType, toggled);
         return new Hotkey(hotkeyItem, title);
     }
 

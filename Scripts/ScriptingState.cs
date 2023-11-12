@@ -1,6 +1,7 @@
 ﻿using Api.Inputs;
 using Api.Menus;
 using Api.Scripts;
+using NativeWarper;
 
 namespace Scripts;
 
@@ -24,14 +25,14 @@ public class ScriptingState : IScriptingState
     
     public ScriptingState(IInputManager inputManager, IMainMenu mainMenu)
     {
-        inputManager.KeyDown += InputManagerOnKeyDown;
-        inputManager.KeyUp += InputManagerOnKeyUp;
-
         var menu = mainMenu.CreateMenu("Hotkeys", ScriptType.Utility);
         _comboKey = menu.AddHotkey("Combo", VirtualKey.Space, HotkeyType.Press, false);
         _harasKey = menu.AddHotkey("Haras", VirtualKey.C, HotkeyType.Press, false);
         _farmKey = menu.AddHotkey("Farm", VirtualKey.X, HotkeyType.Press, false);
         _clearKey = menu.AddHotkey("Clear", VirtualKey.V, HotkeyType.Press, false);
+        
+        inputManager.KeyDown += InputManagerOnKeyDown;
+        inputManager.KeyUp += InputManagerOnKeyUp;
     }
 
     private void InputManagerOnKeyDown(VirtualKey virtualKey)
