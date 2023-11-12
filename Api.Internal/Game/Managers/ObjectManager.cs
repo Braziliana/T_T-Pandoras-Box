@@ -41,7 +41,13 @@ internal class ObjectManager : IObjectManager
         IMonsterManager monsterManager,
         IPlantManager plantManager,
         IWardManager wardManager,
-        ITrapManager trapManager)
+        ITrapManager trapManager,
+        IMinionReader minionReader,
+        IMonsterReader monsterReader,
+        IPlantReader plantReader,
+        IWardReader wardReader,
+        ITrapReader trapReader
+        )
     {
         _localPlayer = localPlayer;
         _gameObjectTypeMapper = gameObjectTypeMapper;
@@ -53,7 +59,22 @@ internal class ObjectManager : IObjectManager
         TrapManager = trapManager;
         
         _minionsArray = new TArray(targetProcess, baseOffsets.MinionList);
-        _memoryBuffer = new MemoryBuffer(gameObjectReader.GetBufferSize());
+        _memoryBuffer = new MemoryBuffer(GetBufferSize(minionReader, monsterReader, plantReader, wardReader, trapReader));
+    }
+
+    private uint GetBufferSize(
+        IMinionReader minionReader,
+        IMonsterReader monsterReader,
+        IPlantReader plantReader,
+        IWardReader wardReader,
+        ITrapReader trapReader)
+    {
+        var size = _gameObjectReader.GetBufferSize();
+        size = Math.Max(size, minionReader.GetBufferSize());
+        size = Math.Max(size, monsterReader.GetBufferSize());
+        size = Math.Max(size, plantReader.GetBufferSize());
+        size = Math.Max(size, wardReader.GetBufferSize());
+        return Math.Max(size, trapReader.GetBufferSize());
     }
 
     public void Update(float deltaTime)

@@ -272,8 +272,6 @@ void InputManager::ProcessInputEvents()
             const auto event = _keyStateEventQueue.front();
             _keyStateEventQueue.pop();
             
-            std::cout << "KeyEvent: " << event.key << " " << event.isDown << std::endl;
-            
             keyStateLock.unlock();
             for (const auto& handler : _onKeyStateEvent) {
                 handler.second(event);

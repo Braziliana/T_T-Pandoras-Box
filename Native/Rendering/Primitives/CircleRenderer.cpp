@@ -17,7 +17,7 @@ CircleRenderer::CircleRenderer()
         {7, 1, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, borderSize)), 1},
     };
     
-    float size = 0.5f;
+    float size = 1.0f;
 
     std::vector<Vertex> verts2D;
     // First Triangle

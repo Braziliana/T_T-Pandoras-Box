@@ -115,6 +115,7 @@ internal class GameObjectReader : BaseReader, IGameObjectReader
 
     protected override IMemoryBuffer CreateBatchReadContext()
     {
-        return new MemoryBuffer(GetBufferSize());
+        var size = GetBufferSize();
+        return new MemoryBuffer(size);
     }
 }

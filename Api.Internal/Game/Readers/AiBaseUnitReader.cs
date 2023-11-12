@@ -101,6 +101,7 @@ internal class AiBaseUnitReader : AttackableUnitReader, IAiBaseUnitReader
     
     public override uint GetBufferSize()
     {
-        return Math.Max(base.GetBufferSize(), GetSize(_aiBaseUnitOffsets.GetOffsets()));
+        var size = Math.Max(base.GetBufferSize(), GetSize(_aiBaseUnitOffsets.GetOffsets()));
+        return size;
     }
 }

@@ -159,12 +159,10 @@ public class InputManager : IInputManager, IDisposable
         if (evt.isDown)
         {
             KeyDown?.Invoke((VirtualKey)evt.key);
-            Console.WriteLine((VirtualKey)evt.key + " down");
         }
         else
         {
             KeyUp?.Invoke((VirtualKey)evt.key);
-            Console.WriteLine((VirtualKey)evt.key + " up");
         }
     }
 

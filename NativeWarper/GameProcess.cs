@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using Api.GameProcess;
 
 namespace NativeWarper;
@@ -32,7 +33,11 @@ public unsafe class MemoryBuffer : IMemoryBuffer, IDisposable
     public T Read<T>(uint offset) where T : unmanaged
     {
         if (offset + sizeof(T) > MemoryBufferInternal->size)
-            throw new ArgumentOutOfRangeException("Attempted to read beyond the buffer size.");
+        {
+            Console.WriteLine($"Attempted to read beyond the buffer size. Required size: {(offset + sizeof(T)):X} bufferSize: {MemoryBufferInternal->size:X}");
+            return default;
+            //throw new ArgumentOutOfRangeException("Attempted to read beyond the buffer size.");
+        }
 
         return *(T*)(MemoryBufferInternal->bytes + (int)offset);
     }
