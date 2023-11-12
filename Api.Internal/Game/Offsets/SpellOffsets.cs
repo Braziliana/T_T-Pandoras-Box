@@ -23,20 +23,20 @@ public class SpellOffsets : ISpellOffsets
     public SpellOffsets(IConfiguration configuration)
     {
         var cs = configuration.GetSection(nameof(SpellOffsets));
-        SpellSlotLevel = new OffsetData(nameof(SpellSlotLevel), Convert.ToInt32(cs[nameof(SpellSlotLevel)], 16), typeof(int));
-        SpellSlotReadyAt = new OffsetData(nameof(SpellSlotReadyAt), Convert.ToInt32(cs[nameof(SpellSlotReadyAt)], 16), typeof(float));
-        SpellSlotSmiteReadyAt = new OffsetData(nameof(SpellSlotSmiteReadyAt), Convert.ToInt32(cs[nameof(SpellSlotSmiteReadyAt)], 16), typeof(float));
-        SpellSlotDamage = new OffsetData(nameof(SpellSlotDamage), Convert.ToInt32(cs[nameof(SpellSlotDamage)], 16), typeof(float));
-        SpellSlotSmiteCharges = new OffsetData(nameof(SpellSlotSmiteCharges), Convert.ToInt32(cs[nameof(SpellSlotSmiteCharges)], 16), typeof(int));
-        SpellSlotSpellInput = new OffsetData(nameof(SpellSlotSpellInput), Convert.ToInt32(cs[nameof(SpellSlotSpellInput)], 16), typeof(IntPtr));
-        SpellSlotSpellInfo = new OffsetData(nameof(SpellSlotSpellInfo), Convert.ToInt32(cs[nameof(SpellSlotSpellInfo)], 16), typeof(IntPtr));
+        SpellSlotLevel = new OffsetData(nameof(SpellSlotLevel), Convert.ToUInt32(cs[nameof(SpellSlotLevel)], 16), typeof(int));
+        SpellSlotReadyAt = new OffsetData(nameof(SpellSlotReadyAt), Convert.ToUInt32(cs[nameof(SpellSlotReadyAt)], 16), typeof(float));
+        SpellSlotSmiteReadyAt = new OffsetData(nameof(SpellSlotSmiteReadyAt), Convert.ToUInt32(cs[nameof(SpellSlotSmiteReadyAt)], 16), typeof(float));
+        SpellSlotDamage = new OffsetData(nameof(SpellSlotDamage), Convert.ToUInt32(cs[nameof(SpellSlotDamage)], 16), typeof(float));
+        SpellSlotSmiteCharges = new OffsetData(nameof(SpellSlotSmiteCharges), Convert.ToUInt32(cs[nameof(SpellSlotSmiteCharges)], 16), typeof(int));
+        SpellSlotSpellInput = new OffsetData(nameof(SpellSlotSpellInput), Convert.ToUInt32(cs[nameof(SpellSlotSpellInput)], 16), typeof(IntPtr));
+        SpellSlotSpellInfo = new OffsetData(nameof(SpellSlotSpellInfo), Convert.ToUInt32(cs[nameof(SpellSlotSpellInfo)], 16), typeof(IntPtr));
         
-        SpellInfoSpellData = new OffsetData(nameof(SpellInfoSpellData), Convert.ToInt32(cs[nameof(SpellInfoSpellData)], 16), typeof(IntPtr));
-        SpellDataSpellName = new OffsetData(nameof(SpellDataSpellName), Convert.ToInt32(cs[nameof(SpellDataSpellName)], 16), typeof(IntPtr));
+        SpellInfoSpellData = new OffsetData(nameof(SpellInfoSpellData), Convert.ToUInt32(cs[nameof(SpellInfoSpellData)], 16), typeof(IntPtr));
+        SpellDataSpellName = new OffsetData(nameof(SpellDataSpellName), Convert.ToUInt32(cs[nameof(SpellDataSpellName)], 16), typeof(IntPtr));
         
-        SpellInputStartPosition = new OffsetData(nameof(SpellInputStartPosition), Convert.ToInt32(cs[nameof(SpellInputStartPosition)], 16), typeof(Vector3));
-        SpellInputEndPosition = new OffsetData(nameof(SpellInputEndPosition), Convert.ToInt32(cs[nameof(SpellInputEndPosition)], 16), typeof(Vector3));
-        SpellInputTargetId = new OffsetData(nameof(SpellInputTargetId), Convert.ToInt32(cs[nameof(SpellInputTargetId)], 16), typeof(int));
+        SpellInputStartPosition = new OffsetData(nameof(SpellInputStartPosition), Convert.ToUInt32(cs[nameof(SpellInputStartPosition)], 16), typeof(Vector3));
+        SpellInputEndPosition = new OffsetData(nameof(SpellInputEndPosition), Convert.ToUInt32(cs[nameof(SpellInputEndPosition)], 16), typeof(Vector3));
+        SpellInputTargetId = new OffsetData(nameof(SpellInputTargetId), Convert.ToUInt32(cs[nameof(SpellInputTargetId)], 16), typeof(int));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

@@ -8,19 +8,19 @@ namespace Api.Game.Readers;
 
 public interface IGameObjectReader
 {
-    bool ReadBuffer(IntPtr ptr, BatchReadContext batchReadContext);
-    T ReadOffset<T>(OffsetData offsetData, BatchReadContext batchReadContext) where T : unmanaged;
-    string ReadString(OffsetData offsetData, Encoding encoding, BatchReadContext batchReadContext);
+    bool ReadBuffer(IntPtr ptr, IMemoryBuffer memoryBuffer);
+    T ReadOffset<T>(OffsetData offsetData, IMemoryBuffer memoryBuffer) where T : unmanaged;
+    string ReadString(OffsetData offsetData, Encoding encoding, IMemoryBuffer memoryBuffer);
     bool ReadObject(IGameObject? gameObject);
     /// <summary>
     /// batchReadContext must be initialized and read manully before with ReadBuffer(IntPtr ptr, BatchReadContext batchReadContext)
     /// </summary>
     /// <param name="gameObject"></param>
-    /// <param name="batchReadContext"></param>
+    /// <param name="memoryBuffer"></param>
     /// <returns></returns>
-    bool ReadObject(IGameObject? gameObject, BatchReadContext batchReadContext);
-    string ReadObjectName(BatchReadContext batchReadContext);
-    int ReadObjectNetworkId(BatchReadContext batchReadContext);
-    public int GetSize(IEnumerable<OffsetData> offsetData);
-    public int GetBufferSize();
+    bool ReadObject(IGameObject? gameObject, IMemoryBuffer memoryBuffer);
+    string ReadObjectName(IMemoryBuffer memoryBuffer);
+    int ReadObjectNetworkId(IMemoryBuffer memoryBuffer);
+    public uint GetSize(IEnumerable<OffsetData> offsetData);
+    public uint GetBufferSize();
 }

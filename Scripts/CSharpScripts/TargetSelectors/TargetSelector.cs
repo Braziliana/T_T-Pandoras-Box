@@ -170,15 +170,15 @@ public class TargetSelector : ITargetSelector
     public void OnLoad()
     {
         _menu = _mainMenu.CreateMenu("Target selector", ScriptType.TargetSelector);
-        _targetSelectorComboBox =
-            _menu.AddEnumComboBox("Target selector mode", "", TargetSelectorMode.Weighted);
+        // _targetSelectorComboBox =
+        //     _menu.AddEnumComboBox("Target selector mode", "", TargetSelectorMode.Weighted);
         
-        _targetSelectorComboBox.SelectionChanged += (TargetSelectorMode targetSelectorMode) =>
-            TargetSelectorMode = targetSelectorMode;
+        // _targetSelectorComboBox.SelectionChanged += (TargetSelectorMode targetSelectorMode) =>
+        //     TargetSelectorMode = targetSelectorMode;
         
-        _healthWeightSlider = _menu.AddValueSlider("Health weight", "", 0.5f, 0.1f, 1.0f);
-        _abilityPowerWeightSlider = _menu.AddValueSlider("Ability power weight", "", 0.5f, 0.1f, 1.0f);
-        _damageWeightSlider = _menu.AddValueSlider("Attack damage weight", "", 0.5f, 0.1f, 1.0f);
+        _healthWeightSlider = _menu.AddFloatSlider("Health weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
+        _abilityPowerWeightSlider = _menu.AddFloatSlider("Ability power weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
+        _damageWeightSlider = _menu.AddFloatSlider("Attack damage weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
     }
 
     public void OnUnload()
@@ -202,7 +202,7 @@ public class TargetSelector : ITargetSelector
     {
         if (_target is not null)
         {
-            _renderer.Circle3D(_target.Position, _target.CollisionRadius, Color.Yellow, 1, _gameState.Time, 1, 1);
+            _renderer.CircleBorder3D(_target.Position, _target.CollisionRadius, Color.Yellow, 1);
         }
     }
 }

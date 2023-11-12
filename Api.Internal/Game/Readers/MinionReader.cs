@@ -12,13 +12,13 @@ internal class MinionReader : AiBaseUnitReader, IMinionReader
     private readonly IMinionNameTypeMapper _minionNameTypeMapper;
     
     public MinionReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         IMinionNameTypeMapper minionNameTypeMapper,
         UnitDataDictionary unitDataDictionary,
         IAiBaseUnitOffsets aiBaseUnitOffsets)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
     {
         _minionNameTypeMapper = minionNameTypeMapper;
     }
@@ -35,9 +35,9 @@ internal class MinionReader : AiBaseUnitReader, IMinionReader
         return true;
     }
 
-    public bool ReadMinion(IMinion? minion, BatchReadContext batchReadContext)
+    public bool ReadMinion(IMinion? minion, IMemoryBuffer memoryBuffer)
     {
-        if (minion is null || !ReadAiBaseUnit(minion, batchReadContext))
+        if (minion is null || !ReadAiBaseUnit(minion, memoryBuffer))
         {
             return false;
         }

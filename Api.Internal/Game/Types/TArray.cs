@@ -1,73 +1,74 @@
 ﻿using System.Runtime.InteropServices;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Types;
 
 public class TArray : IDisposable
 {
-    private readonly IMemory _memory;
-    private readonly int _offset;
-    private readonly BatchReadContext _doubleIntBatchReadContext;
-    private BatchReadContext? _batchReadContext;
-    private readonly int _intPtrSize;
+    private readonly ITargetProcess _targetProcess;
+    private readonly uint _offset;
+    private readonly IMemoryBuffer _doubleIntMemoryBuffer;
+    private IMemoryBuffer? _memoryBuffer;
+    private readonly uint _intPtrSize;
 
-    private int _size;
-    public int Size => _size;
+    private uint _size;
+    public uint Size => _size;
 
     private IntPtr _listPtr;
     public IntPtr ListPtr => _listPtr;
     
-    public TArray(IMemory memory, int offset)
+    public TArray(ITargetProcess targetProcess, uint offset)
     {
-        _memory = memory;
+        _targetProcess = targetProcess;
         _offset = offset;
 
         _listPtr = IntPtr.Zero;
         _size = 0;
         
-        _intPtrSize = Marshal.SizeOf<IntPtr>();
-        _doubleIntBatchReadContext = new BatchReadContext(_intPtrSize + Marshal.SizeOf<int>());
-        _batchReadContext = null;
+        _intPtrSize = (uint)Marshal.SizeOf<IntPtr>();
+        _doubleIntMemoryBuffer = new MemoryBuffer(_intPtrSize + (uint)Marshal.SizeOf<int>());
+        _memoryBuffer = null;
     }
 
     
     public bool Read()
     {
-        if (!_memory.ReadModulePointer(_offset, out var tArray))
+        if (!_targetProcess.ReadModulePointer(_offset, out var tArray))
         {
             return false;
         }
         
-        if (!_memory.ReadCachedBuffer(tArray + 0x8, _doubleIntBatchReadContext))
+        if (!_targetProcess.Read(tArray + 0x8, _doubleIntMemoryBuffer))
         {
          return false;
         }
         
-        _listPtr = _doubleIntBatchReadContext.Read<IntPtr>(0);
-        _size = _doubleIntBatchReadContext.Read<int>(_intPtrSize) * 0x8;
+        _listPtr = _doubleIntMemoryBuffer.Read<IntPtr>(0);
+        _size = _doubleIntMemoryBuffer.Read<uint>(_intPtrSize);
         
-        if (_batchReadContext is null)
+        if (_memoryBuffer is null)
         {
-            _batchReadContext = new BatchReadContext(_size);
+            _memoryBuffer = new MemoryBuffer(_size * _intPtrSize);
         }
         else
         {
-            _batchReadContext.Resize(_size);
+            _memoryBuffer.Resize(_size * _intPtrSize);
         }
 
-        return _memory.ReadCachedBuffer(_listPtr, _batchReadContext);
+        return _targetProcess.Read(_listPtr, _memoryBuffer);
     }
 
     public IEnumerable<IntPtr> GetPointers()
     {
-        if (_batchReadContext is null)
+        if (_memoryBuffer is null)
         {
             yield break;
         }
         
-        for (var i = 0; i < _size; i++)
+        for (uint i = 0; i < _size; i++)
         {
-            var ptr = _batchReadContext.Read<IntPtr>(0x8 * i);
+            var ptr = _memoryBuffer.Read<IntPtr>(_intPtrSize * i);
             if (ptr != IntPtr.Zero && ptr.ToInt64() > 0x1000)
             {
                 yield return ptr;
@@ -77,6 +78,6 @@ public class TArray : IDisposable
     
     public void Dispose()
     {
-        _batchReadContext?.Dispose();
+        _memoryBuffer?.Dispose();
     }
 }

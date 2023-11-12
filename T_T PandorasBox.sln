@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "T_T_PandorasBox", "T_T_PandorasBox\T_T_PandorasBox.csproj", "{A246C115-4B30-4D50-9F17-9855D07F0AFF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD} = {F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scripts", "Scripts\Scripts.csproj", "{9896C50B-5D24-4A54-8508-0CFD0B0306FF}"
 EndProject
@@ -18,6 +21,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Native", "Native\Native.vcxproj", "{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{4432A2DF-61F0-4F4E-8813-7DC3E062B967}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD} = {F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NativeWarper", "NativeWarper\NativeWarper.csproj", "{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD} = {F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}
 	EndProjectSection
@@ -128,6 +136,18 @@ Global
 		{4432A2DF-61F0-4F4E-8813-7DC3E062B967}.Release|x64.Build.0 = Release|Any CPU
 		{4432A2DF-61F0-4F4E-8813-7DC3E062B967}.Release|x86.ActiveCfg = Release|Any CPU
 		{4432A2DF-61F0-4F4E-8813-7DC3E062B967}.Release|x86.Build.0 = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|x64.Build.0 = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Debug|x86.Build.0 = Debug|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|x64.ActiveCfg = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|x64.Build.0 = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|x86.ActiveCfg = Release|Any CPU
+		{C4DCDB33-CC17-4C1C-9E85-5285F9CE4C18}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,7 +25,7 @@ public class HeroManager : IHeroManager
 
     public HeroManager(
         IBaseOffsets baseOffsets,
-        IMemory memory,
+        ITargetProcess memory,
         ILocalPlayer localPlayer,
         IHeroReader heroReader)
     {

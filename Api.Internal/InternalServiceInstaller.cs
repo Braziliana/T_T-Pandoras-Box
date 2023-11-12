@@ -21,9 +21,6 @@ using Api.Internal.Game.Objects;
 using Api.Internal.Game.Offsets;
 using Api.Internal.Game.Readers;
 using Api.Internal.Game.Settings;
-using Api.Internal.GameProcess;
-using Api.Internal.Inputs;
-using Api.Internal.Menus;
 using Api.Internal.Utils;
 using Api.Menus;
 using Api.Settings;
@@ -31,7 +28,6 @@ using Api.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using WinApi;
 
 namespace Api.Internal
 {
@@ -44,14 +40,6 @@ namespace Api.Internal
             
             collection.TryAddSingleton<IManagerSettings, ManagerSettings>();
             collection.TryAddSingleton<ISettingsProvider, SettingsProvider>();
-            
-            collection.TryAddSingleton<ITargetProcess, TargetProcess>();
-            collection.TryAddSingleton<IMemory, BasicMemory>();
-            
-            collection.TryAddSingleton<IInputManager, InputManager>();
-            
-            collection.TryAddSingleton<IMainMenu, MainMenu>();
-
             collection.TryAddSingleton<UnitDataDictionary>();
             collection.TryAddSingleton<SpellDataDictionary>();
             collection.TryAddSingleton<MissileDataDictionary>();

@@ -8,11 +8,13 @@ CircleRenderer::CircleRenderer()
         {1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, uv)), 0},
         {2, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, color)), 0},
     };
-
+    
     const std::vector<VertexAttribute> instanceAttributes = {
         {3, 3, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, position)), 1},
         {4, 3, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, scale)), 1},
         {5, 4, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, color)), 1},
+        {6, 4, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, borderColor)), 1},
+        {7, 1, GL_FLOAT, GL_FALSE, sizeof(CircleData), reinterpret_cast<void*>(offsetof(CircleData, borderSize)), 1},
     };
     
     float size = 0.5f;
@@ -86,14 +88,36 @@ void CircleRenderer::Release()
     }
 }
 
-void CircleRenderer::Draw(const Vector2& position, const Vector2& size, const Color& color) const
+void CircleRenderer::Filled(const Vector2& position, const float size, const Color& color) const
 {
-    _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color});
+    _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size, size, 1.0f), color, Color(0, 0, 0, 0), 0});
 }
 
-void CircleRenderer::Draw(const Vector3& position, const Vector2& size, const Color& color) const
+void CircleRenderer::Filled(const Vector3& position, const float size, const Color& color) const
 {
-    _buffer3D->Add(CircleData{position, Vector3(size.x, 1.0f, size.y), color});
+    _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), color, Color(0, 0, 0, 0), 0});
+}
+
+void CircleRenderer::FilledBordered(const Vector2& position, const float size, const Color& color, const Color& borderColor,
+    float borderSize) const
+{
+    _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size, size, 1.0f), color, borderColor, borderSize});
+}
+
+void CircleRenderer::FilledBordered(const Vector3& position, const float size, const Color& color, const Color& borderColor,
+                                    const float borderSize) const
+{
+    _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), color, borderColor, borderSize});
+}
+
+void CircleRenderer::Border(const Vector2& position, const float size, const Color& color, const float borderSize) const
+{
+    _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size, size, 1.0f), Color(0, 0, 0, 0), color, borderSize});
+}
+
+void CircleRenderer::Border(const Vector3& position, const float size, const Color& color, const float borderSize) const
+{
+    _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), Color(0, 0, 0, 0), color, borderSize});
 }
 
 void CircleRenderer::Flush2D() const

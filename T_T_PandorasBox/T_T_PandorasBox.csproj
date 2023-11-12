@@ -19,25 +19,34 @@
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>..\x64\Debug</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\x64\Release</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PlatformTarget>x64</PlatformTarget>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Flurl" Version="3.0.7" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
-    <PackageReference Include="FontStashSharp" Version="1.2.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Silk.NET" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.Core" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.Maths" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Api.Internal\Api.Internal.csproj" />
     <ProjectReference Include="..\Api\Api.csproj" />
     <ProjectReference Include="..\LCU\LCU.csproj" />
+    <ProjectReference Include="..\NativeWarper\NativeWarper.csproj" />
     <ProjectReference Include="..\Scripts\Scripts.csproj" />
     <ProjectReference Include="..\WinApi\WinApi.csproj" />
   </ItemGroup>
@@ -55,22 +64,10 @@
     <None Update="Resources\Shaders\CircleShader.vert">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Fonts\DroidSans.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Resources\Shaders\FontShader.frag">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Shaders\FontShader.vert">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Fonts\OpenSans-Regular.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Fonts\DroidSansJapanese.ttf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\Fonts\Symbola-Emoji.ttf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Resources\ObjectNameMappers\GameObjectTypeMapper.json">

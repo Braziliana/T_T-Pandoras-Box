@@ -12,12 +12,12 @@ internal class WardReader : AttackableUnitReader, IWardReader
     private readonly IWardNameTypeMapper _wardNameTypeMapper;
     
     public WardReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         IWardNameTypeMapper wardNameTypeMapper,
         UnitDataDictionary unitDataDictionary)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
     {
         _wardNameTypeMapper = wardNameTypeMapper;
     }
@@ -34,9 +34,9 @@ internal class WardReader : AttackableUnitReader, IWardReader
         return true;
     }
 
-    public bool ReadWard(IWard? ward, BatchReadContext batchReadContext)
+    public bool ReadWard(IWard? ward, IMemoryBuffer memoryBuffer)
     {
-        if (ward is null || !ReadAttackableUnit(ward, batchReadContext))
+        if (ward is null || !ReadAttackableUnit(ward, memoryBuffer))
         {
             return false;
         }

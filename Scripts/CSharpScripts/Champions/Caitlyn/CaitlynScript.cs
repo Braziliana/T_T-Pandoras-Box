@@ -3,7 +3,6 @@ using Api;
 using Api.Game.Calculations;
 using Api.Game.GameInputs;
 using Api.Game.Objects;
-using Api.Internal.Menus;
 using Api.Menus;
 using Api.Scripts;
 using Scripts.Utils;
@@ -56,8 +55,8 @@ public class CaitlynScript : IChampionScript
     public void OnLoad()
     {
         _menu = _mainMenu.CreateMenu("Caitlin", ScriptType.Champion);
-        var comboMenu = _menu.AddSubMenu("Combo", "");
-        _useQInCombo = comboMenu.AddToggle("Use Q in combo", "", true);
+        var comboMenu = _menu.AddSubMenu("Combo");
+        _useQInCombo = comboMenu.AddToggle("Use Q in combo", true);
     }
 
     public void OnUnload()
@@ -103,12 +102,12 @@ public class CaitlynScript : IChampionScript
         var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.625f, 2200, 120);
         //if (prediction.HitChance > 50)
         {
-            _renderer.Circle3D(prediction.Position, 120, Color.Cyan, 1, _gameState.Time, 1, 0);
-
-            if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
-            {
-                _renderer.Text(prediction.HitChance.ToString(CultureInfo.InvariantCulture), ps, 21, Color.Cyan);
-            }
+            // _renderer.DrawCircle(prediction.Position, 120, Color.Cyan, 1, _gameState.Time, 1, 0);
+            //
+            // if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
+            // {
+            //     _renderer.Text(prediction.HitChance.ToString(CultureInfo.InvariantCulture), ps, 21, Color.Cyan);
+            // }
             //_gameInput.CastSpell(SpellSlot.Q, prediction.Position);
         }
     }

@@ -9,7 +9,7 @@ Menu* MenuGetInstance()
 Menu* Menu::_instance = nullptr;
 std::once_flag Menu::_initInstanceFlag;
 
-Menu::Menu(const std::string& title, const Rect rect): MenuBase(title, rect), _isMoving(false), _mouseMoveHandlerId(0), _keyStateEventHandlerId(0)
+Menu::Menu(const std::string& title, const Rect rect): MenuBase(MenuItemType::Menu, title, rect), _isMoving(false), _mouseMoveHandlerId(0), _keyStateEventHandlerId(0)
 {
     const auto im = InputManager::GetInstance();
     _mouseMoveHandlerId = im->AddMouseMoveHandler([this](const MouseMoveEvent event) { this->OnMouseMoveEvent(event); });
@@ -53,6 +53,11 @@ bool Menu::OnMouseMoveEvent(MouseMoveEvent event)
 
 bool Menu::OnKeyStateEvent(KeyStateEvent event)
 {
+    for (const auto item : _menus)
+    {
+        item->HandleHotkeys(event);
+    }
+    
     if(event.key == VK_LSHIFT && event.isDown)
     {
         _open = !_open;

@@ -6,5 +6,5 @@ namespace Api.Game.Readers;
 public interface IHeroReader : IAiBaseUnitReader
 {
     bool ReadHero(IHero? hero);
-    bool ReadHero(IHero? hero, BatchReadContext batchReadContext);
+    bool ReadHero(IHero? hero, IMemoryBuffer memoryBuffer);
 }

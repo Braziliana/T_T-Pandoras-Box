@@ -6,6 +6,7 @@ using Api.Game.Readers;
 using Api.GameProcess;
 using Api.Internal.Game.Objects;
 using Api.Utils;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
@@ -16,9 +17,9 @@ internal class BuffReader : BaseReader, IBuffReader
 	private readonly ObjectPool<IBuff> _buffPool = new ObjectPool<IBuff>(400, () => new Buff());
 
 	public BuffReader(
-		IMemory memory,
+		ITargetProcess targetProcess,
 		IBuffOffsets buffOffsets,
-		IGameState gameState) : base(memory)
+		IGameState gameState) : base(targetProcess)
 	{
 		_buffOffsets = buffOffsets;
 		_gameState = gameState;
@@ -75,7 +76,7 @@ internal class BuffReader : BaseReader, IBuffReader
     
     private IBuff? ReadBuff(IntPtr ptr)
     {
-	    if(!Memory.ReadPointer(ptr, out ptr))
+	    if(!TargetProcess.ReadPointer(ptr, out ptr))
 	    {
 		    return null;
 	    }
@@ -116,7 +117,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	    }
 
 	    string name = string.Empty;
-	    if (Memory.ReadPointer(buffInfoPtr + _buffOffsets.BuffInfoName.Offset, out var buffNamePtr))
+	    if (TargetProcess.ReadPointer(buffInfoPtr + (int)_buffOffsets.BuffInfoName.Offset, out var buffNamePtr))
 	    {
 		    name = ReadCharArray(buffNamePtr, Encoding.ASCII);
 		    if (string.IsNullOrWhiteSpace(name) || name.Count(char.IsLetter) < 3)
@@ -136,9 +137,9 @@ internal class BuffReader : BaseReader, IBuffReader
 	    return buff;
     }
 
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
 	    var size = GetSize(_buffOffsets.GetOffsets());
-	    return new BatchReadContext(size);
+	    return new MemoryBuffer(size);
     }
 }

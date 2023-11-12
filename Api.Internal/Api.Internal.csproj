@@ -15,15 +15,11 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Silk.NET" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.Core" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.Maths" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
-    <PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Api\Api.csproj" />
+    <ProjectReference Include="..\NativeWarper\NativeWarper.csproj" />
     <ProjectReference Include="..\WinApi\WinApi.csproj" />
   </ItemGroup>
 

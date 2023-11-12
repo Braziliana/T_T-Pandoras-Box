@@ -13,7 +13,13 @@ std::once_flag Renderer::_initInstanceFlag;
 
 void RegisterRenderCallback(const RenderCallback callback)
 {
-    Renderer::Instance()->SetRenderCallback(callback);
+    const auto renderer = Renderer::Instance();
+    if(renderer == nullptr)
+    {
+        std::cout << "Renderer doesnt exist" << std::endl;
+        return;
+    }
+    renderer->SetRenderCallback(callback);
 }
 
 void RegisterRenderHudCallback(const RenderCallback callback)
@@ -56,15 +62,39 @@ void RendererRectBorder3D(const Vector3* position, const Vector2* size, const Co
     Renderer::Instance()->RectBorder(*position, *size, *color, borderSize);
 }
 
-void RendererDrawCircle2D(const Vector2* position, const Vector2* size, const Color* color)
+
+void RendererCircleFilled2D(const Vector2* position, const float size, const Color* color)
 {
-    Renderer::Instance()->DrawCircle(*position, *size, *color);
+    Renderer::Instance()->CircleFilled(*position, size, *color);
 }
 
-void RendererDrawCircle3D(const Vector3* position, const Vector2* size, const Color* color)
+void RendererCircleFilled3D(const Vector3* position, const float size, const Color* color)
 {
-    Renderer::Instance()->DrawCircle(*position, *size, *color);
+    Renderer::Instance()->CircleFilled(*position, size, *color);
 }
+
+void RendererCircleFilledBordered2D(const Vector2* position, const float size, const Color* color,
+    const Color* borderColor, float borderSize)
+{
+    Renderer::Instance()->CircleFilledBordered(*position, size, *color, *borderColor, borderSize);
+}
+
+void RendererCircleFilledBordered3D(const Vector3* position, const float size, const Color* color,
+    const Color* borderColor, float borderSize)
+{
+    Renderer::Instance()->CircleFilledBordered(*position, size, *color, *borderColor, borderSize);
+}
+
+void RendererCircleBorder2D(const Vector2* position, const float size, const Color* color, const float borderSize)
+{
+    Renderer::Instance()->CircleBorder(*position, size, *color, borderSize);
+}
+
+void RendererCircleBorder3D(const Vector3* position, const float size, const Color* color, const float borderSize)
+{
+    Renderer::Instance()->CircleBorder(*position, size, *color, borderSize);
+}
+
 
 void RendererText2D(const char* text, const Vector2* position, const float size, const Color* color,
                     const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset)
@@ -78,6 +108,11 @@ void RendererTextRect2D(const char* text, const Vector2* start, const Vector2* e
     Renderer::Instance()->Text(text, *start, *end, size, *color, textHorizontalOffset, textVerticalOffset);
 }
 
+
+void RendererSet3DMatrix(const glm::mat4* matrix)
+{
+    Renderer::Instance()->Set3DMatrix(*matrix);
+}
 
 Renderer::Renderer(const HDC hdc) : _hdc(hdc), _viewProjectionMatrix()
 {
@@ -124,29 +159,19 @@ void Renderer::SetRenderHudCallback(RenderCallback callback)
     _renderGuiCallback = callback;
 }
 
-void Renderer::DrawCircle(const Vector2& position, const Vector2& size, const Color& color) const
-{
-    _circleRenderer->Draw(position, size, color);
-}
-
-void Renderer::DrawCircle(const Vector3& position, const Vector2& size, const Color& color) const
-{
-    _circleRenderer->Draw(position, size, color);
-}
-
 void Renderer::Text(const std::string& text, const Vector2& position, const float size, const Color& color, const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const
 {
     _textRenderer->Draw(text, position, size, color, textHorizontalOffset, textVerticalOffset);
 }
 
-auto Renderer::Text(const std::string& text, const Vector2& start, const Vector2& end, const float size, const Color& color,
-                    const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const -> void
+void Renderer::Text(const std::string& text, const Vector2& start, const Vector2& end, const float size, const Color& color,
+                    const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const
 {
     _textRenderer->Draw(text, start, end, size, color, textHorizontalOffset, textVerticalOffset);
 }
 
 
-Renderer* Renderer::CreateInstance(const HDC hdc, int width, int height)
+Renderer* Renderer::CreateInstance(const HDC hdc, const int width, const int height)
 {
     Destroy();
         
@@ -273,4 +298,36 @@ void Renderer::RectBorder(const Vector2& position, const Vector2& size, const Co
 void Renderer::RectBorder(const Vector3& position, const Vector2& size, const Color& color, const float borderSize) const
 {
     _rectRenderer->Border(position, size, color, borderSize);
+}
+
+void Renderer::CircleFilled(const Vector2& position, const float size, const Color& color) const
+{
+    _circleRenderer->Filled(position, size, color);
+}
+
+void Renderer::CircleFilled(const Vector3& position, const float size, const Color& color) const
+{
+    _circleRenderer->Filled(position, size, color);
+}
+
+void Renderer::CircleFilledBordered(const Vector2& position, const float size, const Color& color, const Color& borderColor,
+                                    const float borderSize) const
+{
+    _circleRenderer->FilledBordered(position, size, color, borderColor, borderSize);
+}
+
+void Renderer::CircleFilledBordered(const Vector3& position, const float size, const Color& color, const Color& borderColor,
+                                    const float borderSize) const
+{
+    _circleRenderer->FilledBordered(position, size, color, borderColor, borderSize);
+}
+
+void Renderer::CircleBorder(const Vector2& position, const float size, const Color& color, const float borderSize) const
+{
+    _circleRenderer->Border(position, size, color, borderSize);
+}
+
+void Renderer::CircleBorder(const Vector3& position, const float size, const Color& color, const float borderSize) const
+{
+    _circleRenderer->Border(position, size, color, borderSize);
 }

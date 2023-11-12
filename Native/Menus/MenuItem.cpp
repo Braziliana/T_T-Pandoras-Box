@@ -5,8 +5,16 @@
 
 void MenuItemSetTitle(MenuItem* instance, const char* title)
 {
+    instance->SetTitle(title);
 }
 
+void MenuItemRender(MenuItem* instance)
+{
+    instance->Render();
+}
+
+MenuItem::MenuItem(const MenuItemType menuItemType, std::string title, const Rect rect): _menuItemType(menuItemType), _title(std::move(title)), _rect(rect)
+{  }
 
 bool MenuItem::Contains(const Vector2& position) const
 {
@@ -55,4 +63,9 @@ bool MenuItem::OnMouseMoveEvent(MouseMoveEvent mouseMoveEvent)
 bool MenuItem::OnKeyStateEvent(KeyStateEvent event)
 {
     return false;
+}
+
+MenuItemType MenuItem::GetType() const
+{
+    return _menuItemType;
 }

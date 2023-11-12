@@ -21,7 +21,7 @@ internal class MonsterManager : IMonsterManager
         _monsterReader = monsterReader;
     }
 
-    public ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext)
+    public ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer)
     {
         var item = _itemsPool.GetNext((setItem) =>
         {
@@ -29,7 +29,7 @@ internal class MonsterManager : IMonsterManager
             setItem.GameObjectType = GameObjectType.Monster;
         });
         
-        if (!_monsterReader.ReadMonster(item, batchReadContext))
+        if (!_monsterReader.ReadMonster(item, memoryBuffer))
         {
             _itemsPool.CancelNext();
             return ObjectCreateResult.Failed;

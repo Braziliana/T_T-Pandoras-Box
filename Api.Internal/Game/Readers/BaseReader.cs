@@ -10,34 +10,34 @@ namespace Api.Internal.Game.Readers;
 public abstract class BaseReader : IDisposable
 {
     private readonly byte[] _stringBuffer;
-    private BatchReadContext? _batchReadContext;
+    private IMemoryBuffer? _memoryBuffer;
     protected readonly byte[] CharArray = new byte[64];
-    protected readonly IMemory Memory;
+    protected readonly ITargetProcess TargetProcess;
     
-    protected BatchReadContext BatchReadContext => _batchReadContext ??= CreateBatchReadContext();
+    protected IMemoryBuffer MemoryBuffer => _memoryBuffer ??= CreateBatchReadContext();
 
-    protected BaseReader(IMemory memory)
+    protected BaseReader(ITargetProcess targetProcess)
     {
-        Memory = memory;
+        TargetProcess = targetProcess;
         _stringBuffer = new byte[255];
     }
 
-    protected abstract BatchReadContext CreateBatchReadContext();
+    protected abstract IMemoryBuffer CreateBatchReadContext();
 
        
     protected bool StartRead(IBaseObject baseObject)
     {
-        return StartRead(baseObject, BatchReadContext);
+        return StartRead(baseObject, MemoryBuffer);
     }
     
     protected T ReadOffset<T>(OffsetData offsetData) where T : unmanaged
     {
-        return ReadOffset<T>(offsetData, BatchReadContext);
+        return ReadOffset<T>(offsetData, MemoryBuffer);
     }
     
-    public bool StartRead(IBaseObject baseObject, BatchReadContext batchReadContext)
+    public bool StartRead(IBaseObject baseObject, IMemoryBuffer memoryBuffer)
     {
-        var result = ReadBuffer(baseObject.Pointer, batchReadContext);
+        var result = ReadBuffer(baseObject.Pointer, memoryBuffer);
         baseObject.IsValid = result;
 
         return result;
@@ -45,22 +45,22 @@ public abstract class BaseReader : IDisposable
     
     public bool StartRead(IntPtr ptr)
     {
-        return ReadBuffer(ptr, BatchReadContext);
+        return ReadBuffer(ptr, MemoryBuffer);
     }
     
-    public bool ReadBuffer(IntPtr ptr, BatchReadContext batchReadContext)
+    public bool ReadBuffer(IntPtr ptr, IMemoryBuffer memoryBuffer)
     {
-        return Memory.ReadCachedBuffer(ptr, batchReadContext);
+        return TargetProcess.Read(ptr, memoryBuffer);
     }
 
-    public T ReadOffset<T>(OffsetData offsetData, BatchReadContext batchReadContext) where T : unmanaged
+    public T ReadOffset<T>(OffsetData offsetData, IMemoryBuffer memoryBuffer) where T : unmanaged
     {
-        return batchReadContext.Read<T>(offsetData.Offset);
+        return memoryBuffer.Read<T>(offsetData.Offset);
     }
 
-    public string ReadString(OffsetData offsetData, Encoding encoding, BatchReadContext batchReadContext)
+    public string ReadString(OffsetData offsetData, Encoding encoding, IMemoryBuffer memoryBuffer)
     {
-        var ts = ReadOffset<TString>(offsetData, batchReadContext);
+        var ts = ReadOffset<TString>(offsetData, memoryBuffer);
         if (ts._maxContentLength <= 0 || ts._contentLength <= 0)
         {
             return string.Empty;
@@ -72,7 +72,7 @@ public abstract class BaseReader : IDisposable
         }
 
         var ptr = ts.GetPtr();
-        if (ptr == IntPtr.Zero || !Memory.Read(ptr, _stringBuffer))
+        if (ptr == IntPtr.Zero || !TargetProcess.Read(ptr, _stringBuffer))
         {
             return string.Empty;
         }
@@ -83,12 +83,12 @@ public abstract class BaseReader : IDisposable
     
     protected string ReadString(OffsetData offsetData, Encoding encoding)
     {
-        return ReadString(offsetData, encoding, BatchReadContext);
+        return ReadString(offsetData, encoding, MemoryBuffer);
     }
     
     public string ReadString(IntPtr pointer, Encoding encoding)
     {
-        if (!Memory.Read<TString>(pointer, out var ts))
+        if (!TargetProcess.Read<TString>(pointer, out var ts))
         {
             return string.Empty;
         }
@@ -103,7 +103,7 @@ public abstract class BaseReader : IDisposable
         }
 
         var ptr = ts.GetPtr();
-        if (ptr == IntPtr.Zero || !Memory.Read(ptr, _stringBuffer))
+        if (ptr == IntPtr.Zero || !TargetProcess.Read(ptr, _stringBuffer))
         {
             return string.Empty;
         }
@@ -114,7 +114,7 @@ public abstract class BaseReader : IDisposable
 
     public string ReadCharArray(IntPtr strPtr, Encoding encoding)
     {
-        if (!Memory.Read(strPtr, CharArray))
+        if (!TargetProcess.Read(strPtr, CharArray))
         {
             return string.Empty;
         }
@@ -127,13 +127,13 @@ public abstract class BaseReader : IDisposable
         return encoding.GetString(CharArray, 0, length);
     }
     
-    public int GetSize(IEnumerable<OffsetData> offsetData)
+    public uint GetSize(IEnumerable<OffsetData> offsetData)
     {
-        return offsetData.Select(data => data.Offset + data.TargetSize).Prepend(0).Max();
+        return offsetData.Select(data => data.Offset + data.TargetSize).Prepend((uint)0).Max();
     }
     
     public virtual void Dispose()
     {
-        _batchReadContext?.Dispose();
+        _memoryBuffer?.Dispose();
     }
 }

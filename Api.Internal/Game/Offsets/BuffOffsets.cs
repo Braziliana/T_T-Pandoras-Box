@@ -15,13 +15,13 @@ internal class BuffOffsets : IBuffOffsets
     public BuffOffsets(IConfiguration configuration)
     {
         var cs = configuration.GetSection(nameof(BuffOffsets));
-        BuffEntryBuffStartTime = new OffsetData(nameof(BuffEntryBuffStartTime), Convert.ToInt32(cs[nameof(BuffEntryBuffStartTime)], 16), typeof(float));
-        BuffEntryBuffEndTime = new OffsetData(nameof(BuffEntryBuffEndTime), Convert.ToInt32(cs[nameof(BuffEntryBuffEndTime)], 16), typeof(float));
-        BuffEntryBuffCount = new OffsetData(nameof(BuffEntryBuffCount), Convert.ToInt32(cs[nameof(BuffEntryBuffCount)], 16), typeof(int));
-        BuffEntryBuffCountAlt = new OffsetData(nameof(BuffEntryBuffCountAlt), Convert.ToInt32(cs[nameof(BuffEntryBuffCountAlt)], 16), typeof(int));
-        BuffInfo = new OffsetData(nameof(BuffInfo), Convert.ToInt32(cs[nameof(BuffInfo)], 16), typeof(IntPtr));
+        BuffEntryBuffStartTime = new OffsetData(nameof(BuffEntryBuffStartTime), Convert.ToUInt32(cs[nameof(BuffEntryBuffStartTime)], 16), typeof(float));
+        BuffEntryBuffEndTime = new OffsetData(nameof(BuffEntryBuffEndTime), Convert.ToUInt32(cs[nameof(BuffEntryBuffEndTime)], 16), typeof(float));
+        BuffEntryBuffCount = new OffsetData(nameof(BuffEntryBuffCount), Convert.ToUInt32(cs[nameof(BuffEntryBuffCount)], 16), typeof(int));
+        BuffEntryBuffCountAlt = new OffsetData(nameof(BuffEntryBuffCountAlt), Convert.ToUInt32(cs[nameof(BuffEntryBuffCountAlt)], 16), typeof(int));
+        BuffInfo = new OffsetData(nameof(BuffInfo), Convert.ToUInt32(cs[nameof(BuffInfo)], 16), typeof(IntPtr));
         //TYPE IS WRONG BUT WE READ IT IN DIFFRENT WAY
-        BuffInfoName = new OffsetData(nameof(BuffInfoName), Convert.ToInt32(cs[nameof(BuffInfoName)], 16), typeof(IntPtr));
+        BuffInfoName = new OffsetData(nameof(BuffInfoName), Convert.ToUInt32(cs[nameof(BuffInfoName)], 16), typeof(IntPtr));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

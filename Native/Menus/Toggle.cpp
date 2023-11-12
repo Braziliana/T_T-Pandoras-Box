@@ -7,7 +7,7 @@ bool* ToggleGetToggledPointer(Toggle* togglePointer)
     return togglePointer->GetToggledPointer();
 }
 
-Toggle::Toggle(const std::string& title, const Rect& rect, const bool toggled): MenuItem(title, rect), _toggled(toggled)
+Toggle::Toggle(const std::string& title, const Rect& rect, const bool toggled): MenuItem(MenuItemType::Toggle, title, rect), _toggled(toggled)
 {
     _toggleElement =  DefaultMenuStyle.GetElementRect(_rect, 0);
 }

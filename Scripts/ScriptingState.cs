@@ -28,10 +28,10 @@ public class ScriptingState : IScriptingState
         inputManager.KeyUp += InputManagerOnKeyUp;
 
         var menu = mainMenu.CreateMenu("Hotkeys", ScriptType.Utility);
-        _comboKey = menu.AddHotkey("Combo", string.Empty, VirtualKey.Spacebar, HotkeyType.Press);
-        _harasKey = menu.AddHotkey("Haras", string.Empty, VirtualKey.C, HotkeyType.Press);
-        _farmKey = menu.AddHotkey("Farm", string.Empty, VirtualKey.X, HotkeyType.Press);
-        _clearKey = menu.AddHotkey("Clear", string.Empty, VirtualKey.V, HotkeyType.Press);
+        _comboKey = menu.AddHotkey("Combo", VirtualKey.Space, HotkeyType.Press, false);
+        _harasKey = menu.AddHotkey("Haras", VirtualKey.C, HotkeyType.Press, false);
+        _farmKey = menu.AddHotkey("Farm", VirtualKey.X, HotkeyType.Press, false);
+        _clearKey = menu.AddHotkey("Clear", VirtualKey.V, HotkeyType.Press, false);
     }
 
     private void InputManagerOnKeyDown(VirtualKey virtualKey)

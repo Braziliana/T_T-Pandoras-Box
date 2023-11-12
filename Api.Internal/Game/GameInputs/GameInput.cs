@@ -2,7 +2,6 @@
 using Api.Game.GameInputs;
 using Api.Game.Objects;
 using Api.Inputs;
-using Api.Internal.Inputs;
 
 namespace Api.Internal.Game.GameInputs;
 

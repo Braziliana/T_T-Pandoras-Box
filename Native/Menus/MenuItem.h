@@ -5,15 +5,26 @@
 #include "../../Input/InputManager.h"
 #include "MenuStyle.h"
 
+enum class MenuItemType
+{
+    Menu,
+    SubMenu,
+    Toggle,
+    Hotkey,
+    FloatSlider,
+    ComboBox
+};
+
 class MenuItem
 {
 protected:
+    MenuItemType _menuItemType;
     std::string _title;
     Rect _rect;
-
+    
 public:
     
-    MenuItem(std::string title, const Rect rect) : _title(std::move(title)), _rect(rect) {  }
+    MenuItem(MenuItemType menuItemType, std::string title, Rect rect);
     virtual ~MenuItem() = default;
 
     bool Contains(const Vector2& position) const;
@@ -25,8 +36,10 @@ public:
     virtual void Render();
     virtual bool OnMouseMoveEvent(MouseMoveEvent mouseMoveEvent);
     virtual bool OnKeyStateEvent(KeyStateEvent event);
+    MenuItemType GetType() const;
 };
 
 extern "C" {
     __declspec(dllexport) void MenuItemSetTitle(MenuItem* instance, const char* title);
+    __declspec(dllexport) void MenuItemRender(MenuItem* instance);
 }

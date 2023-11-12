@@ -4,6 +4,7 @@ using Api.Game.Objects;
 using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
@@ -12,8 +13,8 @@ public class ActiveCastSpellReader : BaseReader, IActiveCastSpellReader
     private readonly IActiveCastSpellOffsets _activeCastSpellOffsets;
     
     public ActiveCastSpellReader(
-        IMemory memory,
-        IActiveCastSpellOffsets activeCastSpellOffsets) : base(memory)
+        ITargetProcess targetProcess,
+        IActiveCastSpellOffsets activeCastSpellOffsets) : base(targetProcess)
     {
         _activeCastSpellOffsets = activeCastSpellOffsets;
     }
@@ -48,7 +49,7 @@ public class ActiveCastSpellReader : BaseReader, IActiveCastSpellReader
 
         spell.SourceId = ReadOffset<int>(_activeCastSpellOffsets.SourceId);
 
-        if (Memory.Read<int>(ReadOffset<IntPtr>(_activeCastSpellOffsets.TargetId), out var targetId))
+        if (TargetProcess.Read<int>(ReadOffset<IntPtr>(_activeCastSpellOffsets.TargetId), out var targetId))
         {
             spell.TargetId = targetId;
         }
@@ -64,14 +65,14 @@ public class ActiveCastSpellReader : BaseReader, IActiveCastSpellReader
         spell.EndTime = ReadOffset<float>(_activeCastSpellOffsets.EndTime);
 
         var spellInfo = ReadOffset<IntPtr>(_activeCastSpellOffsets.SpellInfo);
-        spell.Name = ReadString(spellInfo + _activeCastSpellOffsets.SpellInfoName.Offset, Encoding.ASCII);
+        spell.Name = ReadString(spellInfo + (int)_activeCastSpellOffsets.SpellInfoName.Offset, Encoding.ASCII);
         
         return true;
     }
     
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
         var size = GetSize(_activeCastSpellOffsets.GetOffsets());
-        return new BatchReadContext(size);
+        return new MemoryBuffer(size);
     }
 }

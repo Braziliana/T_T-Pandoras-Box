@@ -12,12 +12,12 @@ internal class PlantReader : AttackableUnitReader, IPlantReader
     private readonly IPlantNameTypeMapper _plantNameTypeMapper;
     
     public PlantReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         IPlantNameTypeMapper plantNameTypeMapper,
         UnitDataDictionary unitDataDictionary)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
     {
         _plantNameTypeMapper = plantNameTypeMapper;
     }
@@ -34,9 +34,9 @@ internal class PlantReader : AttackableUnitReader, IPlantReader
         return true;
     }
 
-    public bool ReadPlant(IPlant? plant, BatchReadContext batchReadContext)
+    public bool ReadPlant(IPlant? plant, IMemoryBuffer memoryBuffer)
     {        
-        if (plant is null || !ReadAttackableUnit(plant, batchReadContext))
+        if (plant is null || !ReadAttackableUnit(plant, memoryBuffer))
         {
             return false;
         }

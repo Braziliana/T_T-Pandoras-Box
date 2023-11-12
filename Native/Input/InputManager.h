@@ -78,7 +78,7 @@ public:
     void Start();
     void Stop();
     void Reset();
-    bool GetKeyState(unsigned int vkCode) const;
+    bool GetKeyState(unsigned short vkCode) const;
     Vector2 GetMousePosition() const;
     void ProcessInputEvents();
 
@@ -89,17 +89,46 @@ public:
     int AddKeyStateEventHandler(std::function<void(KeyStateEvent)> handler);
     void RemoveKeyStateEventHandler(int key);
 
+    static INPUT CreateMouseClickInput(unsigned short vkCode, bool down);
+    static INPUT CreateMouseMoveInput(const Vector2& position);
+    static void MouseSendDown(unsigned short vkCode);
+    static void MouseSendUp(unsigned short vkCode);
+    static void MouseMove(const Vector2& position);
+    static void MouseSend(unsigned short vkCode, bool down);
+    static void MouseSend(unsigned short vkCode);
+
+    static INPUT CreateKeyboardInput(unsigned short vkCode, bool down);
+    static void KeyboardSendDown(unsigned short vkCode);
+    static void KeyboardSendUp(unsigned short vkCode);
+    static void KeyboardSend(unsigned short vkCode, bool down);
+    static void KeyboardSend(unsigned short vkCode);
+
+    static void SendInputs(INPUT* inputs, unsigned int count);
+    
     ~InputManager();
 };
 
 
 extern "C" {
     __declspec(dllexport) void InputManagerReset();
-    __declspec(dllexport) bool InputManagerGetKeyState(unsigned int vkCode);
+    __declspec(dllexport) bool InputManagerGetKeyState(unsigned short vkCode);
     __declspec(dllexport) void InputManagerGetMousePosition(Vector2* vector);
     
     __declspec(dllexport) int InputManagerAddMouseMoveHandler(MouseMoveEventHandler handler);
     __declspec(dllexport) void InputManagerRemoveMouseMoveHandler(int key);
     __declspec(dllexport) int InputManagerAddKeyStateEventHandler(KeyStateEventHandler handler);
     __declspec(dllexport) void InputManagerRemoveKeyStateEventHandler(int key);
+    
+    __declspec(dllexport) INPUT InputManagerCreateMouseClickInput(unsigned short vkCode, bool down);
+    __declspec(dllexport) INPUT InputManagerCreateMouseMoveInput(const Vector2* position);
+    __declspec(dllexport) void InputManagerMouseSendDown(unsigned short vkCode);
+    __declspec(dllexport) void InputManagerMouseSendUp(unsigned short vkCode);
+    __declspec(dllexport) void InputManagerMouseMove(const Vector2* position);
+    __declspec(dllexport) void InputManagerMouseSend(unsigned short vkCode);
+
+    __declspec(dllexport) INPUT InputManagerCreateKeyboardInput(unsigned short vkCode, bool down);
+    __declspec(dllexport) void InputManagerKeyboardSendDown(unsigned short vkCode);
+    __declspec(dllexport) void InputManagerKeyboardSendUp(unsigned short vkCode);
+    __declspec(dllexport) void InputManagerKeyboardSend(unsigned short vkCode);
+    __declspec(dllexport) void InputManagerSendInputs(INPUT* inputs, unsigned int count);
 }

@@ -10,12 +10,12 @@ internal class AiBaseUnitReader : AttackableUnitReader, IAiBaseUnitReader
 {
     private readonly IAiBaseUnitOffsets _aiBaseUnitOffsets;
     public AiBaseUnitReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         UnitDataDictionary unitDataDictionary,
         IAiBaseUnitOffsets aiBaseUnitOffsets) 
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary)
     {
         _aiBaseUnitOffsets = aiBaseUnitOffsets;
     }
@@ -62,24 +62,24 @@ internal class AiBaseUnitReader : AttackableUnitReader, IAiBaseUnitReader
         return true;
     }
 
-    public bool ReadAiBaseUnit(IAiBaseUnit? aiBaseUnit, BatchReadContext batchReadContext)
+    public bool ReadAiBaseUnit(IAiBaseUnit? aiBaseUnit, IMemoryBuffer memoryBuffer)
     {
-        if (aiBaseUnit is null || !ReadAttackableUnit(aiBaseUnit, batchReadContext))
+        if (aiBaseUnit is null || !ReadAttackableUnit(aiBaseUnit, memoryBuffer))
         {
             return false;
         }
 
-        aiBaseUnit.CurrentTargetIndex = ReadOffset<int>(_aiBaseUnitOffsets.CurrentTargetIndex, batchReadContext);
-        aiBaseUnit.BaseAttackRange = ReadOffset<float>(_aiBaseUnitOffsets.AttackRange, batchReadContext);
-        aiBaseUnit.BonusAttackSpeed = ReadOffset<float>(_aiBaseUnitOffsets.BonusAttackSpeed, batchReadContext);
+        aiBaseUnit.CurrentTargetIndex = ReadOffset<int>(_aiBaseUnitOffsets.CurrentTargetIndex, memoryBuffer);
+        aiBaseUnit.BaseAttackRange = ReadOffset<float>(_aiBaseUnitOffsets.AttackRange, memoryBuffer);
+        aiBaseUnit.BonusAttackSpeed = ReadOffset<float>(_aiBaseUnitOffsets.BonusAttackSpeed, memoryBuffer);
         
-        aiBaseUnit.BaseAttackDamage = ReadOffset<float>(_aiBaseUnitOffsets.BaseAttackDamage, batchReadContext);
-        aiBaseUnit.BonusAttackDamage = ReadOffset<float>(_aiBaseUnitOffsets.BonusAttackDamage, batchReadContext);
+        aiBaseUnit.BaseAttackDamage = ReadOffset<float>(_aiBaseUnitOffsets.BaseAttackDamage, memoryBuffer);
+        aiBaseUnit.BonusAttackDamage = ReadOffset<float>(_aiBaseUnitOffsets.BonusAttackDamage, memoryBuffer);
         
-        aiBaseUnit.AbilityPower = ReadOffset<float>(_aiBaseUnitOffsets.AbilityPower, batchReadContext);
-        aiBaseUnit.MagicPenetration = ReadOffset<float>(_aiBaseUnitOffsets.MagicPenetration, batchReadContext);
-        aiBaseUnit.Lethality = ReadOffset<float>(_aiBaseUnitOffsets.Lethality, batchReadContext);
-        aiBaseUnit.Level = ReadOffset<int>(_aiBaseUnitOffsets.Level, batchReadContext);
+        aiBaseUnit.AbilityPower = ReadOffset<float>(_aiBaseUnitOffsets.AbilityPower, memoryBuffer);
+        aiBaseUnit.MagicPenetration = ReadOffset<float>(_aiBaseUnitOffsets.MagicPenetration, memoryBuffer);
+        aiBaseUnit.Lethality = ReadOffset<float>(_aiBaseUnitOffsets.Lethality, memoryBuffer);
+        aiBaseUnit.Level = ReadOffset<int>(_aiBaseUnitOffsets.Level, memoryBuffer);
 
         if (aiBaseUnit.Level is > 30 or < 1)
         {
@@ -99,7 +99,7 @@ internal class AiBaseUnitReader : AttackableUnitReader, IAiBaseUnitReader
         return true;
     }
     
-    public override int GetBufferSize()
+    public override uint GetBufferSize()
     {
         return Math.Max(base.GetBufferSize(), GetSize(_aiBaseUnitOffsets.GetOffsets()));
     }

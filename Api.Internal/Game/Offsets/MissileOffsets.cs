@@ -23,18 +23,18 @@ internal class MissileOffsets : IMissileOffsets
     {
         var cs = configuration.GetSection(nameof(MissileOffsets));
             
-        NetworkId = new OffsetData(nameof(NetworkId), Convert.ToInt32(cs[nameof(NetworkId)], 16), typeof(int));
-        Name = new OffsetData(nameof(Name), Convert.ToInt32(cs[nameof(Name)], 16), typeof(TString));
-        Speed = new OffsetData(nameof(Speed), Convert.ToInt32(cs[nameof(Speed)], 16), typeof(float));
-        Position = new OffsetData(nameof(Position), Convert.ToInt32(cs[nameof(Position)], 16), typeof(Vector3));
-        SourceIndex = new OffsetData(nameof(SourceIndex), Convert.ToInt32(cs[nameof(SourceIndex)], 16), typeof(int));
-        DestinationIndex = new OffsetData(nameof(DestinationIndex), Convert.ToInt32(cs[nameof(DestinationIndex)], 16), typeof(IntPtr));
-        StartPosition = new OffsetData(nameof(StartPosition), Convert.ToInt32(cs[nameof(StartPosition)], 16), typeof(Vector3));
-        EndPosition = new OffsetData(nameof(EndPosition), Convert.ToInt32(cs[nameof(EndPosition)], 16), typeof(Vector3));
-        SpellInfo = new OffsetData(nameof(SpellInfo), Convert.ToInt32(cs[nameof(SpellInfo)], 16), typeof(IntPtr));
+        NetworkId = new OffsetData(nameof(NetworkId), Convert.ToUInt32(cs[nameof(NetworkId)], 16), typeof(int));
+        Name = new OffsetData(nameof(Name), Convert.ToUInt32(cs[nameof(Name)], 16), typeof(TString));
+        Speed = new OffsetData(nameof(Speed), Convert.ToUInt32(cs[nameof(Speed)], 16), typeof(float));
+        Position = new OffsetData(nameof(Position), Convert.ToUInt32(cs[nameof(Position)], 16), typeof(Vector3));
+        SourceIndex = new OffsetData(nameof(SourceIndex), Convert.ToUInt32(cs[nameof(SourceIndex)], 16), typeof(int));
+        DestinationIndex = new OffsetData(nameof(DestinationIndex), Convert.ToUInt32(cs[nameof(DestinationIndex)], 16), typeof(IntPtr));
+        StartPosition = new OffsetData(nameof(StartPosition), Convert.ToUInt32(cs[nameof(StartPosition)], 16), typeof(Vector3));
+        EndPosition = new OffsetData(nameof(EndPosition), Convert.ToUInt32(cs[nameof(EndPosition)], 16), typeof(Vector3));
+        SpellInfo = new OffsetData(nameof(SpellInfo), Convert.ToUInt32(cs[nameof(SpellInfo)], 16), typeof(IntPtr));
         
-        SpellInfoSpellName = new OffsetData(nameof(SpellInfoSpellName), Convert.ToInt32(cs[nameof(SpellInfoSpellName)], 16), typeof(TString));
-        SpellInfoMissileName = new OffsetData(nameof(SpellInfoMissileName), Convert.ToInt32(cs[nameof(SpellInfoMissileName)], 16), typeof(TString));
+        SpellInfoSpellName = new OffsetData(nameof(SpellInfoSpellName), Convert.ToUInt32(cs[nameof(SpellInfoSpellName)], 16), typeof(TString));
+        SpellInfoMissileName = new OffsetData(nameof(SpellInfoMissileName), Convert.ToUInt32(cs[nameof(SpellInfoMissileName)], 16), typeof(TString));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

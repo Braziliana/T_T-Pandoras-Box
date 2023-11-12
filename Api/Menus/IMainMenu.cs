@@ -12,10 +12,10 @@ namespace Api.Menus
         public event Action? MenuOpen;
         public event Action? MenuClose;
         void Render();
-        void AddMenu(IMenu menu);
-        IMenu CreateMenu(string name, ScriptType scriptType);
+        public ISubMenu AddSubMenu(string title);
         void LoadSettings();
         void SaveSettings();
         void RemoveMenu(IMenu menu);
+        IMenu CreateMenu(string title, ScriptType scriptType);
     }
 }

@@ -21,9 +21,9 @@ FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, const
     return instance->AddFloatSlider(std::string(title), value, minValue, maxValue, step, precision);
 }
 
-Hotkey* MenuBaseAddHotkey(MenuBase* instance, const std::string& title, const unsigned hotkey, const HotkeyType hotkeyType, const bool toggled)
+Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, const unsigned hotkey, const int hotkeyType, const bool toggled)
 {
-    return instance->AddHotkey(title, hotkey, hotkeyType, toggled);
+    return instance->AddHotkey(title, hotkey, static_cast<HotkeyType>(hotkeyType), toggled);
 }
 
 
@@ -53,7 +53,7 @@ void MenuBase::DrawHeader() const
     renderer->Text(_title, itemsRect.GetStart(), itemsRect.GetEnd(), DefaultMenuStyle.FontSize, DefaultMenuStyle.TextColor, TextHorizontalOffset::Center, TextVerticalOffset::Center);
 }
 
-MenuBase::MenuBase(const std::string& title, const Rect rect): MenuItem(title, rect)
+MenuBase::MenuBase(MenuItemType menuItemType, const std::string& title, const Rect rect): MenuItem(menuItemType, title, rect)
 {
     _headerRect = Rect(_rect.x + DefaultMenuStyle.ItemSize.x - DefaultMenuStyle.Border, rect.y, DefaultMenuStyle.ItemSize.x, DefaultMenuStyle.ItemSize.y);
     _nextChildPosition = Vector2(_headerRect.x, _headerRect.y + _headerRect.height - DefaultMenuStyle.Border);
@@ -65,6 +65,8 @@ MenuBase::~MenuBase()
         delete item;
     }
     _items.clear();
+    _menus.clear();
+    _hotkeys.clear();
 }
 
 void MenuBase::Render()
@@ -107,6 +109,7 @@ SubMenu* MenuBase::AddSubMenu(const std::string& title)
 {
     const auto item = new SubMenu(title, GetChildRect(1));
     AddItem(item);
+    _menus.push_back(item);
     return item;
 }
 
@@ -129,6 +132,7 @@ Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned hotkey, con
 {
     const auto item = new Hotkey(title, GetChildRect(2), hotkey, hotkeyType, toggled);
     AddItem(item);
+    _hotkeys.push_back(item);
     return item;
 }
 
@@ -180,11 +184,19 @@ bool MenuBase::OnKeyStateEvent(const KeyStateEvent event)
 
     for (const auto item : _items)
     {
-        if(item->OnKeyStateEvent(event))
+        if(item->GetType() != MenuItemType::Hotkey && item->OnKeyStateEvent(event))
         {
             return true;
         }
     }
         
     return false;
+}
+
+void MenuBase::HandleHotkeys(const KeyStateEvent event) const
+{
+    for (const auto item : _hotkeys)
+    {
+        item->OnKeyStateEvent(event);
+    }
 }

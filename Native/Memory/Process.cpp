@@ -12,7 +12,7 @@ bool ProcessRead(const uintptr_t address, const unsigned int size, unsigned char
 
 bool ProcessReadBuffer(const uintptr_t address, MemoryBuffer* memoryBuffer)
 {
-    return Process::GetInstance()->Read(address, memoryBuffer);
+    return Process::GetInstance()->ReadBuffer(address, memoryBuffer);
 }
 
 bool ProcessReadModule(const unsigned int offset, const unsigned int size, unsigned char* result)
@@ -76,10 +76,11 @@ bool Process::Read(const uintptr_t address, const unsigned int size, unsigned ch
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(address), result, size, &bytesRead);
 }
 
-bool Process::ReadBuffer(const uintptr_t address, MemoryBuffer* memoryBuffer) const
+bool Process::ReadBuffer(const uintptr_t address, const MemoryBuffer* memoryBuffer) const
 {
     size_t bytesRead;
-    return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(address), memoryBuffer, memoryBuffer->size, &bytesRead);
+    const auto result = ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(address), memoryBuffer->bytes, memoryBuffer->size, &bytesRead);
+    return result;
 }
 
 bool Process::ReadModule(const unsigned int offset, const unsigned int size, unsigned char* result) const
@@ -88,10 +89,11 @@ bool Process::ReadModule(const unsigned int offset, const unsigned int size, uns
     return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(_moduleBase + offset), result, size, &bytesRead);
 }
 
-bool Process::ReadModuleBuffer(const unsigned int offset, MemoryBuffer* memoryBuffer) const
+bool Process::ReadModuleBuffer(const unsigned int offset, const MemoryBuffer* memoryBuffer) const
 {
     size_t bytesRead;
-    return ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(_moduleBase + offset), memoryBuffer, memoryBuffer->size, &bytesRead);
+    const auto result = ReadProcessMemory(_hProcess, reinterpret_cast<LPCVOID>(_moduleBase + offset), memoryBuffer->bytes, memoryBuffer->size, &bytesRead);
+    return result;
 }
 
 DWORD Process::GetId() const

@@ -6,5 +6,5 @@ namespace Api.Game.Readers;
 public interface IAiBaseUnitReader : IAttackableUnitReader
 { 
     bool ReadAiBaseUnit(IAiBaseUnit? aiBaseUnit);
-    bool ReadAiBaseUnit(IAiBaseUnit? aiBaseUnit, BatchReadContext batchReadContext);
+    bool ReadAiBaseUnit(IAiBaseUnit? aiBaseUnit, IMemoryBuffer memoryBuffer);
 }

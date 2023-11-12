@@ -7,7 +7,7 @@ bool* HotkeyGetToggledPointer(Hotkey* instance)
 }
 
 Hotkey::Hotkey(const std::string& title, const Rect& rect, const unsigned hotkey, const HotkeyType hotkeyType,
-    bool toggled): MenuItem(title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
+    bool toggled): MenuItem(MenuItemType::Hotkey, title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
 {
 }
 

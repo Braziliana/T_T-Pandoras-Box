@@ -36,11 +36,7 @@ private:
     }
     
 public:
-    FloatSlider(const std::string& title, const Rect& rect, const float value, const float minValue, const float maxValue, const float step, const int precision)
-        : MenuItem(title, rect), _value(value), _minValue(minValue), _maxValue(maxValue), _step(step), _precision(precision), _isSliding(false)
-    {
-        UpdateContentPositions();
-    }
+    FloatSlider(const std::string& title, const Rect& rect, const float value, const float minValue, const float maxValue, const float step, const int precision);
 
     float* GetValuePointer()
     {

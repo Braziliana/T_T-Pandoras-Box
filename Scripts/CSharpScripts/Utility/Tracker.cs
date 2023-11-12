@@ -52,20 +52,20 @@ public class Tracker : IScript
         _objectManager = objectManager;
 
         var menu = mainMenu.CreateMenu("Tracker", ScriptType.Utility);
-        var subMenuRanges = menu.AddSubMenu("Ranges", "");
+        var subMenuRanges = menu.AddSubMenu("Ranges");
         
-        _showAllyAutoAttacksRange = subMenuRanges.AddToggle("Ally range indicator", "Display allay heroes ranges", false);
-        _showEnemyAutoAttacksRange = subMenuRanges.AddToggle("Enemy range indicator", "Display enemy heroes ranges", true);
-        _showAllyTurretRange = subMenuRanges.AddToggle("Ally turret range indicator", "Display allay turret ranges", false);
-        _showEnemyTurretRange = subMenuRanges.AddToggle("Enemy turret range indicator", "Display enemy turret ranges", true);
+        _showAllyAutoAttacksRange = subMenuRanges.AddToggle("Ally range indicator", false);
+        _showEnemyAutoAttacksRange = subMenuRanges.AddToggle("Enemy range indicator", true);
+        _showAllyTurretRange = subMenuRanges.AddToggle("Ally turret range indicator", false);
+        _showEnemyTurretRange = subMenuRanges.AddToggle("Enemy turret range indicator", true);
         
         
-        var subMenuPaths = menu.AddSubMenu("Paths", "");
-        _showAllyPath = subMenuPaths.AddToggle("Ally path indicator", "Might make lags. Line renderer needs fixes. Display allay path nodes", false);
-        _showEnemyPath = subMenuPaths.AddToggle("Enemy path indicator", "Might make lags. Line renderer needs fixes. Display enemy path nodes", false);
+        var subMenuPaths = menu.AddSubMenu("Paths");
+        _showAllyPath = subMenuPaths.AddToggle("Ally path indicator", false);
+        _showEnemyPath = subMenuPaths.AddToggle("Enemy path indicator", false);
 
-        _showEnemyWards = menu.AddToggle("Enemy wards indicator", "Display enemy wards", true);
-        _showEnemyTraps = menu.AddToggle("Enemy traps indicator", "Display enemy traps", true);
+        _showEnemyWards = menu.AddToggle("Enemy wards indicator", true);
+        _showEnemyTraps = menu.AddToggle("Enemy traps indicator", true);
     }
     
     public void OnLoad()
@@ -140,7 +140,7 @@ public class Tracker : IScript
                     WardType.Crab => Color.Green,
                     _ => Color.Red
                 };
-                _renderer.Circle3D(ward.Position, ward.CollisionRadius, color, 1, _gameState.Time, 1, 0);
+                _renderer.CircleBorder3D(ward.Position, ward.CollisionRadius, color, 1);
             }
         }
 
@@ -148,7 +148,7 @@ public class Tracker : IScript
         {
             foreach (var enemyTrap in _objectManager.TrapManager.GetEnemyTraps())
             {
-                _renderer.Circle3D(enemyTrap.Position, 80, Color.Red, 1, _gameState.Time, 1, 0);
+                _renderer.CircleBorder3D(enemyTrap.Position, 80, Color.Red, 5);
 
                 if (_gameCamera.WorldToScreen(enemyTrap.Position, out var trapSp))
                 {
@@ -160,15 +160,15 @@ public class Tracker : IScript
 
     private void DrawRange(IAiBaseUnit unit, Color color)
     {
-        _renderer.Circle3D(unit.Position, unit.AttackRange, color, 1, _gameState.Time, 1, 1);
+        _renderer.CircleBorder3D(unit.Position, unit.AttackRange, color, 1);
     }
     
     private void DrawPath(IHero hero, Color color)
     {
-        _renderer.RenderLines(hero.AiManager.RemainingPath, 1, color);
-        if (_gameCamera.WorldToScreen(hero.AiManager.TargetPosition, out var targetScreenPosition))
-        {
-            _renderer.Text(hero.Name, targetScreenPosition, 21, color);
-        }
+        // _renderer.RenderLines(hero.AiManager.RemainingPath, 1, color);
+        // if (_gameCamera.WorldToScreen(hero.AiManager.TargetPosition, out var targetScreenPosition))
+        // {
+        //     _renderer.Text(hero.Name, targetScreenPosition, 21, color);
+        // }
     }
 }

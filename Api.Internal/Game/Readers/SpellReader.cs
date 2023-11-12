@@ -4,6 +4,7 @@ using Api.Game.Objects;
 using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
@@ -11,13 +12,13 @@ internal class SpellReader : BaseReader, ISpellReader
 {
     private readonly ISpellOffsets _spellOffsets;
     private readonly IGameState _gameState;
-    private readonly BatchReadContext _spellInputBatchReadContext;
+    private readonly IMemoryBuffer _memoryBuffer;
     
-    public SpellReader(IMemory memory, ISpellOffsets spellOffsets, IGameState gameState) : base(memory)
+    public SpellReader(ITargetProcess targetProcess, ISpellOffsets spellOffsets, IGameState gameState) : base(targetProcess)
     {
         _spellOffsets = spellOffsets;
         _gameState = gameState;
-        _spellInputBatchReadContext = new BatchReadContext(GetSize(_spellOffsets.GetSpellInputOffsets()));
+        _memoryBuffer = new MemoryBuffer(GetSize(_spellOffsets.GetSpellInputOffsets()));
     }
     
     public bool ReadSpell(ISpell spell, IntPtr spellPointer)
@@ -34,17 +35,17 @@ internal class SpellReader : BaseReader, ISpellReader
         spell.Damage = ReadOffset<float>(_spellOffsets.SpellSlotDamage);
         spell.Stacks = ReadOffset<int>(_spellOffsets.SpellSlotSmiteCharges);
 
-        if (Memory.ReadPointer(ReadOffset<IntPtr>(_spellOffsets.SpellSlotSpellInput), out var spellInputPointer))
+        if (TargetProcess.ReadPointer(ReadOffset<IntPtr>(_spellOffsets.SpellSlotSpellInput), out var spellInputPointer))
         {
             spell.SpellInput.Pointer = spellInputPointer;
-            if (ReadBuffer(spellInputPointer, _spellInputBatchReadContext))
+            if (ReadBuffer(spellInputPointer, _memoryBuffer))
             {
                 spell.SpellInput.SpellInputTargetId =
-                    ReadOffset<int>(_spellOffsets.SpellInputTargetId, _spellInputBatchReadContext);
+                    ReadOffset<int>(_spellOffsets.SpellInputTargetId, _memoryBuffer);
                 spell.SpellInput.SpellInputStartPosition =
-                    ReadOffset<Vector3>(_spellOffsets.SpellInputStartPosition, _spellInputBatchReadContext);
+                    ReadOffset<Vector3>(_spellOffsets.SpellInputStartPosition, _memoryBuffer);
                 spell.SpellInput.SpellInputEndPosition =
-                    ReadOffset<Vector3>(_spellOffsets.SpellInputEndPosition, _spellInputBatchReadContext);
+                    ReadOffset<Vector3>(_spellOffsets.SpellInputEndPosition, _memoryBuffer);
             }
         }
         
@@ -60,9 +61,9 @@ internal class SpellReader : BaseReader, ISpellReader
         spell.IsReady = spell is { Cooldown: <= 0, Level: > 0 };
         spell.SmiteIsReady = spell.SmiteCooldown <= 0 || spell.Stacks >= 1;
 
-        if (Memory.ReadPointer(ReadOffset<IntPtr>(_spellOffsets.SpellSlotSpellInfo) + _spellOffsets.SpellInfoSpellData.Offset, out var spellDataPointer))
+        if (TargetProcess.ReadPointer(ReadOffset<IntPtr>(_spellOffsets.SpellSlotSpellInfo) + (int)_spellOffsets.SpellInfoSpellData.Offset, out var spellDataPointer))
         {
-            if (Memory.ReadPointer(spellDataPointer + _spellOffsets.SpellDataSpellName.Offset,
+            if (TargetProcess.ReadPointer(spellDataPointer + (int)_spellOffsets.SpellDataSpellName.Offset,
                     out var spellNamePointer))
             {
                 spell.Name = ReadCharArray(spellNamePointer, Encoding.ASCII);
@@ -75,15 +76,15 @@ internal class SpellReader : BaseReader, ISpellReader
         return true;
     }
 
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
         var size = GetSize(_spellOffsets.GetOffsets());
-        return new BatchReadContext(size);
+        return new MemoryBuffer(size);
     }
 
     public override void Dispose()
     {
         base.Dispose();
-        _spellInputBatchReadContext.Dispose();
+        _memoryBuffer.Dispose();
     }
 }

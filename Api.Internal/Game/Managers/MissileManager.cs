@@ -30,18 +30,18 @@ public struct MissileNode
 internal class MissileManager : IMissileManager
 {
     private float _listCacheDuration;
-    private readonly IMemory _memory;
+    private readonly ITargetProcess _targetProcess;
     private readonly IMissileReader _missileReader;
     private readonly IDictionary<int, IMissile> _items = new Dictionary<int, IMissile>();
     private readonly PooledList<IMissile> _itemsPool = new PooledList<IMissile>(100, 10, () => new Missile());
-    private readonly int _missileListOffset;
+    private readonly uint _missileListOffset;
     
     public MissileManager(
         IBaseOffsets baseOffsets,
-        IMemory memory,
+        ITargetProcess targetProcess,
         IMissileReader missileReader)
     {
-        _memory = memory;
+        _targetProcess = targetProcess;
         _missileReader = missileReader;
         _missileListOffset = baseOffsets.MissileList;
     }
@@ -72,7 +72,7 @@ internal class MissileManager : IMissileManager
         
         blockedNodes.Add(childPtr);
         
-        if(!_memory.Read<MissileNode>(childPtr, out var missileNode)) return;
+        if(!_targetProcess.Read<MissileNode>(childPtr, out var missileNode)) return;
         
         nodesToVisit.Enqueue(missileNode);
         if (missileNode.Missile.ToInt64() > 0x1000)
@@ -86,12 +86,12 @@ internal class MissileManager : IMissileManager
         _items.Clear();
         _itemsPool.Clear();
         
-        if (!_memory.ReadModulePointer(_missileListOffset, out var missilesPtr))
+        if (!_targetProcess.ReadModulePointer(_missileListOffset, out var missilesPtr))
         {
             return;
         }
         
-        if (!_memory.Read(missilesPtr + 0x8, out missilesPtr))
+        if (!_targetProcess.Read(missilesPtr + 0x8, out missilesPtr))
         {
             return;
         }
@@ -101,7 +101,7 @@ internal class MissileManager : IMissileManager
         var blockedNodes = new HashSet<IntPtr>();
         var missilesToRead = new HashSet<IntPtr>();
         var nodesToVisit = new Queue<MissileNode>();
-        if (!_memory.Read<MissileNode>(missilesPtr, out var rootNode))
+        if (!_targetProcess.Read<MissileNode>(missilesPtr, out var rootNode))
         {
             return;
         }

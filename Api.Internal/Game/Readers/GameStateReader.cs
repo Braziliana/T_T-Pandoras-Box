@@ -7,17 +7,18 @@ namespace Api.Internal.Game.Readers;
 
 internal class GameStateReader : IGameStateReader
 {
-    private readonly IMemory _memory;
+    private readonly ITargetProcess _targetProcess;
     private readonly IBaseOffsets _baseOffsets;
     
-    public GameStateReader(IMemory memory, IBaseOffsets baseOffsets)
+    public GameStateReader(ITargetProcess targetProcess, IBaseOffsets baseOffsets)
     {
-        _memory = memory;
+        _targetProcess = targetProcess;
         _baseOffsets = baseOffsets;
     }
+    
     public void ReadGameState(IGameState gameState)
     {
-        if (_memory.ReadModule<float>(_baseOffsets.GameTime, out var time))
+        if (_targetProcess.ReadModule<float>(_baseOffsets.GameTime, out var time))
         {
             gameState.Time = time;
         }

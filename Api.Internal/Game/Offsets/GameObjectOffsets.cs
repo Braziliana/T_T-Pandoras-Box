@@ -21,12 +21,12 @@ namespace Api.Internal.Game.Offsets
         {
             var cs = configuration.GetSection(nameof(GameObjectOffsets));
             
-            NetworkId = new OffsetData(nameof(Team), Convert.ToInt32(cs[nameof(NetworkId)], 16), typeof(int));
-            Name = new OffsetData(nameof(Name), Convert.ToInt32(cs[nameof(Name)], 16), typeof(TString));
-            Team = new OffsetData(nameof(Team), Convert.ToInt32(cs[nameof(Team)], 16), typeof(int));
-            IsVisible = new OffsetData(nameof(IsVisible), Convert.ToInt32(cs[nameof(IsVisible)], 16), typeof(bool));
-            Position = new OffsetData(nameof(Position), Convert.ToInt32(cs[nameof(Position)], 16), typeof(Vector3));
-            ObjectName = new OffsetData(nameof(ObjectName), Convert.ToInt32(cs[nameof(ObjectName)], 16), typeof(TString));
+            NetworkId = new OffsetData(nameof(Team), Convert.ToUInt32(cs[nameof(NetworkId)], 16), typeof(int));
+            Name = new OffsetData(nameof(Name), Convert.ToUInt32(cs[nameof(Name)], 16), typeof(TString));
+            Team = new OffsetData(nameof(Team), Convert.ToUInt32(cs[nameof(Team)], 16), typeof(int));
+            IsVisible = new OffsetData(nameof(IsVisible), Convert.ToUInt32(cs[nameof(IsVisible)], 16), typeof(bool));
+            Position = new OffsetData(nameof(Position), Convert.ToUInt32(cs[nameof(Position)], 16), typeof(Vector3));
+            ObjectName = new OffsetData(nameof(ObjectName), Convert.ToUInt32(cs[nameof(ObjectName)], 16), typeof(TString));
         }
         
         public IEnumerable<OffsetData> GetOffsets()

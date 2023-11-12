@@ -1,26 +1,20 @@
 ﻿using Api;
 using Api.GameProcess;
+using Api.Inputs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Api.Internal;
+using Api.Menus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using NativeWarper;
+using NativeWarper.Menus;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Scripts;
 using T_T_PandorasBox;
-using T_T_PandorasBox.Rendering;
-using T_T_PandorasBox.States;
-using T_T_PandorasBox.States.MainWindowViews;
-using WinApi;
 
-void RegisterMainWindows(IServiceCollection collection)
-{
-    collection.AddScoped<IMainWindowView, MainWindowTosView>();
-    collection.AddScoped<IMainWindowView, MainWindowLobbyView>();
-    collection.AddScoped<IMainWindowView, MainWindowDataView>();
-}
 
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureHostConfiguration(configHost =>
@@ -47,24 +41,29 @@ var host = Host.CreateDefaultBuilder(args)
         };
 
         collection.AddSingleton(settings);
+        collection.AddSingleton<AppWindow>();
+        collection.AddSingleton<ITargetProcess, GameProcess>();
         collection.AddSingleton<IRenderer, Renderer>();
+        collection.AddSingleton<IInputManager, InputManager>();
+        collection.AddSingleton<IMainMenu, MainMenu>();
+        collection.AddSingleton<Overlay>();
         InternalServiceInstaller.InstallServices(collection);
         ScriptsServiceInstaller.InstallServices(collection);
-
-        RegisterMainWindows(collection);
-        collection.AddSingleton<InGameAppState>();
-        collection.AddSingleton<AppStateManager>();
-        collection.AddSingleton<MainAppState>();
+        
     })
     .Build();
 
-var appStateManager = host.Services.GetRequiredService<AppStateManager>();
-appStateManager.Run();
 
-while (!appStateManager.ShouldExit)
-{
-    appStateManager.Update();
-}
+var overlay = host.Services.GetRequiredService<Overlay>();
+overlay.Run();
 
-GlobalKeyboardHook.Unhook();
-GlobalMouseHook.Unhook();
+// var appStateManager = host.Services.GetRequiredService<AppStateManager>();
+// appStateManager.Run();
+//
+// while (!appStateManager.ShouldExit)
+// {
+//     appStateManager.Update();
+// }
+//
+// GlobalKeyboardHook.Unhook();
+// GlobalMouseHook.Unhook();

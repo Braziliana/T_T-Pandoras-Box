@@ -27,11 +27,11 @@ public:
     template <typename T>
     bool Read(uintptr_t address, T* result) const;
     bool Read(uintptr_t address, unsigned int size, unsigned char* result) const;
-    bool ReadBuffer(uintptr_t address, MemoryBuffer* memoryBuffer) const;
+    bool ReadBuffer(uintptr_t address, const MemoryBuffer* memoryBuffer) const;
     template <typename T>
     bool ReadModule(unsigned int offset, T* result) const;
     bool ReadModule(unsigned int offset, unsigned int size, unsigned char* result) const;
-    bool ReadModuleBuffer(unsigned int offset, MemoryBuffer* memoryBuffer) const;
+    bool ReadModuleBuffer(unsigned int offset, const MemoryBuffer* memoryBuffer) const;
 
     DWORD GetId() const;
     HANDLE GetHandle() const;

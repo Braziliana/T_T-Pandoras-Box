@@ -10,6 +10,7 @@ layout(location = 4) in vec3 instanceScale;
 layout(location = 5) in vec4 instanceColor;
 layout(location = 6) in vec4 instanceBorderColor;
 layout(location = 7) in float instanceBorderSize;
+
 //GLOBAL
 uniform mat4 viewProjectionMatrix;
 

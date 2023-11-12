@@ -9,7 +9,7 @@ void InputManagerReset()
     InputManager::GetInstance()->Reset();
 }
 
-bool InputManagerGetKeyState(unsigned vkCode)
+bool InputManagerGetKeyState(unsigned short vkCode)
 {
     return InputManager::GetInstance()->GetKeyState(vkCode);
 }
@@ -233,7 +233,7 @@ void InputManager::Reset()
     Start();
 }
 
-bool InputManager::GetKeyState(const unsigned vkCode) const
+bool InputManager::GetKeyState(const unsigned short vkCode) const
 {
     if (vkCode < _keyStates.size()) {
         return _keyStates[vkCode].load(std::memory_order_relaxed);
@@ -321,9 +321,158 @@ void InputManager::RemoveKeyStateEventHandler(int key)
     _onKeyStateEvent.erase(key);
 }
 
+INPUT InputManager::CreateMouseClickInput(unsigned short vkCode, bool down)
+{
+    INPUT input;
+    ZeroMemory(&input, sizeof(INPUT));
+
+    input.type = INPUT_MOUSE;
+    input.mi.mouseData = 0;
+    input.mi.dwFlags = (vkCode == VK_LBUTTON) ? (down ? MOUSEEVENTF_LEFTDOWN : MOUSEEVENTF_LEFTUP) : 
+                       (vkCode == VK_RBUTTON) ? (down ? MOUSEEVENTF_RIGHTDOWN : MOUSEEVENTF_RIGHTUP) : 0;
+    return input;
+}
+
+INPUT InputManager::CreateMouseMoveInput(const Vector2& position)
+{
+    INPUT input;
+    ZeroMemory(&input, sizeof(INPUT));
+
+    input.type = INPUT_MOUSE;
+    input.mi.dx = static_cast<int>(position.x);
+    input.mi.dy = static_cast<int>(position.y);
+    input.mi.dwFlags = MOUSEEVENTF_MOVE;
+    return input;
+}
+
+void InputManager::MouseSendDown(unsigned short vkCode)
+{
+    MouseSend(vkCode, true);
+}
+
+void InputManager::MouseSendUp(unsigned short vkCode)
+{
+    MouseSend(vkCode, false);
+}
+
+void InputManager::MouseMove(const Vector2& position)
+{
+    INPUT input = CreateMouseMoveInput(position);
+    SendInput(1, &input, sizeof(INPUT));
+}
+
+void InputManager::MouseSend(unsigned short vkCode, bool down)
+{
+    INPUT input = CreateMouseClickInput(vkCode, down);
+    SendInput(1, &input, sizeof(INPUT));
+}
+
+void InputManager::MouseSend(unsigned short vkCode)
+{
+    INPUT inputs[2];
+    inputs[0] = CreateMouseClickInput(vkCode, true);
+    inputs[1] = CreateMouseClickInput(vkCode, false);
+    SendInputs(inputs, 2);
+}
+
+INPUT InputManager::CreateKeyboardInput(unsigned short vkCode, bool down)
+{
+    INPUT input;
+    ZeroMemory(&input, sizeof(INPUT));
+
+    input.type = INPUT_KEYBOARD;
+    input.ki.wVk = vkCode;
+    input.ki.wScan = MapVirtualKey(vkCode, MAPVK_VK_TO_VSC);
+    input.ki.dwFlags = KEYEVENTF_SCANCODE | (down ? 0 : KEYEVENTF_KEYUP);
+    return input;
+}
+
+void InputManager::KeyboardSendDown(unsigned short vkCode)
+{
+    KeyboardSend(vkCode, true);
+}
+
+void InputManager::KeyboardSendUp(unsigned short vkCode)
+{
+    KeyboardSend(vkCode, false);
+}
+
+void InputManager::KeyboardSend(unsigned short vkCode, bool down)
+{
+    INPUT input = CreateKeyboardInput(vkCode, down);
+    SendInput(1, &input, sizeof(INPUT));
+}
+
+void InputManager::KeyboardSend(unsigned short vkCode)
+{
+    INPUT inputs[2];
+    inputs[0] = CreateKeyboardInput(vkCode, true);
+    inputs[1] = CreateKeyboardInput(vkCode, false);
+    SendInputs(inputs, 2);
+}
+
+void InputManager::SendInputs(INPUT* inputs, unsigned count)
+{
+    SendInput(count, inputs, sizeof(INPUT));
+}
+
 InputManager::~InputManager()
 {
     Stop();
 }
 
 
+INPUT InputManagerCreateMouseClickInput(const unsigned short vkCode, const bool down)
+{
+    return InputManager::CreateMouseClickInput(vkCode, down);
+}
+
+INPUT InputManagerCreateMouseMoveInput(const Vector2* position)
+{
+    return InputManager::CreateMouseMoveInput(*position);
+}
+
+void InputManagerMouseSendDown(const unsigned short vkCode)
+{
+    InputManager::MouseSendDown(vkCode);
+}
+
+void InputManagerMouseSendUp(const unsigned short vkCode)
+{
+    InputManager::MouseSendUp(vkCode);
+}
+
+void InputManagerMouseMove(const Vector2* position)
+{
+    InputManager::MouseMove(*position);
+}
+
+void InputManagerMouseSend(const unsigned short vkCode)
+{
+    InputManager::MouseSend(vkCode);
+}
+
+INPUT InputManagerCreateKeyboardInput(unsigned short vkCode, bool down)
+{
+    return InputManager::CreateKeyboardInput(vkCode, down);
+}
+
+void InputManagerKeyboardSendDown(unsigned short vkCode)
+{
+    InputManager::KeyboardSendDown(vkCode);
+}
+
+void InputManagerKeyboardSendUp(unsigned short vkCode)
+{
+    InputManager::KeyboardSendUp(vkCode);
+}
+
+void InputManagerKeyboardSend(unsigned short vkCode)
+{
+    InputManager::KeyboardSend(vkCode);
+}
+
+void InputManagerSendInputs(INPUT* inputs, unsigned count)
+{
+    InputManager::SendInputs(inputs, count);
+}

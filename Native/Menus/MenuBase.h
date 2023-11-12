@@ -16,6 +16,7 @@ protected:
     bool _open = false;
     std::vector<MenuItem*> _items;
     std::vector<Hotkey*> _hotkeys;
+    std::vector<MenuBase*> _menus;
     Rect _headerRect;
     Vector2 _nextChildPosition;
     virtual Rect GetChildRect(float slots) const;
@@ -23,7 +24,7 @@ protected:
     void DrawHeader() const;
     
 public:
-    MenuBase(const std::string& title, const Rect rect);
+    MenuBase(MenuItemType menuItemType, const std::string& title, Rect rect);
 
     MenuBase(const MenuBase&) = delete;
     MenuBase& operator=(const MenuBase&) = delete;
@@ -43,6 +44,8 @@ public:
     void RemoveItem(const MenuItem* itemToRemove);
     bool OnMouseMoveEvent(MouseMoveEvent event) override;
     bool OnKeyStateEvent(KeyStateEvent event) override;
+    
+    void HandleHotkeys(KeyStateEvent event) const;
 };
 
 
@@ -50,5 +53,5 @@ extern "C" {
     __declspec(dllexport) SubMenu* MenuBaseAddSubMenu(MenuBase* instance, const char* title);
     __declspec(dllexport) Toggle* MenuBaseAddToggle(MenuBase* instance, const char* title, bool toggled);
     __declspec(dllexport) FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, float value, float minValue, float maxValue, float step, int precision);
-    __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const std::string& title, unsigned int hotkey, HotkeyType hotkeyType, bool toggled);
+    __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, unsigned int hotkey, int hotkeyType, bool toggled);
 }

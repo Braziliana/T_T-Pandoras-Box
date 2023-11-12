@@ -6,5 +6,5 @@ namespace Api.Game.Readers;
 public interface IInhibitorReader : IAttackableUnitReader
 {
     bool ReadInhibitor(IInhibitor? inhibitor);
-    bool ReadInhibitor(IInhibitor? inhibitor, BatchReadContext batchReadContext);
+    bool ReadInhibitor(IInhibitor? inhibitor, IMemoryBuffer memoryBuffer);
 }
