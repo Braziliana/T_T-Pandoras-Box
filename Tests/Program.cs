@@ -15,7 +15,7 @@ gp.SetTargetProcessName("League of Legends.exe");
 Console.WriteLine("hook: " + gp.Hook());
 Console.WriteLine("isRunning: " + gp.IsProcessRunning());
 
-Console.WriteLine(gp.FindOffset("48 8B 05 ? ? ? ? 4C 8B D2 4C 8B C1", 3).ToString("X"));
+Console.WriteLine(gp.FindOffset("48 8B 0D ? ? ? ? 45 33 C9 44 0F B6 C5", 3).ToString("X"));
 var im = new InputManager();
 
 var menu = new Menu();
