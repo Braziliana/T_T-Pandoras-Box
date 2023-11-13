@@ -4,26 +4,27 @@ using Api.Game.Objects;
 using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
 internal class AiManagerReader : BaseReader, IAiManagerReader
 {
 	private const int MaxSegmentsToRead = 12;
-	private readonly int _vectorSize = Marshal.SizeOf<Vector3>();
+	private readonly uint _vectorSize = (uint)Marshal.SizeOf<Vector3>();
 	private readonly IAiManagerOffsets _aiManagerOffsets;
-	private readonly BatchReadContext _segmentsBatchReadContext;
+	private readonly IMemoryBuffer _segmentsBatchReadContext;
 
-	public AiManagerReader(IAiManagerOffsets aiManagerOffsets, IMemory memory) : base(memory)
+	public AiManagerReader(IAiManagerOffsets aiManagerOffsets, ITargetProcess targetProcess) : base(targetProcess)
 	{
 		_aiManagerOffsets = aiManagerOffsets;
 		//We will read max 15 waypoints i dont see any reason to read more when i saw 5-8 typicly
-		_segmentsBatchReadContext = new BatchReadContext(MaxSegmentsToRead * _vectorSize);
+		_segmentsBatchReadContext = new MemoryBuffer(MaxSegmentsToRead * _vectorSize);
 	}
 
 	public void ReadAiManager(IHero hero, IntPtr aiManagerPointer)
 	{
-		if (!Memory.ReadPointer(aiManagerPointer, out var aiManager))
+		if (!TargetProcess.ReadPointer(aiManagerPointer, out var aiManager))
 		{
 			return;
 		}
@@ -55,17 +56,17 @@ internal class AiManagerReader : BaseReader, IAiManagerReader
 	    var pathSegmentsPtr = ReadOffset<IntPtr>(_aiManagerOffsets.PathSegments);
 	    if (ReadBuffer(pathSegmentsPtr, _segmentsBatchReadContext))
 	    {
-		    for (var i = 0; i < hero.AiManager.PathSegmentsCount; i++)
+		    for (uint i = 0; i < hero.AiManager.PathSegmentsCount; i++)
 		    {
 			    hero.AiManager.PathSegments.Add(_segmentsBatchReadContext.Read<Vector3>(_vectorSize*i));
 		    }
 	    }
 	}
     
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
 	    var size = GetSize(_aiManagerOffsets.GetOffsets());
-	    return new BatchReadContext(size);
+	    return new MemoryBuffer(size);
     }
     
     public override void Dispose()

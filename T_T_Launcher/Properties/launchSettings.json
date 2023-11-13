@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "T_T_Launcher": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

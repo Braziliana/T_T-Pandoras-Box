@@ -2,12 +2,12 @@
 
 public interface IBaseOffsets
 {
-    public int GameTime { get; }
-    public int LocalPlayer { get; }
-    int HeroList { get; }
-    int MinionList { get; }
-    int MissileList { get; }
-    int TurretList { get; }
-    int InhibitorList { get; set; }
-    int UnderMouseObject { get; }
+    public uint GameTime { get; }
+    public uint LocalPlayer { get; }
+    uint HeroList { get; }
+    uint MinionList { get; }
+    uint MissileList { get; }
+    uint TurretList { get; }
+    uint InhibitorList { get; set; }
+    uint UnderMouseObject { get; }
 }

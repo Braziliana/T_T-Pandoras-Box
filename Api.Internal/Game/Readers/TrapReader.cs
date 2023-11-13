@@ -7,7 +7,7 @@ namespace Api.Internal.Game.Readers;
 
 internal class TrapReader : GameObjectReader, ITrapReader
 {
-    public TrapReader(IMemory memory, IGameObjectOffsets gameObjectOffsets) : base(memory, gameObjectOffsets)
+    public TrapReader(ITargetProcess targetProcess, IGameObjectOffsets gameObjectOffsets) : base(targetProcess, gameObjectOffsets)
     {
     }
 
@@ -21,9 +21,9 @@ internal class TrapReader : GameObjectReader, ITrapReader
         return true;
     }
 
-    public bool ReadTrap(ITrap? trap, BatchReadContext batchReadContext)
+    public bool ReadTrap(ITrap? trap, IMemoryBuffer memoryBuffer)
     {
-        if (trap is null || !ReadObject(trap, batchReadContext))
+        if (trap is null || !ReadObject(trap, memoryBuffer))
         {
             return false;
         }

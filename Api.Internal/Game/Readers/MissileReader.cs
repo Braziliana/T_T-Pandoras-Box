@@ -6,27 +6,28 @@ using Api.Game.Objects;
 using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
 internal class MissileReader : BaseReader, IMissileReader
 {
     private readonly IMissileOffsets _missileOffsets;
-    private readonly BatchReadContext _missileSpellInfoBatchReadContext;
+    private readonly IMemoryBuffer _missileSpellInfoMemoryBuffer;
     private readonly ILocalPlayer _localPlayer;
     private readonly SpellDataDictionary _spellDataDictionary;
 
     public MissileReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IMissileOffsets missileOffsets,
         ILocalPlayer localPlayer,
-        SpellDataDictionary spellDataDictionary) : base(memory)
+        SpellDataDictionary spellDataDictionary) : base(targetProcess)
     {
         _missileOffsets = missileOffsets;
         _localPlayer = localPlayer;
         _spellDataDictionary = spellDataDictionary;
 
-        _missileSpellInfoBatchReadContext = new BatchReadContext(GetSize(_missileOffsets.GetSpellInfoOffsets()));
+        _missileSpellInfoMemoryBuffer = new MemoryBuffer(GetSize(_missileOffsets.GetSpellInfoOffsets()));
     }
 
     public bool ReadMissile(IMissile? missile)
@@ -50,7 +51,7 @@ internal class MissileReader : BaseReader, IMissileReader
         //missile.Speed = ReadOffset<float>(_missileOffsets.Speed);
         
         var spellInfoPtr = ReadOffset<IntPtr>(_missileOffsets.SpellInfo);
-        if (!ReadBuffer(spellInfoPtr, _missileSpellInfoBatchReadContext))
+        if (!ReadBuffer(spellInfoPtr, _missileSpellInfoMemoryBuffer))
         {
             missile.IsValid = false;
             return false;
@@ -59,8 +60,8 @@ internal class MissileReader : BaseReader, IMissileReader
         missile.StartPosition = ReadOffset<Vector3>(_missileOffsets.StartPosition);
         missile.EndPosition = ReadOffset<Vector3>(_missileOffsets.EndPosition);
         
-        missile.SpellName = ReadString(_missileOffsets.SpellInfoSpellName, Encoding.ASCII, _missileSpellInfoBatchReadContext);
-        missile.MissileName = ReadString(_missileOffsets.SpellInfoMissileName, Encoding.ASCII, _missileSpellInfoBatchReadContext);
+        missile.SpellName = ReadString(_missileOffsets.SpellInfoSpellName, Encoding.ASCII, _missileSpellInfoMemoryBuffer);
+        missile.MissileName = ReadString(_missileOffsets.SpellInfoMissileName, Encoding.ASCII, _missileSpellInfoMemoryBuffer);
         
         missile.SpellData = _spellDataDictionary[missile.SpellName.GetHashCode()];
         if (missile.SpellData?.MissileData != null)
@@ -78,7 +79,7 @@ internal class MissileReader : BaseReader, IMissileReader
         missile.SourceIndex = ReadOffset<int>(_missileOffsets.SourceIndex);
         
         var destinationPtr = ReadOffset<IntPtr>(_missileOffsets.DestinationIndex);
-        if (destinationPtr.ToInt64() > 0x1000 && Memory.Read<int>(destinationPtr, out var destinationIndex))
+        if (destinationPtr.ToInt64() > 0x1000 && TargetProcess.Read<int>(destinationPtr, out var destinationIndex))
         {
             missile.DestinationIndex = destinationIndex;
         }
@@ -91,15 +92,15 @@ internal class MissileReader : BaseReader, IMissileReader
     }
     
     
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
         var size = GetSize(_missileOffsets.GetOffsets());
-        return new BatchReadContext(size);
+        return new MemoryBuffer(size);
     }
 
     public override void Dispose()
     {
         base.Dispose();
-        _missileSpellInfoBatchReadContext.Dispose();
+        _missileSpellInfoMemoryBuffer.Dispose();
     }
 }

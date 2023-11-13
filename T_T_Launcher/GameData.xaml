@@ -1,0 +1,18 @@
+﻿<Page x:Class="T_T_Launcher.GameData"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:T_T_Launcher"
+      mc:Ignorable="d"
+      Title="GameData" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="DownloadDataButton" Grid.Row="0" Content="Download Data" Width="200" Height="20" Margin="5, 0, 0, 0" Click="DownloadDataButton_OnClick"></Button>
+        <RichTextBox x:Name="LogsRTB" Grid.Row="1" MinHeight="100" IsReadOnly="True" VerticalScrollBarVisibility="Visible">
+        </RichTextBox>
+    </Grid>
+</Page>

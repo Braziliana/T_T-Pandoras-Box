@@ -12,8 +12,6 @@ namespace Api.Inputs
     {
         delegate void KeyUpDelegate(VirtualKey virtualKey);
         delegate void KeyDownDelegate(VirtualKey virtualKey);
-
-        event EventHandler<InputKeyEventArgs>? InputKeyEvent;
         event KeyUpDelegate? KeyUp;
         event KeyDownDelegate? KeyDown;
         KeyState GetKeyState(VirtualKey virtualKey);
@@ -21,7 +19,6 @@ namespace Api.Inputs
         void KeyboardSendDown(VirtualKey virtualKey);
         void KeyboardSendUp(VirtualKey virtualKey);
         void KeyboardSend(VirtualKey virtualKey);
-
         void MouseSendDown(MouseButton mouseButton);
         void MouseSendUp(MouseButton mouseButton);
         void MouseSend(MouseButton mouseButton);

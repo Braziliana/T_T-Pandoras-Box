@@ -1,0 +1,685 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{F049A2F7-87D8-40B6-A1BF-F462E3BFE5FD}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Native</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\x64\Debug\T_T</OutDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);Glad\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);Glad\lib</LibraryPath>
+    <ExecutablePath>$(VC_ExecutablePath_x64);$(CommonExecutablePath);</ExecutablePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <ExecutablePath>$(VC_ExecutablePath_x64);$(CommonExecutablePath);</ExecutablePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);Glad\include</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);Glad\lib</LibraryPath>
+    <OutDir>$(SolutionDir)\x64\Release\T_T</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions);</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;CPPDYNAMICLIBRARYTEMPLATE_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp14</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
+    <ClCompile Include="Input\InputManager.cpp" />
+    <ClCompile Include="Math\Rect.cpp" />
+    <ClCompile Include="Memory\MemoryBuffer.cpp" />
+    <ClCompile Include="Memory\PatternScanner.cpp" />
+    <ClCompile Include="Memory\Process.cpp" />
+    <ClCompile Include="Menus\ComboBox.cpp" />
+    <ClCompile Include="Menus\FloatSlider.cpp" />
+    <ClCompile Include="Menus\Hotkey.cpp" />
+    <ClCompile Include="Menus\Menu.cpp" />
+    <ClCompile Include="Menus\MenuBase.cpp" />
+    <ClCompile Include="Menus\MenuItem.cpp" />
+    <ClCompile Include="Menus\MenuStyle.cpp" />
+    <ClCompile Include="Menus\SelectionList.cpp" />
+    <ClCompile Include="Menus\SubMenu.cpp" />
+    <ClCompile Include="Menus\Toggle.cpp" />
+    <ClCompile Include="Rendering\Materials\Material.cpp" />
+    <ClCompile Include="Rendering\Materials\Shader.cpp" />
+    <ClCompile Include="Rendering\Materials\ShaderManager.cpp" />
+    <ClCompile Include="Rendering\Materials\TexturedMaterial.cpp" />
+    <ClCompile Include="Rendering\Primitives\CircleRenderer.cpp" />
+    <ClCompile Include="Rendering\Primitives\RectRenderer.cpp" />
+    <ClCompile Include="Rendering\Renderer.cpp" />
+    <ClCompile Include="Rendering\TextRendering\Font.cpp" />
+    <ClCompile Include="Rendering\TextRendering\FontRenderer.cpp" />
+    <ClCompile Include="Rendering\TextRendering\TextRenderer.cpp" />
+    <ClCompile Include="Rendering\Textures\Texture.cpp" />
+    <ClCompile Include="Rendering\Textures\TextureAtlas.cpp" />
+    <ClCompile Include="Windows\AppWindow.cpp" />
+    <ClCompile Include="Windows\WindowExtensions.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Glad\include\freetype\config\ftconfig.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftheader.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftmodule.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftoption.h" />
+    <ClInclude Include="Glad\include\freetype\config\ftstdlib.h" />
+    <ClInclude Include="Glad\include\freetype\config\integer-types.h" />
+    <ClInclude Include="Glad\include\freetype\config\mac-support.h" />
+    <ClInclude Include="Glad\include\freetype\config\public-macros.h" />
+    <ClInclude Include="Glad\include\freetype\freetype.h" />
+    <ClInclude Include="Glad\include\freetype\ftadvanc.h" />
+    <ClInclude Include="Glad\include\freetype\ftbbox.h" />
+    <ClInclude Include="Glad\include\freetype\ftbdf.h" />
+    <ClInclude Include="Glad\include\freetype\ftbitmap.h" />
+    <ClInclude Include="Glad\include\freetype\ftbzip2.h" />
+    <ClInclude Include="Glad\include\freetype\ftcache.h" />
+    <ClInclude Include="Glad\include\freetype\ftchapters.h" />
+    <ClInclude Include="Glad\include\freetype\ftcid.h" />
+    <ClInclude Include="Glad\include\freetype\ftcolor.h" />
+    <ClInclude Include="Glad\include\freetype\ftdriver.h" />
+    <ClInclude Include="Glad\include\freetype\fterrdef.h" />
+    <ClInclude Include="Glad\include\freetype\fterrors.h" />
+    <ClInclude Include="Glad\include\freetype\ftfntfmt.h" />
+    <ClInclude Include="Glad\include\freetype\ftgasp.h" />
+    <ClInclude Include="Glad\include\freetype\ftglyph.h" />
+    <ClInclude Include="Glad\include\freetype\ftgxval.h" />
+    <ClInclude Include="Glad\include\freetype\ftgzip.h" />
+    <ClInclude Include="Glad\include\freetype\ftimage.h" />
+    <ClInclude Include="Glad\include\freetype\ftincrem.h" />
+    <ClInclude Include="Glad\include\freetype\ftlcdfil.h" />
+    <ClInclude Include="Glad\include\freetype\ftlist.h" />
+    <ClInclude Include="Glad\include\freetype\ftlogging.h" />
+    <ClInclude Include="Glad\include\freetype\ftlzw.h" />
+    <ClInclude Include="Glad\include\freetype\ftmac.h" />
+    <ClInclude Include="Glad\include\freetype\ftmm.h" />
+    <ClInclude Include="Glad\include\freetype\ftmodapi.h" />
+    <ClInclude Include="Glad\include\freetype\ftmoderr.h" />
+    <ClInclude Include="Glad\include\freetype\ftotval.h" />
+    <ClInclude Include="Glad\include\freetype\ftoutln.h" />
+    <ClInclude Include="Glad\include\freetype\ftparams.h" />
+    <ClInclude Include="Glad\include\freetype\ftpfr.h" />
+    <ClInclude Include="Glad\include\freetype\ftrender.h" />
+    <ClInclude Include="Glad\include\freetype\ftsizes.h" />
+    <ClInclude Include="Glad\include\freetype\ftsnames.h" />
+    <ClInclude Include="Glad\include\freetype\ftstroke.h" />
+    <ClInclude Include="Glad\include\freetype\ftsynth.h" />
+    <ClInclude Include="Glad\include\freetype\ftsystem.h" />
+    <ClInclude Include="Glad\include\freetype\fttrigon.h" />
+    <ClInclude Include="Glad\include\freetype\fttypes.h" />
+    <ClInclude Include="Glad\include\freetype\ftwinfnt.h" />
+    <ClInclude Include="Glad\include\freetype\otsvg.h" />
+    <ClInclude Include="Glad\include\freetype\t1tables.h" />
+    <ClInclude Include="Glad\include\freetype\ttnameid.h" />
+    <ClInclude Include="Glad\include\freetype\tttables.h" />
+    <ClInclude Include="Glad\include\freetype\tttags.h" />
+    <ClInclude Include="Glad\include\ft2build.h" />
+    <ClInclude Include="Glad\include\glm\common.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\compute_common.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\compute_vector_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\func_common.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_common_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_exponential.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_exponential_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_geometric.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_geometric_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_integer.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_integer_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_matrix.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_matrix_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_packing.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_packing_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_trigonometric.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_trigonometric_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_vector_relational.inl" />
+    <ClInclude Include="Glad\include\glm\detail\func_vector_relational_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\qualifier.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\setup.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_float.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_half.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_half.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x2.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x3.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat2x4.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x2.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x3.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat3x4.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x2.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x3.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x4.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_mat4x4_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_quat.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_quat.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_quat_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec1.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec1.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec2.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec2.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec3.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec3.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec4.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec4.inl" />
+    <ClInclude Include="Glad\include\glm\detail\type_vec4_simd.inl" />
+    <ClInclude Include="Glad\include\glm\detail\_features.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\_fixes.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\_noise.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\_swizzle.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\_swizzle_func.hpp" />
+    <ClInclude Include="Glad\include\glm\detail\_vectorize.hpp" />
+    <ClInclude Include="Glad\include\glm\exponential.hpp" />
+    <ClInclude Include="Glad\include\glm\ext.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_clip_space.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_clip_space.inl" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_common.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_common.inl" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double2x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double3x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_double4x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float2x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float3x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_float4x4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int2x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int3x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_int4x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_projection.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_projection.inl" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_relational.inl" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_transform.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_transform.inl" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint2x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint3x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\matrix_uint4x4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_common.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_common.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_common_simd.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_double.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_double_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_exponential.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_exponential.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_float.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_float_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_geometric.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_geometric.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_relational.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_transform.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_transform.inl" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_trigonometric.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\quaternion_trigonometric.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_common.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_common.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_constants.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_constants.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_integer.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_integer.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_int_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_packing.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_packing.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_relational.inl" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_uint_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_ulp.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\scalar_ulp.inl" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool1.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool1_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_bool4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_common.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_common.inl" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double1.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double1_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_double4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float1.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float1_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float2_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float3_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_float4_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int1.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int1_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_int4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_integer.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_integer.inl" />
+    <ClInclude Include="Glad\include\glm\ext\vector_packing.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_packing.inl" />
+    <ClInclude Include="Glad\include\glm\ext\vector_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_relational.inl" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint1.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint1_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint2.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint2_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint3.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint3_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint4.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_uint4_sized.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_ulp.hpp" />
+    <ClInclude Include="Glad\include\glm\ext\vector_ulp.inl" />
+    <ClInclude Include="Glad\include\glm\fwd.hpp" />
+    <ClInclude Include="Glad\include\glm\geometric.hpp" />
+    <ClInclude Include="Glad\include\glm\glm.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\bitfield.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\bitfield.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\color_space.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\color_space.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\constants.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\constants.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\epsilon.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\epsilon.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\integer.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\integer.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_access.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_access.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_integer.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_inverse.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_inverse.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_transform.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\matrix_transform.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\noise.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\noise.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\packing.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\packing.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\quaternion.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\quaternion.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\quaternion_simd.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\random.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\random.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\reciprocal.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\reciprocal.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\round.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\round.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\type_aligned.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\type_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\type_precision.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\type_ptr.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\type_ptr.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\ulp.hpp" />
+    <ClInclude Include="Glad\include\glm\gtc\ulp.inl" />
+    <ClInclude Include="Glad\include\glm\gtc\vec1.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\associated_min_max.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\associated_min_max.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\bit.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\bit.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\closest_point.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\closest_point.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\color_encoding.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\color_encoding.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\color_space.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\color_space.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\color_space_YCoCg.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\color_space_YCoCg.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\common.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\common.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\compatibility.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\compatibility.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\component_wise.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\component_wise.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\dual_quaternion.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\dual_quaternion.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\easing.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\easing.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\euler_angles.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\euler_angles.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\extend.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\extend.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\extended_min_max.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\extended_min_max.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\exterior_product.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\exterior_product.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_exponential.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_exponential.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_square_root.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_square_root.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_trigonometry.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\fast_trigonometry.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\float_notmalize.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\functions.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\functions.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\gradient_paint.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\gradient_paint.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\handed_coordinate_space.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\handed_coordinate_space.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\hash.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\hash.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\integer.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\integer.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\intersect.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\intersect.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\io.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\io.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\log_base.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\log_base.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_cross_product.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_cross_product.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_decompose.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_decompose.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_factorisation.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_factorisation.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_interpolation.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_interpolation.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_major_storage.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_major_storage.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_operation.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_operation.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_query.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_query.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_transform_2d.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\matrix_transform_2d.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\mixed_product.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\mixed_product.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\norm.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\norm.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\normal.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\normal.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\normalize_dot.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\normalize_dot.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\number_precision.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\number_precision.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\optimum_pow.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\optimum_pow.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\orthonormalize.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\orthonormalize.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\perpendicular.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\perpendicular.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\polar_coordinates.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\polar_coordinates.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\projection.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\projection.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\quaternion.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\quaternion.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\range.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\raw_data.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\raw_data.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\rotate_normalized_axis.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\rotate_normalized_axis.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\rotate_vector.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\rotate_vector.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\scalar_multiplication.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\scalar_relational.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\scalar_relational.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\spline.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\spline.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\std_based_type.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\std_based_type.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\string_cast.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\string_cast.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\texture.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\texture.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\transform.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\transform.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\transform2.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\transform2.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\type_aligned.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\type_aligned.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\type_trait.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\type_trait.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\vector_angle.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\vector_angle.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\vector_query.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\vector_query.inl" />
+    <ClInclude Include="Glad\include\glm\gtx\vec_swizzle.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\wrap.hpp" />
+    <ClInclude Include="Glad\include\glm\gtx\wrap.inl" />
+    <ClInclude Include="Glad\include\glm\integer.hpp" />
+    <ClInclude Include="Glad\include\glm\mat2x2.hpp" />
+    <ClInclude Include="Glad\include\glm\mat2x3.hpp" />
+    <ClInclude Include="Glad\include\glm\mat2x4.hpp" />
+    <ClInclude Include="Glad\include\glm\mat3x2.hpp" />
+    <ClInclude Include="Glad\include\glm\mat3x3.hpp" />
+    <ClInclude Include="Glad\include\glm\mat3x4.hpp" />
+    <ClInclude Include="Glad\include\glm\mat4x2.hpp" />
+    <ClInclude Include="Glad\include\glm\mat4x3.hpp" />
+    <ClInclude Include="Glad\include\glm\mat4x4.hpp" />
+    <ClInclude Include="Glad\include\glm\matrix.hpp" />
+    <ClInclude Include="Glad\include\glm\packing.hpp" />
+    <ClInclude Include="Glad\include\glm\simd\common.h" />
+    <ClInclude Include="Glad\include\glm\simd\exponential.h" />
+    <ClInclude Include="Glad\include\glm\simd\geometric.h" />
+    <ClInclude Include="Glad\include\glm\simd\integer.h" />
+    <ClInclude Include="Glad\include\glm\simd\matrix.h" />
+    <ClInclude Include="Glad\include\glm\simd\neon.h" />
+    <ClInclude Include="Glad\include\glm\simd\packing.h" />
+    <ClInclude Include="Glad\include\glm\simd\platform.h" />
+    <ClInclude Include="Glad\include\glm\simd\trigonometric.h" />
+    <ClInclude Include="Glad\include\glm\simd\vector_relational.h" />
+    <ClInclude Include="Glad\include\glm\trigonometric.hpp" />
+    <ClInclude Include="Glad\include\glm\vec2.hpp" />
+    <ClInclude Include="Glad\include\glm\vec3.hpp" />
+    <ClInclude Include="Glad\include\glm\vec4.hpp" />
+    <ClInclude Include="Glad\include\glm\vector_relational.hpp" />
+    <ClInclude Include="Glad\include\GL\eglew.h" />
+    <ClInclude Include="Glad\include\GL\glew.h" />
+    <ClInclude Include="Glad\include\GL\glxew.h" />
+    <ClInclude Include="Glad\include\GL\wglew.h" />
+    <ClInclude Include="Glad\include\KHR\khrplatform.h" />
+    <ClInclude Include="Input\InputManager.h" />
+    <ClInclude Include="Math\Color.h" />
+    <ClInclude Include="Math\Rect.h" />
+    <ClInclude Include="Math\Vector2.h" />
+    <ClInclude Include="Math\Vector3.h" />
+    <ClInclude Include="Memory\MemoryBuffer.h" />
+    <ClInclude Include="Memory\PatternScanner.h" />
+    <ClInclude Include="Memory\Process.h" />
+    <ClInclude Include="Menus\ComboBox.h" />
+    <ClInclude Include="Menus\FloatSlider.h" />
+    <ClInclude Include="Menus\Hotkey.h" />
+    <ClInclude Include="Menus\HotkeyType.h" />
+    <ClInclude Include="Menus\Menu.h" />
+    <ClInclude Include="Menus\MenuBase.h" />
+    <ClInclude Include="Menus\MenuItem.h" />
+    <ClInclude Include="Menus\MenuStyle.h" />
+    <ClInclude Include="Menus\SelectionList.h" />
+    <ClInclude Include="Menus\SubMenu.h" />
+    <ClInclude Include="Menus\Toggle.h" />
+    <ClInclude Include="Rendering\Buffers\InstancedBatchBuffer.h" />
+    <ClInclude Include="Rendering\Buffers\VertexAttribute.h" />
+    <ClInclude Include="Rendering\Materials\Material.h" />
+    <ClInclude Include="Rendering\Materials\Shader.h" />
+    <ClInclude Include="Rendering\Materials\ShaderManager.h" />
+    <ClInclude Include="Rendering\Materials\TexturedMaterial.h" />
+    <ClInclude Include="Rendering\Primitives\CircleRenderer.h" />
+    <ClInclude Include="Rendering\Primitives\RectRenderer.h" />
+    <ClInclude Include="Rendering\Renderer.h" />
+    <ClInclude Include="Rendering\TextRendering\Font.h" />
+    <ClInclude Include="Rendering\TextRendering\FontRenderer.h" />
+    <ClInclude Include="Rendering\TextRendering\TextRenderer.h" />
+    <ClInclude Include="Rendering\Textures\Texture.h" />
+    <ClInclude Include="Rendering\Textures\TextureAtlas.h" />
+    <ClInclude Include="Rendering\Vertex.h" />
+    <ClInclude Include="Windows\AppWindow.h" />
+    <ClInclude Include="Windows\WindowExtensions.h" />
+    <ClInclude Include="Windows\WindowSettings.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Glad\include\glm\CMakeLists.txt" />
+    <Content Include="Glad\lib\freetype.lib" />
+    <Content Include="Glad\lib\glew32.lib" />
+    <Content Include="Glad\lib\glew32s.lib" />
+    <Content Include="Resources\Fonts\Roboto-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Circle.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Circle.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Font.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Font.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Rect.frag">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Shaders\Rect.vert">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Fonts\OpenSans-Regular.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

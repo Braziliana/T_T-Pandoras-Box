@@ -11,7 +11,7 @@ namespace Api.Internal.Game.Managers;
 internal class GameManager : IGameManager
 {
     private bool _gameLoaded = false;
-    private readonly IMemory _memory;
+    private readonly ITargetProcess _targetProcess;
     private readonly IBaseOffsets _baseOffsets;
 
     private readonly IHeroReader _heroReader;
@@ -32,7 +32,7 @@ internal class GameManager : IGameManager
     public bool IsGameActive => _gameLoaded;
     
     public GameManager(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IBaseOffsets baseOffsets,
         IGameState gameState,
         IGameStateReader gameStateReader,
@@ -47,7 +47,7 @@ internal class GameManager : IGameManager
         IMissileManager missileManager,
         IHeroManager heroManager)
     {
-        _memory = memory;
+        _targetProcess = targetProcess;
         _baseOffsets = baseOffsets;
         GameState = gameState;
         _gameStateReader = gameStateReader;
@@ -91,7 +91,7 @@ internal class GameManager : IGameManager
 
     private void UpdateLocalPlayer()
     {
-        if (_memory.ReadModulePointer(_baseOffsets.LocalPlayer, out var localPlayerPointer))
+        if (_targetProcess.ReadModulePointer(_baseOffsets.LocalPlayer, out var localPlayerPointer))
         {
             LocalPlayer.Pointer = localPlayerPointer;
             LocalPlayer.IsLocalHero = true;

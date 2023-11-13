@@ -22,17 +22,17 @@ internal class AiManagerOffsets : IAiManagerOffsets
     {
         var cs = configuration.GetSection(nameof(AiManagerOffsets));
 	    
-        TargetPosition = new OffsetData(nameof(TargetPosition), Convert.ToInt32(cs[nameof(TargetPosition)], 16), typeof(Vector3));
-        PathStart = new OffsetData(nameof(PathStart), Convert.ToInt32(cs[nameof(PathStart)], 16), typeof(Vector3));
-        PathEnd = new OffsetData(nameof(PathEnd), Convert.ToInt32(cs[nameof(PathEnd)], 16), typeof(Vector3));
-        CurrentPathSegment = new OffsetData(nameof(CurrentPathSegment), Convert.ToInt32(cs[nameof(CurrentPathSegment)], 16), typeof(int));
-        PathSegments = new OffsetData(nameof(PathSegments), Convert.ToInt32(cs[nameof(PathSegments)], 16), typeof(IntPtr));
-        PathSegmentsCount = new OffsetData(nameof(PathSegmentsCount), Convert.ToInt32(cs[nameof(PathSegmentsCount)], 16), typeof(int));
-        CurrentPosition = new OffsetData(nameof(CurrentPosition), Convert.ToInt32(cs[nameof(CurrentPosition)], 16), typeof(Vector3));
-        IsDashing = new OffsetData(nameof(IsDashing), Convert.ToInt32(cs[nameof(IsDashing)], 16), typeof(bool));
-        DashSpeed = new OffsetData(nameof(DashSpeed), Convert.ToInt32(cs[nameof(DashSpeed)], 16), typeof(float));
-        IsMoving = new OffsetData(nameof(IsMoving), Convert.ToInt32(cs[nameof(IsMoving)], 16), typeof(bool));
-        MovementSpeed = new OffsetData(nameof(MovementSpeed), Convert.ToInt32(cs[nameof(MovementSpeed)], 16), typeof(float));
+        TargetPosition = new OffsetData(nameof(TargetPosition), Convert.ToUInt32(cs[nameof(TargetPosition)], 16), typeof(Vector3));
+        PathStart = new OffsetData(nameof(PathStart), Convert.ToUInt32(cs[nameof(PathStart)], 16), typeof(Vector3));
+        PathEnd = new OffsetData(nameof(PathEnd), Convert.ToUInt32(cs[nameof(PathEnd)], 16), typeof(Vector3));
+        CurrentPathSegment = new OffsetData(nameof(CurrentPathSegment), Convert.ToUInt32(cs[nameof(CurrentPathSegment)], 16), typeof(int));
+        PathSegments = new OffsetData(nameof(PathSegments), Convert.ToUInt32(cs[nameof(PathSegments)], 16), typeof(IntPtr));
+        PathSegmentsCount = new OffsetData(nameof(PathSegmentsCount), Convert.ToUInt32(cs[nameof(PathSegmentsCount)], 16), typeof(int));
+        CurrentPosition = new OffsetData(nameof(CurrentPosition), Convert.ToUInt32(cs[nameof(CurrentPosition)], 16), typeof(Vector3));
+        IsDashing = new OffsetData(nameof(IsDashing), Convert.ToUInt32(cs[nameof(IsDashing)], 16), typeof(bool));
+        DashSpeed = new OffsetData(nameof(DashSpeed), Convert.ToUInt32(cs[nameof(DashSpeed)], 16), typeof(float));
+        IsMoving = new OffsetData(nameof(IsMoving), Convert.ToUInt32(cs[nameof(IsMoving)], 16), typeof(bool));
+        MovementSpeed = new OffsetData(nameof(MovementSpeed), Convert.ToUInt32(cs[nameof(MovementSpeed)], 16), typeof(float));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

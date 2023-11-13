@@ -9,6 +9,7 @@ using Api.GameProcess;
 using Api.Internal.Game.Objects;
 using Api.Internal.Game.Types;
 using Api.Utils;
+using NativeWarper;
 
 namespace Api.Internal.Game.Managers;
 
@@ -26,13 +27,13 @@ internal class ObjectManager : IObjectManager
     public ITrapManager TrapManager { get; }
 
     private readonly TArray _minionsArray;
-    private readonly BatchReadContext _batchReadContext;
+    private readonly IMemoryBuffer _memoryBuffer;
     private readonly PooledList<IGameObject> _itemsPool = new(100, 50, () => new GameObject());
     private readonly IDictionary<int, IGameObject> _gameObjects = new Dictionary<int, IGameObject>();
 
     public ObjectManager(
         IBaseOffsets baseOffsets,
-        IMemory memory,
+        ITargetProcess targetProcess,
         ILocalPlayer localPlayer,
         IGameObjectTypeMapper gameObjectTypeMapper,
         IGameObjectReader gameObjectReader,
@@ -40,7 +41,13 @@ internal class ObjectManager : IObjectManager
         IMonsterManager monsterManager,
         IPlantManager plantManager,
         IWardManager wardManager,
-        ITrapManager trapManager)
+        ITrapManager trapManager,
+        IMinionReader minionReader,
+        IMonsterReader monsterReader,
+        IPlantReader plantReader,
+        IWardReader wardReader,
+        ITrapReader trapReader
+        )
     {
         _localPlayer = localPlayer;
         _gameObjectTypeMapper = gameObjectTypeMapper;
@@ -51,8 +58,23 @@ internal class ObjectManager : IObjectManager
         WardManager = wardManager;
         TrapManager = trapManager;
         
-        _minionsArray = new TArray(memory, baseOffsets.MinionList);
-        _batchReadContext = new BatchReadContext(gameObjectReader.GetBufferSize());
+        _minionsArray = new TArray(targetProcess, baseOffsets.MinionList);
+        _memoryBuffer = new MemoryBuffer(GetBufferSize(minionReader, monsterReader, plantReader, wardReader, trapReader));
+    }
+
+    private uint GetBufferSize(
+        IMinionReader minionReader,
+        IMonsterReader monsterReader,
+        IPlantReader plantReader,
+        IWardReader wardReader,
+        ITrapReader trapReader)
+    {
+        var size = _gameObjectReader.GetBufferSize();
+        size = Math.Max(size, minionReader.GetBufferSize());
+        size = Math.Max(size, monsterReader.GetBufferSize());
+        size = Math.Max(size, plantReader.GetBufferSize());
+        size = Math.Max(size, wardReader.GetBufferSize());
+        return Math.Max(size, trapReader.GetBufferSize());
     }
 
     public void Update(float deltaTime)
@@ -103,18 +125,18 @@ internal class ObjectManager : IObjectManager
     
     private ObjectCreateResult Read(IntPtr ptr)
     {
-        if (!_gameObjectReader.ReadBuffer(ptr, _batchReadContext))
+        if (!_gameObjectReader.ReadBuffer(ptr, _memoryBuffer))
         {
             return ObjectCreateResult.Failed;
         }
 
-        var networkId = _gameObjectReader.ReadObjectNetworkId(_batchReadContext);
+        var networkId = _gameObjectReader.ReadObjectNetworkId(_memoryBuffer);
         if (networkId == 0 || _gameObjects.ContainsKey(networkId))
         {
             return ObjectCreateResult.Failed;
         }
         
-        var name = _gameObjectReader.ReadObjectName(_batchReadContext);
+        var name = _gameObjectReader.ReadObjectName(_memoryBuffer);
         if (string.IsNullOrWhiteSpace(name))
         {
             return ObjectCreateResult.Failed;
@@ -125,15 +147,15 @@ internal class ObjectManager : IObjectManager
         switch (gameObjectType)
         {
             case GameObjectType.Minion:
-                return MinionManager.Create(ptr, _batchReadContext);
+                return MinionManager.Create(ptr, _memoryBuffer);
             case GameObjectType.Monster:
-                return MonsterManager.Create(ptr, _batchReadContext);
+                return MonsterManager.Create(ptr, _memoryBuffer);
             case GameObjectType.Ward:
-                return WardManager.Create(ptr, _batchReadContext);
+                return WardManager.Create(ptr, _memoryBuffer);
             case GameObjectType.Plant:
-                return PlantManager.Create(ptr, _batchReadContext);
+                return PlantManager.Create(ptr, _memoryBuffer);
             case GameObjectType.Trap:
-                return TrapManager.Create(ptr, _batchReadContext);
+                return TrapManager.Create(ptr, _memoryBuffer);
             case GameObjectType.Unknown:
             default:
                 var createResult = CreateGameObject(ptr);
@@ -154,7 +176,7 @@ internal class ObjectManager : IObjectManager
             setItem.GameObjectType = GameObjectType.Unknown;
         });
 
-        if (!_gameObjectReader.ReadObject(item, _batchReadContext))
+        if (!_gameObjectReader.ReadObject(item, _memoryBuffer))
         {
             _itemsPool.CancelNext();
             return ObjectCreateResult.Failed;
@@ -177,7 +199,7 @@ internal class ObjectManager : IObjectManager
     public void Dispose()
     {
         _minionsArray.Dispose();
-        _batchReadContext.Dispose();
+        _memoryBuffer.Dispose();
     }
 
     public IGameObject? GetByNetworkId(int handle)

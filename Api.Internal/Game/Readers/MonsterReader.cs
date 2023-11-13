@@ -12,13 +12,13 @@ internal class MonsterReader : AiBaseUnitReader, IMonsterReader
     private readonly IMonsterNameTypeMapper _monsterNameTypeMapper;
     
     public MonsterReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         IMonsterNameTypeMapper monsterNameTypeMapper,
         UnitDataDictionary unitDataDictionary,
         IAiBaseUnitOffsets aiBaseUnitOffsets)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
     {
         _monsterNameTypeMapper = monsterNameTypeMapper;
     }
@@ -35,9 +35,9 @@ internal class MonsterReader : AiBaseUnitReader, IMonsterReader
         return true;
     }
 
-    public bool ReadMonster(IMonster? monster, BatchReadContext batchReadContext)
+    public bool ReadMonster(IMonster? monster, IMemoryBuffer memoryBuffer)
     {
-        if (monster is null || !ReadAiBaseUnit(monster, batchReadContext))
+        if (monster is null || !ReadAiBaseUnit(monster, memoryBuffer))
         {
             return false;
         }

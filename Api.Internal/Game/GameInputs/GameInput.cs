@@ -2,7 +2,6 @@
 using Api.Game.GameInputs;
 using Api.Game.Objects;
 using Api.Inputs;
-using Api.Internal.Inputs;
 
 namespace Api.Internal.Game.GameInputs;
 
@@ -48,7 +47,17 @@ internal class GameInput : IGameInput
 
     public bool IssueOrder(Vector3 position, IssueOrderType issueOrderType)
     {
-        return _gameCamera.WorldToScreen(position, out var screenPosition) && IssueOrder(screenPosition, IssueOrderType.Attack);
+        if (!_gameCamera.WorldToScreen(position, out var screenPosition))
+        {
+            return false;
+        }
+
+        if (screenPosition.X > 8000)
+        {
+            Console.WriteLine("WTF");
+        }
+        
+        return IssueOrder(screenPosition, IssueOrderType.Attack);
     }
 
     public bool Attack(IGameObject target)

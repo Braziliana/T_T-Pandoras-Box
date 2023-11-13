@@ -20,16 +20,16 @@ public class HeroOffsets : IHeroOffsets
     {
         var cs = configuration.GetSection(nameof(HeroOffsets));
         
-        SpawnCount = new OffsetData(nameof(SpawnCount), Convert.ToInt32(cs[nameof(SpawnCount)], 16), typeof(int));
+        SpawnCount = new OffsetData(nameof(SpawnCount), Convert.ToUInt32(cs[nameof(SpawnCount)], 16), typeof(int));
         
-        BuffManager = new OffsetData(nameof(BuffManager), Convert.ToInt32(cs[nameof(BuffManager)], 16), typeof(float));
-        BuffManagerEntryStart = new OffsetData(nameof(BuffManagerEntryStart), Convert.ToInt32(cs[nameof(BuffManagerEntryStart)], 16) + BuffManager.Offset, typeof(float));
-        BuffManagerEntryEnd = new OffsetData(nameof(BuffManagerEntryEnd), Convert.ToInt32(cs[nameof(BuffManagerEntryEnd)], 16) + BuffManager.Offset, typeof(float));
+        BuffManager = new OffsetData(nameof(BuffManager), Convert.ToUInt32(cs[nameof(BuffManager)], 16), typeof(float));
+        BuffManagerEntryStart = new OffsetData(nameof(BuffManagerEntryStart), Convert.ToUInt32(cs[nameof(BuffManagerEntryStart)], 16) + BuffManager.Offset, typeof(float));
+        BuffManagerEntryEnd = new OffsetData(nameof(BuffManagerEntryEnd), Convert.ToUInt32(cs[nameof(BuffManagerEntryEnd)], 16) + BuffManager.Offset, typeof(float));
         
-        ActiveSpell = new OffsetData(nameof(ActiveSpell), Convert.ToInt32(cs[nameof(ActiveSpell)], 16), typeof(IntPtr));
-        SpellBook = new OffsetData(nameof(SpellBook), Convert.ToInt32(cs[nameof(SpellBook)], 16), typeof(SpellBookInfo));
+        ActiveSpell = new OffsetData(nameof(ActiveSpell), Convert.ToUInt32(cs[nameof(ActiveSpell)], 16), typeof(IntPtr));
+        SpellBook = new OffsetData(nameof(SpellBook), Convert.ToUInt32(cs[nameof(SpellBook)], 16), typeof(SpellBookInfo));
         
-        AiManager = new OffsetData(nameof(AiManager), Convert.ToInt32(cs[nameof(AiManager)], 16), typeof(ObfuscatedLong));
+        AiManager = new OffsetData(nameof(AiManager), Convert.ToUInt32(cs[nameof(AiManager)], 16), typeof(ObfuscatedLong));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

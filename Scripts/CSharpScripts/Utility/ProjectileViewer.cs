@@ -36,7 +36,7 @@ public class ProjectileViewer : IScript
         _gameState = gameState;
 
         var menu = mainMenu.CreateMenu("Projectile Viewer", ScriptType.Utility);
-        _showEnemyMissiles = menu.AddToggle("Show enemy missiles", "", true);
+        _showEnemyMissiles = menu.AddToggle("Show enemy missiles", true);
     }
 
     public void OnLoad()
@@ -63,7 +63,7 @@ public class ProjectileViewer : IScript
             var hero = _heroManager.GetHero(missile.SourceIndex);
             if(hero is null || hero.Team == _localPlayer.Team) continue;
             
-            _renderer.Rect3D(missile.StartPosition, missile.EndPosition, missile.Width, Color.Red);
+            //_renderer.RectBorder(missile.StartPosition, missile.EndPosition, Color.Red, missile.Width);
         }
     }
 }

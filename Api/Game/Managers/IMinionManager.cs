@@ -6,7 +6,7 @@ namespace Api.Game.Managers;
 
 public interface IMinionManager
 {
-    ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext);
+    ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer);
     void Clear();
     void Update(float deltaTime);
     

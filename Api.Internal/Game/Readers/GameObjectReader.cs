@@ -7,6 +7,7 @@ using Api.GameProcess;
 using Api.Internal.Game.Objects;
 using Api.Internal.Game.Offsets;
 using Microsoft.Extensions.Options;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
@@ -19,7 +20,7 @@ internal class GameObjectReader : BaseReader, IGameObjectReader
     
     protected readonly IGameObjectOffsets GameObjectOffsets;
     
-    public GameObjectReader(IMemory memory, IGameObjectOffsets gameObjectOffsets) : base(memory)
+    public GameObjectReader(ITargetProcess targetProcess, IGameObjectOffsets gameObjectOffsets) : base(targetProcess)
     {
         GameObjectOffsets = gameObjectOffsets;
     }
@@ -63,23 +64,23 @@ internal class GameObjectReader : BaseReader, IGameObjectReader
         return true;
     }
     
-    public bool ReadObject(IGameObject? gameObject, BatchReadContext batchReadContext)
+    public bool ReadObject(IGameObject? gameObject, IMemoryBuffer memoryBuffer)
     {
         if (gameObject is null || gameObject.Pointer == IntPtr.Zero)
         {
             return false;
         }
         
-        gameObject.IsVisible = ReadOffset<bool>(GameObjectOffsets.IsVisible, batchReadContext);
-        gameObject.Position = ReadOffset<Vector3>(GameObjectOffsets.Position, batchReadContext);
+        gameObject.IsVisible = ReadOffset<bool>(GameObjectOffsets.IsVisible, memoryBuffer);
+        gameObject.Position = ReadOffset<Vector3>(GameObjectOffsets.Position, memoryBuffer);
 
         if (!gameObject.RequireFullUpdate)
         {
             return true;
         }
         
-        gameObject.Name = ReadString(GameObjectOffsets.Name, Encoding.UTF8, batchReadContext);
-        gameObject.ObjectName = ReadString(GameObjectOffsets.ObjectName, Encoding.ASCII, batchReadContext);
+        gameObject.Name = ReadString(GameObjectOffsets.Name, Encoding.UTF8, memoryBuffer);
+        gameObject.ObjectName = ReadString(GameObjectOffsets.ObjectName, Encoding.ASCII, memoryBuffer);
         if (string.IsNullOrWhiteSpace(gameObject.Name) && string.IsNullOrWhiteSpace(gameObject.ObjectName))
         {
             return false;
@@ -91,29 +92,30 @@ internal class GameObjectReader : BaseReader, IGameObjectReader
             return false;
         }
         
-        gameObject.Team = ReadOffset<int>(GameObjectOffsets.Team, batchReadContext);
-        gameObject.NetworkId = ReadOffset<int>(GameObjectOffsets.NetworkId, batchReadContext);
+        gameObject.Team = ReadOffset<int>(GameObjectOffsets.Team, memoryBuffer);
+        gameObject.NetworkId = ReadOffset<int>(GameObjectOffsets.NetworkId, memoryBuffer);
         
         return true;
     }
 
-    public string ReadObjectName(BatchReadContext batchReadContext)
+    public string ReadObjectName(IMemoryBuffer batchReadContext)
     {
         return ReadString(GameObjectOffsets.ObjectName, Encoding.ASCII, batchReadContext);
     }
 
-    public int ReadObjectNetworkId(BatchReadContext batchReadContext)
+    public int ReadObjectNetworkId(IMemoryBuffer batchReadContext)
     {
         return ReadOffset<int>(GameObjectOffsets.NetworkId, batchReadContext);
     }
 
-    public virtual int GetBufferSize()
+    public virtual uint GetBufferSize()
     {
         return GetSize(GameObjectOffsets.GetOffsets());
     }
 
-    protected override BatchReadContext CreateBatchReadContext()
+    protected override IMemoryBuffer CreateBatchReadContext()
     {
-        return new BatchReadContext(GetBufferSize());
+        var size = GetBufferSize();
+        return new MemoryBuffer(size);
     }
 }

@@ -4,13 +4,11 @@ using Api.Game.Calculations;
 using Api.Game.GameInputs;
 using Api.Game.Managers;
 using Api.Inputs;
-using Api.Internal.Menus;
 using Api.Menus;
 using Api.Scripts;
 using NLua;
 using Scripts.Extensions;
 using Scripts.Utils;
-using Silk.NET.OpenGL;
 
 namespace Scripts.LuaScripts;
 

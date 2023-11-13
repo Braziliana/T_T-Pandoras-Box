@@ -9,12 +9,12 @@ namespace Api.Internal.Game.Readers;
 internal class TurretReader : AiBaseUnitReader, ITurretReader
 {
     public TurretReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         UnitDataDictionary unitDataDictionary,
         IAiBaseUnitOffsets aiBaseUnitOffsets)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
     {
     }
 
@@ -33,9 +33,9 @@ internal class TurretReader : AiBaseUnitReader, ITurretReader
         return true;
     }
 
-    public bool ReadTurret(ITurret? turret, BatchReadContext batchReadContext)
+    public bool ReadTurret(ITurret? turret, IMemoryBuffer memoryBuffer)
     {
-        if (turret is null || !ReadAiBaseUnit(turret, batchReadContext))
+        if (turret is null || !ReadAiBaseUnit(turret, memoryBuffer))
         {
             return false;
         }

@@ -26,7 +26,7 @@ internal class MinionManager : IMinionManager
         _minionReader = minionReader;
     }
     
-    public ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext)
+    public ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer)
     {
         var item = _itemsPool.GetNext((setItem) =>
         {
@@ -34,7 +34,7 @@ internal class MinionManager : IMinionManager
             setItem.GameObjectType = GameObjectType.Minion;
         });
         
-        if (!_minionReader.ReadMinion(item, batchReadContext))
+        if (!_minionReader.ReadMinion(item, memoryBuffer))
         {
             _itemsPool.CancelNext();
             return ObjectCreateResult.Failed;

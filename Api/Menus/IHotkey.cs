@@ -4,8 +4,8 @@ namespace Api.Menus;
 
 public enum HotkeyType
 {
-    Toggle = 0,
-    Press = 1
+    Press = 0,
+    Toggle = 1,
 }
 
 public interface IHotkey : IMenuElement
@@ -13,6 +13,4 @@ public interface IHotkey : IMenuElement
     VirtualKey VirtualKey { get; set; }
     HotkeyType HotkeyType { get; set; } 
     bool Enabled { get; }
-    void KeyDown(VirtualKey virtualKey);
-    void KeyUp(VirtualKey virtualKey);
 }

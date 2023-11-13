@@ -20,7 +20,7 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
 	private readonly IActiveCastSpellReader _activeCastSpellReader;
 	
     public HeroReader(
-        IMemory memory,
+	    ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
         UnitDataDictionary unitDataDictionary,
@@ -31,7 +31,7 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
         ISpellReader spellReader,
         IAiManagerReader aiManagerReader,
         IActiveCastSpellReader activeCastSpellReader)
-        : base(memory, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
+        : base(targetProcess, gameObjectOffsets, attackableUnitOffsets, unitDataDictionary, aiBaseUnitOffsets)
     {
 	    _heroOffsets = heroOffsets;
 	    _buffReader = buffReader;
@@ -59,7 +59,7 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
 
 	    ReadSpells(hero, ReadOffset<SpellBookInfo>(_heroOffsets.SpellBook));
 	    ReadActiveSpell(hero, ReadOffset<IntPtr>(_heroOffsets.ActiveSpell));
-	    ReadAiManager(hero, BatchReadContext);
+	    ReadAiManager(hero, MemoryBuffer);
 
 	    if (hero.RequireFullUpdate)
 	    {
@@ -69,9 +69,9 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
         return true;
     }     
     
-    public bool ReadHero(IHero? hero, BatchReadContext batchReadContext)
+    public bool ReadHero(IHero? hero, IMemoryBuffer memoryBuffer)
     {
-        if (hero is null || !ReadAiBaseUnit(hero, batchReadContext))
+        if (hero is null || !ReadAiBaseUnit(hero, memoryBuffer))
         {
             return false;
         }
@@ -79,13 +79,13 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
         hero.IsLocalHero = _localPlayer.NetworkId == hero.NetworkId;
 
         hero.SpawnCount = ReadOffset<int>(_heroOffsets.SpawnCount);
-        var buffsStart = ReadOffset<IntPtr>(_heroOffsets.BuffManagerEntryStart, batchReadContext);
-        var buffsEnd = ReadOffset<IntPtr>(_heroOffsets.BuffManagerEntryEnd, batchReadContext);
+        var buffsStart = ReadOffset<IntPtr>(_heroOffsets.BuffManagerEntryStart, memoryBuffer);
+        var buffsEnd = ReadOffset<IntPtr>(_heroOffsets.BuffManagerEntryEnd, memoryBuffer);
         _buffReader.ReadBuffs(hero.BuffsDictionary, buffsStart, buffsEnd);
 
-        ReadSpells(hero, ReadOffset<SpellBookInfo>(_heroOffsets.SpellBook, batchReadContext));
+        ReadSpells(hero, ReadOffset<SpellBookInfo>(_heroOffsets.SpellBook, memoryBuffer));
         ReadActiveSpell(hero, ReadOffset<IntPtr>(_heroOffsets.ActiveSpell));
-        ReadAiManager(hero, batchReadContext);
+        ReadAiManager(hero, memoryBuffer);
         
         if (hero.RequireFullUpdate)
         {
@@ -94,7 +94,7 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
         return true;
     }
     
-    public override int GetBufferSize()
+    public override uint GetBufferSize()
     {
 	    return Math.Max(base.GetBufferSize(), GetSize(_heroOffsets.GetOffsets()));
     }
@@ -109,9 +109,9 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
 	    _spellReader.ReadSpell(hero.Summoner2, spellBookInfo.Summoner2);
     }
 
-    private void ReadAiManager(IHero hero, BatchReadContext batchReadContext)
+    private void ReadAiManager(IHero hero, IMemoryBuffer memoryBuffer)
     {
-	    var obfuscatedLong = ReadOffset<ObfuscatedLong>(_heroOffsets.AiManager, batchReadContext);
+	    var obfuscatedLong = ReadOffset<ObfuscatedLong>(_heroOffsets.AiManager, memoryBuffer);
 	    var ptr = obfuscatedLong.Deobfuscate();
 	    _aiManagerReader.ReadAiManager(hero, new IntPtr(ptr) + 0x10);
     }

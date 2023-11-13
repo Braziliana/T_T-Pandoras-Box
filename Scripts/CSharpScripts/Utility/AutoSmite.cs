@@ -88,19 +88,18 @@ public class AutoSmite : IScript
 
         var menu = mainMenu.CreateMenu("AutoSmite", ScriptType.Utility);
 
-        _drawKillableMonsters = menu.AddToggle("Draw monsters",
-            "Draws circle around monsters which can be killed with smite", true);
+        _drawKillableMonsters = menu.AddToggle("Draw monsters", true);
         for (var i = 0; i < _monsterSettings.Length; i++)
         {
             var ms = _monsterSettings[i];
-            var subMenu = menu.AddSubMenu(ms.MonsterType.ToString(), "");
+            var subMenu = menu.AddSubMenu(ms.MonsterType.ToString());
             _monsterSettings[i].SmiteToggle =
-                subMenu.AddToggle("Smite", string.Empty, true);
+                subMenu.AddToggle("Smite", true);
 
             if (_monsterSettings[i].HasExtraSettings)
             {
                 _monsterSettings[i].RestrictSmite =
-                    subMenu.AddToggle("Restrict smite", string.Empty, true);
+                    subMenu.AddToggle("Restrict smite", true);
             }
         }
     }
@@ -178,7 +177,7 @@ public class AutoSmite : IScript
         {
             if (monster.Health <= smite.Damage)
             {
-                _renderer.Circle3D(monster.Position, monster.CollisionRadius, Color.Magenta, 1, 0, 0, 0);
+                _renderer.CircleBorder3D(monster.Position, monster.CollisionRadius, Color.Magenta, 1);
             }
         }
     }

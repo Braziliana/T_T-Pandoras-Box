@@ -6,5 +6,5 @@ namespace Api.Game.Readers;
 public interface ITurretReader : IAiBaseUnitReader
 {
     bool ReadTurret(ITurret? turret);
-    bool ReadTurret(ITurret? turret, BatchReadContext batchReadContext);
+    bool ReadTurret(ITurret? turret, IMemoryBuffer memoryBuffer);
 }

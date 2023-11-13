@@ -6,7 +6,7 @@ namespace Api.Game.Managers;
 
 public interface IWardManager
 {
-    ObjectCreateResult Create(IntPtr ptr, BatchReadContext batchReadContext);
+    ObjectCreateResult Create(IntPtr ptr, IMemoryBuffer memoryBuffer);
     void Clear();
     void Update(float deltaTime);
     

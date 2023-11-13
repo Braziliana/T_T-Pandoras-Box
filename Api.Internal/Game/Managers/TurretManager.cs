@@ -25,14 +25,14 @@ internal class TurretManager : ITurretManager
 
     public TurretManager(
         IBaseOffsets baseOffsets,
-        IMemory memory,
+        ITargetProcess targetProcess,
         ILocalPlayer localPlayer,
         ITurretReader turretReader)
     {
         _localPlayer = localPlayer;
         _turretReader = turretReader;
 
-        _itemsArray = new TArray(memory, baseOffsets.TurretList);
+        _itemsArray = new TArray(targetProcess, baseOffsets.TurretList);
     }
     
     public void Dispose()

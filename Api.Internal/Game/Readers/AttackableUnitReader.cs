@@ -12,10 +12,10 @@ internal class AttackableUnitReader : GameObjectReader, IAttackableUnitReader
     protected readonly UnitDataDictionary UnitDataDictionary;
     
     public AttackableUnitReader(
-        IMemory memory,
+        ITargetProcess targetProcess,
         IGameObjectOffsets gameObjectOffsets,
         IAttackableUnitOffsets attackableUnitOffsets,
-        UnitDataDictionary unitDataDictionary) : base(memory, gameObjectOffsets)
+        UnitDataDictionary unitDataDictionary) : base(targetProcess, gameObjectOffsets)
     {
         _attackableUnitOffsets = attackableUnitOffsets;
         UnitDataDictionary = unitDataDictionary;
@@ -60,25 +60,25 @@ internal class AttackableUnitReader : GameObjectReader, IAttackableUnitReader
         return true;
     }
 
-    public bool ReadAttackableUnit(IAttackableUnit? attackableUnit, BatchReadContext batchReadContext)
+    public bool ReadAttackableUnit(IAttackableUnit? attackableUnit, IMemoryBuffer memoryBuffer)
     {
-        if (attackableUnit is null || !ReadObject(attackableUnit, batchReadContext))
+        if (attackableUnit is null || !ReadObject(attackableUnit, memoryBuffer))
         {
             return false;
         }
 
-        var isDeadObfuscation = ReadOffset<ObfuscatedBool>(_attackableUnitOffsets.IsDead, batchReadContext);
+        var isDeadObfuscation = ReadOffset<ObfuscatedBool>(_attackableUnitOffsets.IsDead, memoryBuffer);
         attackableUnit.IsDead = isDeadObfuscation.Deobfuscate();
         
-        attackableUnit.Mana = ReadOffset<float>(_attackableUnitOffsets.Mana, batchReadContext);
-        attackableUnit.MaxMana = ReadOffset<float>(_attackableUnitOffsets.MaxMana, batchReadContext);
-        attackableUnit.Health = ReadOffset<float>(_attackableUnitOffsets.Health, batchReadContext);
-        attackableUnit.MaxHealth = ReadOffset<float>(_attackableUnitOffsets.MaxHealth, batchReadContext);
-        attackableUnit.Armor = ReadOffset<float>(_attackableUnitOffsets.Armor, batchReadContext);
-        attackableUnit.BonusArmor = ReadOffset<float>(_attackableUnitOffsets.BonusArmor, batchReadContext);
-        attackableUnit.MagicResistance = ReadOffset<float>(_attackableUnitOffsets.MagicResistance, batchReadContext);
-        attackableUnit.BonusMagicResistance = ReadOffset<float>(_attackableUnitOffsets.BonusMagicResistance, batchReadContext);
-        attackableUnit.Targetable = ReadOffset<bool>(_attackableUnitOffsets.Targetable, batchReadContext);
+        attackableUnit.Mana = ReadOffset<float>(_attackableUnitOffsets.Mana, memoryBuffer);
+        attackableUnit.MaxMana = ReadOffset<float>(_attackableUnitOffsets.MaxMana, memoryBuffer);
+        attackableUnit.Health = ReadOffset<float>(_attackableUnitOffsets.Health, memoryBuffer);
+        attackableUnit.MaxHealth = ReadOffset<float>(_attackableUnitOffsets.MaxHealth, memoryBuffer);
+        attackableUnit.Armor = ReadOffset<float>(_attackableUnitOffsets.Armor, memoryBuffer);
+        attackableUnit.BonusArmor = ReadOffset<float>(_attackableUnitOffsets.BonusArmor, memoryBuffer);
+        attackableUnit.MagicResistance = ReadOffset<float>(_attackableUnitOffsets.MagicResistance, memoryBuffer);
+        attackableUnit.BonusMagicResistance = ReadOffset<float>(_attackableUnitOffsets.BonusMagicResistance, memoryBuffer);
+        attackableUnit.Targetable = ReadOffset<bool>(_attackableUnitOffsets.Targetable, memoryBuffer);
 
         if (!attackableUnit.RequireFullUpdate)
         {
@@ -99,7 +99,7 @@ internal class AttackableUnitReader : GameObjectReader, IAttackableUnitReader
         return true;
     }
 
-    public override int GetBufferSize()
+    public override uint GetBufferSize()
     {
         return Math.Max(base.GetBufferSize(), GetSize(_attackableUnitOffsets.GetOffsets()));
     }

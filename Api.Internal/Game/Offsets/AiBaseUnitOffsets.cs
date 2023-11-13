@@ -19,15 +19,15 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
     {
         var cs = configuration.GetSection(nameof(AiBaseUnitOffsets));
             
-        CurrentTargetIndex = new OffsetData(nameof(CurrentTargetIndex), Convert.ToInt32(cs[nameof(CurrentTargetIndex)], 16), typeof(int));
-        AttackRange = new OffsetData(nameof(AttackRange), Convert.ToInt32(cs[nameof(AttackRange)], 16), typeof(float));
-        BonusAttackSpeed = new OffsetData(nameof(BonusAttackSpeed), Convert.ToInt32(cs[nameof(BonusAttackSpeed)], 16), typeof(float));
-        BaseAttackDamage = new OffsetData(nameof(BaseAttackDamage), Convert.ToInt32(cs[nameof(BaseAttackDamage)], 16), typeof(float));
-        BonusAttackDamage = new OffsetData(nameof(BonusAttackDamage), Convert.ToInt32(cs[nameof(BonusAttackDamage)], 16), typeof(float));
-        AbilityPower = new OffsetData(nameof(AbilityPower), Convert.ToInt32(cs[nameof(AbilityPower)], 16), typeof(float));
-        MagicPenetration = new OffsetData(nameof(MagicPenetration), Convert.ToInt32(cs[nameof(MagicPenetration)], 16), typeof(float));
-        Lethality = new OffsetData(nameof(Lethality), Convert.ToInt32(cs[nameof(Lethality)], 16), typeof(float));
-        Level = new OffsetData(nameof(Level), Convert.ToInt32(cs[nameof(Level)], 16), typeof(int));
+        CurrentTargetIndex = new OffsetData(nameof(CurrentTargetIndex), Convert.ToUInt32(cs[nameof(CurrentTargetIndex)], 16), typeof(int));
+        AttackRange = new OffsetData(nameof(AttackRange), Convert.ToUInt32(cs[nameof(AttackRange)], 16), typeof(float));
+        BonusAttackSpeed = new OffsetData(nameof(BonusAttackSpeed), Convert.ToUInt32(cs[nameof(BonusAttackSpeed)], 16), typeof(float));
+        BaseAttackDamage = new OffsetData(nameof(BaseAttackDamage), Convert.ToUInt32(cs[nameof(BaseAttackDamage)], 16), typeof(float));
+        BonusAttackDamage = new OffsetData(nameof(BonusAttackDamage), Convert.ToUInt32(cs[nameof(BonusAttackDamage)], 16), typeof(float));
+        AbilityPower = new OffsetData(nameof(AbilityPower), Convert.ToUInt32(cs[nameof(AbilityPower)], 16), typeof(float));
+        MagicPenetration = new OffsetData(nameof(MagicPenetration), Convert.ToUInt32(cs[nameof(MagicPenetration)], 16), typeof(float));
+        Lethality = new OffsetData(nameof(Lethality), Convert.ToUInt32(cs[nameof(Lethality)], 16), typeof(float));
+        Level = new OffsetData(nameof(Level), Convert.ToUInt32(cs[nameof(Level)], 16), typeof(int));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

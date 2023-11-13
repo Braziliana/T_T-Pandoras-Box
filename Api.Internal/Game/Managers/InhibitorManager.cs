@@ -25,14 +25,14 @@ public class InhibitorManager : IInhibitorManager
 
     public InhibitorManager(
         IBaseOffsets baseOffsets,
-        IMemory memory,
+        ITargetProcess targetProcess,
         ILocalPlayer localPlayer,
         IInhibitorReader turretReader)
     {
         _localPlayer = localPlayer;
         _turretReader = turretReader;
 
-        _itemsArray = new TArray(memory, baseOffsets.InhibitorList);
+        _itemsArray = new TArray(targetProcess, baseOffsets.InhibitorList);
     }
 
     public void Dispose()

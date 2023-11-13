@@ -4,26 +4,27 @@ using Api.Game.Objects;
 using Api.Game.Offsets;
 using Api.Game.Readers;
 using Api.GameProcess;
+using NativeWarper;
 
 namespace Api.Internal.Game.Readers;
 
 internal class GameCameraReader : IGameCameraReader
 {
-	private readonly IMemory _memory;
+	private readonly ITargetProcess _targetProcess;
 	private readonly IGameCameraOffsets _gameCameraOffsets;
-	private readonly BatchReadContext _matrixBatchReadContext;
-	private readonly BatchReadContext _doubleIntBatchReadContext;
-	private readonly int _matrixSize;
-	private readonly int _intSize;
+	private readonly IMemoryBuffer _matrixMemoryBuffer;
+	private readonly IMemoryBuffer _doubleIntMemoryBuffer;
+	private readonly uint _matrixSize;
+	private readonly uint _intSize;
 	
-	public GameCameraReader(IMemory memory, IGameCameraOffsets gameCameraOffsets)
+	public GameCameraReader(ITargetProcess targetProcess, IGameCameraOffsets gameCameraOffsets)
 	{
-		_memory = memory;
+		_targetProcess = targetProcess;
 		_gameCameraOffsets = gameCameraOffsets;
-		_matrixSize = Marshal.SizeOf<Matrix4x4>();
-		_intSize = Marshal.SizeOf<int>();
-		_matrixBatchReadContext = new BatchReadContext(_matrixSize * 2);
-		_doubleIntBatchReadContext = new BatchReadContext(_intSize * 2);
+		_matrixSize = (uint)Marshal.SizeOf<Matrix4x4>();
+		_intSize = (uint)Marshal.SizeOf<int>();
+		_matrixMemoryBuffer = new MemoryBuffer(_matrixSize * 2);
+		_doubleIntMemoryBuffer = new MemoryBuffer(_intSize * 2);
 	}
 	
     public bool ReadCamera(IGameCamera? gameCamera)
@@ -55,18 +56,18 @@ internal class GameCameraReader : IGameCameraReader
 		    return true;
 	    }
 	    
-	    if(!_memory.ReadModulePointer(_gameCameraOffsets.Renderer.Offset, out var rendererPtr))
+	    if(!_targetProcess.ReadModulePointer(_gameCameraOffsets.Renderer.Offset, out var rendererPtr))
 	    {
 		    return false;
 	    }
 	    
-	    if (!_memory.ReadCachedBuffer(rendererPtr + _gameCameraOffsets.RendererWidth.Offset, _doubleIntBatchReadContext))
+	    if (!_targetProcess.Read(rendererPtr + (int)_gameCameraOffsets.RendererWidth.Offset, _doubleIntMemoryBuffer))
 	    {
 		    return false;
 	    }
 
-	    gameCamera.RendererWidth = _doubleIntBatchReadContext.Read<int>(0);
-	    gameCamera.RendererHeight = _doubleIntBatchReadContext.Read<int>(_intSize);
+	    gameCamera.RendererWidth = _doubleIntMemoryBuffer.Read<int>(0);
+	    gameCamera.RendererHeight = _doubleIntMemoryBuffer.Read<int>(_intSize);
 	    gameCamera.RequireFullUpdate = false;
 	    
 	    return true;
@@ -74,13 +75,13 @@ internal class GameCameraReader : IGameCameraReader
     
     private bool ReadMatrices(IGameCamera gameCamera)
     {
-	    if (!_memory.ReadModuleCachedBuffer(_gameCameraOffsets.ViewProjMatrix.Offset, _matrixBatchReadContext))
+	    if (!_targetProcess.ReadModule(_gameCameraOffsets.ViewProjMatrix.Offset, _matrixMemoryBuffer))
 	    {
 		    return false;
 	    }
 
-	    var viewMatrix = _matrixBatchReadContext.Read<Matrix4x4>(0);
-	    var projMatrix = _matrixBatchReadContext.Read<Matrix4x4>(_matrixSize);
+	    var viewMatrix = _matrixMemoryBuffer.Read<Matrix4x4>(0);
+	    var projMatrix = _matrixMemoryBuffer.Read<Matrix4x4>(_matrixSize);
 
 	    gameCamera.ViewProjMatrix = viewMatrix * projMatrix;
 

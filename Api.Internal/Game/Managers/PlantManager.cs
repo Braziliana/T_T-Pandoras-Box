@@ -21,7 +21,7 @@ internal class PlantManager : IPlantManager
         _plantReader = plantReader;
     }
 
-    public ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext)
+    public ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer)
     {
         var item = _itemsPool.GetNext((setItem) =>
         {
@@ -29,7 +29,7 @@ internal class PlantManager : IPlantManager
             setItem.GameObjectType = GameObjectType.Hero;
         });
         
-        if (!_plantReader.ReadPlant(item, batchReadContext))
+        if (!_plantReader.ReadPlant(item, memoryBuffer))
         {
             _itemsPool.CancelNext();
             return new ObjectCreateResult(false, null);

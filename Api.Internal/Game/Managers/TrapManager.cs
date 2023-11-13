@@ -34,7 +34,7 @@ internal class TrapManager : ITrapManager
         }
     }
     
-    public ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext)
+    public ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer)
     {
         var item = _itemsPool.GetNext((setItem) =>
         {
@@ -42,7 +42,7 @@ internal class TrapManager : ITrapManager
             setItem.GameObjectType = GameObjectType.Trap;
         });
         
-        if (!_trapReader.ReadTrap(item, batchReadContext))
+        if (!_trapReader.ReadTrap(item, memoryBuffer))
         {
             _itemsPool.CancelNext();
             return new ObjectCreateResult(false, null);

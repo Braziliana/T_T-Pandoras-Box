@@ -76,15 +76,15 @@ public class OrbWalker : IOrbWalkScript
         _randomGenerator = randomGenerator;
 
         var menu = mainMenu.CreateMenu(Name, ScriptType.OrbWalker);
-        _humanizerSliderAddRandomDelay = menu.AddToggle("Humanizer random delay", "Adds random value to humanizer 5-50", true);
-        _humanizerSlider = menu.AddValueSlider("Humanizer", "Delay between move actions", 75, 25, 300);
-        _pingSlider = menu.AddValueSlider("Ping", "Average ping", 35, 5, 300);
-        _extraWindupSlider = menu.AddValueSlider("Extra windup", "Extra time between attack and move", 25, 0, 100);
-        _stoppingDistanceSlider = menu.AddValueSlider("Stopping distance", "Extra time between attack and move", 70, 0, 250);
+        _humanizerSliderAddRandomDelay = menu.AddToggle("Humanizer random delay", true);
+        _humanizerSlider = menu.AddFloatSlider("Humanizer", 75, 25, 300, 1, 0);
+        _pingSlider = menu.AddFloatSlider("Ping", 35, 5, 300, 1, 0);
+        _extraWindupSlider = menu.AddFloatSlider("Extra windup", 25, 0, 100, 1, 0);
+        _stoppingDistanceSlider = menu.AddFloatSlider("Stopping distance", 70, 0, 250, 1, 0);
 
-        _supportMode = menu.AddToggle("Support mode", "Wont last hit if ally is close", false);
-        _drawAttackRange = menu.AddToggle("Draw attack range", "", true);
-        _drawKillableMinions = menu.AddToggle("Draw killable minions", "", true);
+        _supportMode = menu.AddToggle("Support mode", false);
+        _drawAttackRange = menu.AddToggle("Draw attack range", true);
+        _drawKillableMinions = menu.AddToggle("Draw killable minions", true);
     }
     
     public void OnLoad()
@@ -251,12 +251,12 @@ public class OrbWalker : IOrbWalkScript
     {
         if (_drawAttackRange.Toggled)
         {
-            _renderer.Circle3D(_localPlayer.Position, _localPlayer.AttackRange, Color.White, 2, _gameState.Time, 1, 2);
+            _renderer.CircleBorder3D(_localPlayer.Position, _localPlayer.AttackRange, Color.White, 2);
         }
 
         if (_stoppingDistanceSlider.Value > 50)
         {
-            _renderer.Circle3D(_localPlayer.Position, _stoppingDistanceSlider.Value, Color.Green, 2, _gameState.Time, 1, 0);
+            _renderer.CircleBorder3D(_localPlayer.Position, _stoppingDistanceSlider.Value, Color.Green, 2);
         }
         
         DrawKillableMinions();
@@ -274,7 +274,7 @@ public class OrbWalker : IOrbWalkScript
         foreach (var minion in _minionSelector.GetKillableMinions(range).Select(x => x.Minion))
         {
             if(minion is null) continue;
-            _renderer.Circle3D(minion.Position, minion.CollisionRadius, Color.Red, 1, _gameState.Time, 1, 1);
+            _renderer.CircleBorder3D(minion.Position, minion.CollisionRadius, Color.Red, 1);
         }
     }
     

@@ -23,16 +23,16 @@ internal class AttackableUnitOffsets : IAttackableUnitOffsets
     {
         var cs = configuration.GetSection(nameof(AttackableUnitOffsets));
             
-        IsDead = new OffsetData(nameof(IsDead), Convert.ToInt32(cs[nameof(IsDead)], 16), typeof(ObfuscatedBool));
-        Mana = new OffsetData(nameof(Mana), Convert.ToInt32(cs[nameof(Mana)], 16), typeof(float));
-        MaxMana = new OffsetData(nameof(MaxMana), Convert.ToInt32(cs[nameof(MaxMana)], 16), typeof(float));
-        Health = new OffsetData(nameof(Health), Convert.ToInt32(cs[nameof(Health)], 16), typeof(float));
-        MaxHealth = new OffsetData(nameof(MaxHealth), Convert.ToInt32(cs[nameof(MaxHealth)], 16), typeof(float));
-        Armor = new OffsetData(nameof(Armor), Convert.ToInt32(cs[nameof(Armor)], 16), typeof(float));
-        BonusArmor = new OffsetData(nameof(BonusArmor), Convert.ToInt32(cs[nameof(BonusArmor)], 16), typeof(float));
-        MagicResistance = new OffsetData(nameof(MagicResistance), Convert.ToInt32(cs[nameof(MagicResistance)], 16), typeof(float));
-        BonusMagicResistance = new OffsetData(nameof(BonusMagicResistance), Convert.ToInt32(cs[nameof(BonusMagicResistance)], 16), typeof(float));
-        Targetable = new OffsetData(nameof(Targetable), Convert.ToInt32(cs[nameof(Targetable)], 16), typeof(bool));
+        IsDead = new OffsetData(nameof(IsDead), Convert.ToUInt32(cs[nameof(IsDead)], 16), typeof(ObfuscatedBool));
+        Mana = new OffsetData(nameof(Mana), Convert.ToUInt32(cs[nameof(Mana)], 16), typeof(float));
+        MaxMana = new OffsetData(nameof(MaxMana), Convert.ToUInt32(cs[nameof(MaxMana)], 16), typeof(float));
+        Health = new OffsetData(nameof(Health), Convert.ToUInt32(cs[nameof(Health)], 16), typeof(float));
+        MaxHealth = new OffsetData(nameof(MaxHealth), Convert.ToUInt32(cs[nameof(MaxHealth)], 16), typeof(float));
+        Armor = new OffsetData(nameof(Armor), Convert.ToUInt32(cs[nameof(Armor)], 16), typeof(float));
+        BonusArmor = new OffsetData(nameof(BonusArmor), Convert.ToUInt32(cs[nameof(BonusArmor)], 16), typeof(float));
+        MagicResistance = new OffsetData(nameof(MagicResistance), Convert.ToUInt32(cs[nameof(MagicResistance)], 16), typeof(float));
+        BonusMagicResistance = new OffsetData(nameof(BonusMagicResistance), Convert.ToUInt32(cs[nameof(BonusMagicResistance)], 16), typeof(float));
+        Targetable = new OffsetData(nameof(Targetable), Convert.ToUInt32(cs[nameof(Targetable)], 16), typeof(bool));
     }
         
     public IEnumerable<OffsetData> GetOffsets()

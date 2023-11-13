@@ -21,16 +21,16 @@ internal class ActiveCastSpellOffsets : IActiveCastSpellOffsets
     public ActiveCastSpellOffsets(IConfiguration configuration)
     {
         var cs = configuration.GetSection(nameof(ActiveCastSpellOffsets));
-        Type = new OffsetData(nameof(Type), Convert.ToInt32(cs[nameof(Type)], 16), typeof(sbyte));
-        SourceId = new OffsetData(nameof(SourceId), Convert.ToInt32(cs[nameof(SourceId)], 16), typeof(int));
-        TargetId = new OffsetData(nameof(TargetId), Convert.ToInt32(cs[nameof(TargetId)], 16), typeof(int));
-        StartPosition = new OffsetData(nameof(StartPosition), Convert.ToInt32(cs[nameof(StartPosition)], 16), typeof(Vector3));
-        EndPosition = new OffsetData(nameof(EndPosition), Convert.ToInt32(cs[nameof(EndPosition)], 16), typeof(Vector3));
-        StartTime = new OffsetData(nameof(StartTime), Convert.ToInt32(cs[nameof(StartTime)], 16), typeof(float));
-        EndTime = new OffsetData(nameof(EndTime), Convert.ToInt32(cs[nameof(EndTime)], 16), typeof(float));
-        SpellInfo = new OffsetData(nameof(SpellInfo), Convert.ToInt32(cs[nameof(SpellInfo)], 16), typeof(IntPtr));
+        Type = new OffsetData(nameof(Type), Convert.ToUInt32(cs[nameof(Type)], 16), typeof(sbyte));
+        SourceId = new OffsetData(nameof(SourceId), Convert.ToUInt32(cs[nameof(SourceId)], 16), typeof(int));
+        TargetId = new OffsetData(nameof(TargetId), Convert.ToUInt32(cs[nameof(TargetId)], 16), typeof(int));
+        StartPosition = new OffsetData(nameof(StartPosition), Convert.ToUInt32(cs[nameof(StartPosition)], 16), typeof(Vector3));
+        EndPosition = new OffsetData(nameof(EndPosition), Convert.ToUInt32(cs[nameof(EndPosition)], 16), typeof(Vector3));
+        StartTime = new OffsetData(nameof(StartTime), Convert.ToUInt32(cs[nameof(StartTime)], 16), typeof(float));
+        EndTime = new OffsetData(nameof(EndTime), Convert.ToUInt32(cs[nameof(EndTime)], 16), typeof(float));
+        SpellInfo = new OffsetData(nameof(SpellInfo), Convert.ToUInt32(cs[nameof(SpellInfo)], 16), typeof(IntPtr));
 
-        SpellInfoName = new OffsetData(nameof(SpellInfoName), Convert.ToInt32(cs[nameof(SpellInfoName)], 16), typeof(TString));
+        SpellInfoName = new OffsetData(nameof(SpellInfoName), Convert.ToUInt32(cs[nameof(SpellInfoName)], 16), typeof(TString));
     }
     
     public IEnumerable<OffsetData> GetOffsets()

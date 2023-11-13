@@ -35,7 +35,7 @@ internal class WardManager : IWardManager
         }
     }
 
-    public ObjectCreateResult Create(IntPtr objectPointer, BatchReadContext batchReadContext)
+    public ObjectCreateResult Create(IntPtr objectPointer, IMemoryBuffer memoryBuffer)
     {
         var item = _itemsPool.GetNext((setItem) =>
         {
@@ -43,7 +43,7 @@ internal class WardManager : IWardManager
             setItem.GameObjectType = GameObjectType.Ward;
         });
         
-        if (!_wardReader.ReadWard(item, batchReadContext))
+        if (!_wardReader.ReadWard(item, memoryBuffer))
         {
             _itemsPool.CancelNext();
             return new ObjectCreateResult(false, null);
