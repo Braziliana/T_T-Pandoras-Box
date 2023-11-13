@@ -9,6 +9,7 @@ class FloatSlider;
 class Toggle;
 class SubMenu;
 class Hotkey;
+class ComboBox;
 
 class MenuBase : public MenuItem
 {
@@ -38,6 +39,7 @@ public:
     Toggle* AddToggle(const std::string& title, bool toggled);
     FloatSlider* AddFloatSlider(const std::string& title, float value, float minValue, float maxValue, float step, int precision);
     Hotkey* AddHotkey(const std::string& title, unsigned short hotkey, HotkeyType hotkeyType, bool toggled);
+    ComboBox* AddComboBox(const std::string& title, const std::vector<std::string>& items, int selectedIndex);
     
     void AddItem(MenuItem* item);
     void RemoveItem(const MenuItem* itemToRemove);
@@ -57,4 +59,5 @@ extern "C" {
     __declspec(dllexport) Toggle* MenuBaseAddToggle(MenuBase* instance, const char* title, bool toggled);
     __declspec(dllexport) FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, float value, float minValue, float maxValue, float step, int precision);
     __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, unsigned short hotkey, int hotkeyType, bool toggled);
+    __declspec(dllexport) ComboBox* MenuBaseAddComboBox(MenuBase* instance, const char* title, const char** items, int itemsCount, int selectedIndex);
 }

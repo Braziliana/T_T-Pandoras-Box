@@ -77,7 +77,9 @@ Hotkey::Hotkey(MenuItem* parent, const std::string& title, const Rect& rect, con
     selectionNames.push_back("Toggle");
     _selectionList = new SelectionList<HotkeyType>(this, selectionHotkeyType, selectionNames, static_cast<int>(hotkeyType));
 
-    _selectionList->OnSelectionChanged([this](auto&& selectedHotkeyType) { HotkeyTypeChanged(std::forward<decltype(selectedHotkeyType)>(selectedHotkeyType)); });
+    _selectionList->OnSelectionChanged([this](const HotkeyType& selectedHotkeyType, int index) {
+        this->HotkeyTypeChanged(selectedHotkeyType);
+    });
 }
 
 Hotkey::~Hotkey()

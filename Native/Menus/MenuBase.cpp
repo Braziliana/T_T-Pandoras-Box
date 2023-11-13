@@ -1,4 +1,6 @@
 ﻿#include "MenuBase.h"
+
+#include "ComboBox.h"
 #include "../Rendering/Renderer.h"
 #include "SubMenu.h"
 #include "Toggle.h"
@@ -26,6 +28,18 @@ Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, const unsigned 
     return instance->AddHotkey(title, hotkey, static_cast<HotkeyType>(hotkeyType), toggled);
 }
 
+ComboBox* MenuBaseAddComboBox(MenuBase* instance, const char* title, const char** items, const int itemsCount,
+                              const int selectedIndex)
+{
+    std::vector<std::string> itemsVec;
+    itemsVec.reserve(itemsCount);
+
+    for (int i = 0; i < itemsCount; ++i) {
+        itemsVec.emplace_back(items[i]);
+    }
+
+    return instance->AddComboBox(title, itemsVec, selectedIndex);
+}
 
 //----------------------
 
@@ -133,6 +147,13 @@ Hotkey* MenuBase::AddHotkey(const std::string& title, const unsigned short hotke
     const auto item = new Hotkey(this, title, GetChildRect(1), hotkey, hotkeyType, toggled);
     AddItem(item);
     _hotkeys.push_back(item);
+    return item;
+}
+
+ComboBox* MenuBase::AddComboBox(const std::string& title, const std::vector<std::string>& items, const int selectedIndex)
+{
+    const auto item = new ComboBox(this, title, GetChildRect(1), items, selectedIndex);
+    AddItem(item);
     return item;
 }
 

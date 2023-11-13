@@ -19,6 +19,9 @@ public unsafe class MenuBase : MenuItem
     [DllImport("Native.dll")]
     private static extern IntPtr MenuBaseAddHotkey(IntPtr instance, string title, uint hotkey, int hotkeyType, bool toggled);
     
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern IntPtr MenuBaseAddComboBox(IntPtr instance, string title, string[] items, int itemCount, int selectedIndex);
+
     public MenuBase(IntPtr menuPointer, string title) : base(menuPointer, title)
     {
         this.menuPointer = menuPointer;
@@ -45,6 +48,19 @@ public unsafe class MenuBase : MenuItem
         return new Hotkey(hotkeyItem, title);
     }
 
+    public IComboBox AddComboBox(string title, string[] items, int selectedIndex)
+    {
+        var comboBox = MenuBaseAddComboBox(menuPointer, title, items, items.Length, selectedIndex);
+        return new ComboBox(comboBox, title, items, selectedIndex);
+    }
+
+    public IEnumComboBox<T> AddEnumComboBox<T>(string title, T selectedItem)  where T : Enum
+    {
+        var items = (string[])Enum.GetNames(typeof(T));
+        var comboBox = MenuBaseAddComboBox(menuPointer, title, items, items.Length, Array.IndexOf(items, selectedItem.ToString()));
+        return new EnumComboBox<T>(comboBox, title, selectedItem);
+    }
+    
     public override void LoadSettings(ISettingsProvider settingsProvider)
     {
     }

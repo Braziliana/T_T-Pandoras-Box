@@ -57,7 +57,7 @@ template<typename T>
 class SelectionList
 {
 public:
-    using EventHandler = std::function<void(const T&)>;
+    using EventHandler = std::function<void(const T&, int)>;
     
 private:
     MenuBase* _menuBase;
@@ -102,7 +102,7 @@ public:
             selectedItem->isSelected = true;
             for (auto& handler : _eventHandlers)
             {
-                handler(selectedItem->item);
+                handler(selectedItem->item, index);
             }
         }
     }

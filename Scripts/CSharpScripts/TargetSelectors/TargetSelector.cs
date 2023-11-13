@@ -170,12 +170,15 @@ public class TargetSelector : ITargetSelector
     public void OnLoad()
     {
         _menu = _mainMenu.CreateMenu("Target selector", ScriptType.TargetSelector);
-        // _targetSelectorComboBox =
-        //     _menu.AddEnumComboBox("Target selector mode", "", TargetSelectorMode.Weighted);
-        
-        // _targetSelectorComboBox.SelectionChanged += (TargetSelectorMode targetSelectorMode) =>
-        //     TargetSelectorMode = targetSelectorMode;
-        
+        _targetSelectorComboBox =
+            _menu.AddEnumComboBox("Target selector mode", TargetSelectorMode.Weighted);
+
+        _targetSelectorComboBox.SelectionChanged += (TargetSelectorMode targetSelectorMode) =>
+        {
+            TargetSelectorMode = targetSelectorMode;
+            Console.WriteLine(targetSelectorMode);
+        };
+
         _healthWeightSlider = _menu.AddFloatSlider("Health weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
         _abilityPowerWeightSlider = _menu.AddFloatSlider("Ability power weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
         _damageWeightSlider = _menu.AddFloatSlider("Attack damage weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
