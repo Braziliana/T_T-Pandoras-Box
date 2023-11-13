@@ -23,15 +23,23 @@ namespace T_T_Launcher
 
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        private GameData _gameData;
+        private BackgroundWorker worker;
+        public MainWindow(GameData gameData)
         {
+            _gameData = gameData;
             InitializeComponent();
             MainFrame.Navigate(new Uri("Lobby.xaml", UriKind.Relative));
 
-            var worker = new BackgroundWorker();
+            worker = new BackgroundWorker();
             worker.WorkerSupportsCancellation = true;
             worker.DoWork += Worker_DoWork;
             worker.RunWorkerAsync();
+        }
+
+        ~MainWindow()
+        {
+            worker.CancelAsync();
         }
 
         private async void Worker_DoWork(object? sender, DoWorkEventArgs e)
@@ -136,7 +144,7 @@ namespace T_T_Launcher
 
         private void GameDataButton_OnClick(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new Uri("GameData.xaml", UriKind.Relative));
+            MainFrame.Navigate(_gameData);
         }
     }
 }
