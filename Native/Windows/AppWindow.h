@@ -4,6 +4,7 @@
 
 extern "C"{
     typedef void (*AppWindowUpdateCallback)(float deltaTime);
+    typedef void (*AppWindowExitCallback)();
 }
 
 class AppWindow
@@ -16,6 +17,7 @@ private:
     HDC _hdc;
     bool _isRunning;
     AppWindowUpdateCallback _updateCallback = nullptr;
+    AppWindowExitCallback _exitCallback = nullptr;
 
     static AppWindow* _instance;
     
@@ -31,6 +33,7 @@ public:
     void Run();
     void Close();
     void SetUpdateCallback(AppWindowUpdateCallback callback);
+    void SetExitCallback(AppWindowExitCallback callback);
 
     void Release();
 
@@ -59,6 +62,8 @@ public:
             _instance = nullptr;
         }
     }
+
+    bool IsRunning() const;
 };
 
 extern "C" {
@@ -66,4 +71,6 @@ extern "C" {
     __declspec(dllexport) void WindowDestroy();
     __declspec(dllexport) void WindowRun();
     __declspec(dllexport) void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback);
+    __declspec(dllexport) void RegisterAppWindowExitCallback(AppWindowExitCallback callback);
+    __declspec(dllexport) bool WindowIsRunning();
 }

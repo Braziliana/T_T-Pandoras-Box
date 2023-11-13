@@ -140,9 +140,18 @@ void InputManager::HookThreadFunction()
     _mouseHook = SetWindowsHookEx(WH_MOUSE_LL, LowLevelMouseProc, nullptr, 0);
 
     MSG msg;
-    while (_running && GetMessage(&msg, nullptr, 0, 0)) {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+    ZeroMemory(&msg, sizeof(MSG));
+    while (msg.message != WM_QUIT && _running) {
+        if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+
+        if(!_running)
+        {
+            break;
+        }
     }
 
     UnhookWindowsHookEx(_keyboardHook);

@@ -24,8 +24,14 @@ public class Overlay : IDisposable
         _appWindow.Create();
         _renderer.Init();
         _appWindow.OnUpdate += AppWindowOnUpdate;
+        _appWindow.OnExit += AppWindowOnExit;
         _renderer.OnRender += AppWindowOnRender;
         _targetProcess.Hook();
+    }
+
+    private void AppWindowOnExit()
+    {
+        Environment.Exit(0);
     }
 
     private void AppWindowOnUpdate(float deltaTime)

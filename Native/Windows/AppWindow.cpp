@@ -9,8 +9,14 @@
 #include "../Input/InputManager.h"
 #include "../Rendering/Renderer.h"
 #include "WindowExtensions.h"
+#include "../Memory/Process.h"
 
 AppWindow* AppWindow::_instance = nullptr;
+
+bool AppWindow::IsRunning() const
+{
+    return _isRunning;
+}
 
 AppWindow* WindowCreate() {
     return AppWindow::CreateInstance();
@@ -45,6 +51,22 @@ void RegisterAppWindowUpdateCallback(AppWindowUpdateCallback callback)
     window->SetUpdateCallback(callback);
 }
 
+bool WindowIsRunning()
+{
+    return AppWindow::Instance()->IsRunning();
+}
+
+void RegisterAppWindowExitCallback(AppWindowExitCallback callback)
+{
+    const auto window = AppWindow::Instance();
+    if(window == nullptr)
+    {
+        std::cout << "Window doesnt exist. Cant add callback." << std::endl;
+        return;
+    }
+    
+    window->SetExitCallback(callback);
+}
 
 std::wstring GenerateRandomName(const int length) {
     static constexpr wchar_t Alpha[] = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -84,6 +106,7 @@ AppWindow::AppWindow() : _isRunning(false) {
 }
 
 auto lastRenderTime = std::chrono::high_resolution_clock::now();
+auto processCheckTimer = 0.25f;
 void AppWindow::Run()
 {
     InputManager::GetInstance()->Start();
@@ -91,7 +114,7 @@ void AppWindow::Run()
     _isRunning = true;
     MSG msg;
     ZeroMemory(&msg, sizeof(MSG));
-    
+    bool wasRunning = false;
     while (msg.message != WM_QUIT && _isRunning)
     {
         if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
@@ -105,6 +128,22 @@ void AppWindow::Run()
             const auto deltaTime = static_cast<float>(std::chrono::duration<double, std::milli>(currentTime - lastRenderTime).count());
             lastRenderTime = currentTime;
 
+            if(processCheckTimer <= 0)
+            {
+                const auto isRunning = Process::GetInstance()->IsRunning();
+                if(!wasRunning && isRunning)
+                {
+                    wasRunning = true;
+                }
+                if(!isRunning && wasRunning)
+                {
+                    _isRunning = false;
+                    break;
+                }
+                processCheckTimer = 0.2f;
+            }
+            processCheckTimer -= deltaTime;
+            
             if(_updateCallback != nullptr)
             {
                 _updateCallback(deltaTime);
@@ -114,7 +153,7 @@ void AppWindow::Run()
             Renderer::Instance()->Render(deltaTime);
         }
     }
-    
+
     _isRunning = false;
     Renderer::Destroy();
     wglMakeCurrent(nullptr, nullptr);
@@ -122,6 +161,11 @@ void AppWindow::Run()
     DestroyWindow(_hWnd);
     UnregisterClass(_wc.lpszClassName, _wc.hInstance);
     InputManager::GetInstance()->Stop();
+
+    if(_exitCallback != nullptr)
+    {
+        _exitCallback();
+    }
 }
 
 void AppWindow::Close()
@@ -132,6 +176,11 @@ void AppWindow::Close()
 void AppWindow::SetUpdateCallback(const AppWindowUpdateCallback callback)
 {
     _updateCallback = callback;
+}
+
+void AppWindow::SetExitCallback(AppWindowExitCallback callback)
+{
+    _exitCallback = callback;
 }
 
 void AppWindow::Release()

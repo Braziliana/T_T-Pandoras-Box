@@ -1,0 +1,49 @@
+﻿<Page x:Class="T_T_Launcher.TosPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      Title="TosPage" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+    <Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+            <RichTextBox x:Name="TermsRichTextBox" IsReadOnly="True">
+                <FlowDocument>
+                    <Paragraph>1. ACCEPTANCE OF TERMS</Paragraph>
+                    <Paragraph>By using T_T Pandora's box, you agree to the following terms and conditions. If you do not agree with these Terms, please do not use this Software.</Paragraph>
+
+                    <Paragraph>2. USAGE OF THE SOFTWARE</Paragraph>
+                    <Paragraph>You are granted a limited, non-exclusive, non-transferable license to use the Software in accordance with these Terms and any other documentation provided.</Paragraph>
+
+                    <Paragraph>3. RESPONSIBILITY</Paragraph>
+                    <Paragraph>You assume full responsibility and risk of loss resulting from your use of the Software. You agree to use the Software responsibly and within the bounds of all applicable laws. 
+                    It is solely your responsibility to ensure that your use of the Software does not contradict with applicable laws and regulations, and koelion takes no responsibility for misuse.</Paragraph>
+
+                    <Paragraph>4. UNINTENDED USE</Paragraph>
+                    <Paragraph>You agree to indemnify and hold harmless koelion from any damages, losses, liabilities, judgments, or settlements, including reasonable attorney's fees, costs, and other expenses incurred by koelion as a result of your use of the Software in ways not intended by koelion.</Paragraph>
+
+                    <Paragraph>5. DISCLAIMER OF WARRANTIES</Paragraph>
+                    <Paragraph>The Software is provided "AS IS" without any express or implied warranties of any kind. koelion makes no representations or guarantees of the Software's functionality, reliability, or suitability for any particular purpose.</Paragraph>
+
+                    <Paragraph>6. LIMITATION OF LIABILITY</Paragraph>
+                    <Paragraph>In no event shall koelion be liable for any direct, indirect, incidental, special, exemplary, or consequential damages arising from or related to your use or inability to use the Software.</Paragraph>
+
+                    <Paragraph>7. EDUCATIONAL PURPOSES AND COMPETITIVE USE</Paragraph>
+                    <Paragraph>The Software is designed and provided for educational purposes only. The information and tools provided by the Software are not intended to give users an unfair advantage in any competitive environment, including but not limited to video games, sports, or any other competitions.
+                    Users are strictly prohibited from using the Software in any competitive games or events, whether formal or informal. Any such use is in violation of these Terms and may also violate the rules or terms of the competitive game or event in question.
+                    By using the Software, you acknowledge and agree that you are using it solely for educational and non-competitive purposes. If you use the Software in violation of this clause, you do so at your own risk and assume all legal and other consequences.
+                    Any use of the Software in a manner inconsistent with its intended educational purpose, as determined by koelion, will be grounds for the immediate termination of your license to use the Software.</Paragraph>
+
+                    <Paragraph>8. USER-MADE SCRIPTS AND THIRD-PARTY CONTENT</Paragraph>
+                    <Paragraph>Software allows for the integration and use of user-made scripts and third-party content ("User Content"). By using the Software, you acknowledge and agree that you are solely responsible for any User Content you integrate or use in conjunction with the Software.
+                        koelion does not review, endorse, or take responsibility for any User Content, including its legality, reliability, accuracy, or appropriateness. We make no representations or warranties about the safety, functionality, or appropriateness of any User Content.
+                        You agree to indemnify and hold harmless koelion, its affiliates, officers, directors, employees, and agents from and against any claims, actions, demands, damages, losses, or expenses, including legal and professional fees, arising out of or in connection with your use of any User Content with the Software.
+                        koelion is not liable for any harm, damages, or losses resulting from your use of User Content, and you agree to use such content at your own risk.
+                        If you choose to use or integrate User Content, you must ensure that you have the necessary rights and permissions to do so and that your use does not infringe on the rights of any third parties.
+                        koelion reserve the right, at his sole discretion, to disable or remove any User Content that we believe violates these Terms or may harm the Software or its users.
+                    </Paragraph>
+                </FlowDocument>
+            </RichTextBox>
+        </ScrollViewer>
+    </Grid>
+</Page>
