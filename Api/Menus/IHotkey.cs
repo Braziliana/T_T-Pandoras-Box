@@ -4,8 +4,8 @@ namespace Api.Menus;
 
 public enum HotkeyType
 {
-    Toggle = 0,
-    Press = 1
+    Press = 0,
+    Toggle = 1,
 }
 
 public interface IHotkey : IMenuElement

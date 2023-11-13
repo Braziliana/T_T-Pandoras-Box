@@ -53,15 +53,6 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-for (var i = 0; i <= (int)VirtualKey.OemClear; i++)
-{
-    Console.Write($"\"{(VirtualKey)i}\", ");
-    if (i>0 && i % 10 == 0)
-    {
-        Console.WriteLine();
-    }
-}
-
 var overlay = host.Services.GetRequiredService<Overlay>();
 overlay.Run();
 

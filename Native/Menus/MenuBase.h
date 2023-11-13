@@ -19,7 +19,6 @@ protected:
     std::vector<MenuBase*> _menus;
     Rect _headerRect;
     Vector2 _nextChildPosition;
-    virtual Rect GetChildRect(float slots) const;
     virtual void UpdateNextChildPosition();
     void DrawHeader() const;
     
@@ -49,6 +48,7 @@ public:
     void HandleHotkeys(KeyStateEvent event) const;
 
     void Close() override;
+    virtual Rect GetChildRect(float slots) const;
 };
 
 

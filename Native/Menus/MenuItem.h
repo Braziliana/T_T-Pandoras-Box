@@ -13,7 +13,8 @@ enum class MenuItemType
     Hotkey,
     FloatSlider,
     ComboBox,
-    HotkeySelector
+    HotkeySelector,
+    SelectionItem
 };
 
 class MenuItem

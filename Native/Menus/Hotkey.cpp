@@ -57,22 +57,33 @@ std::string HotkeyString(const std::string& str, const VirtualKey value) {
     return out.str();
 }
 
-Hotkey::Hotkey(MenuItem* parent, const std::string& title, const Rect& rect, const unsigned short hotkey, const HotkeyType hotkeyType,
-    bool toggled): MenuBase(parent, MenuItemType::Hotkey, title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
+void Hotkey::HotkeyTypeChanged(const HotkeyType hotkeyType)
 {
-    /*
-    const auto item = new Toggle(this, title, GetChildRect(1), toggled);
-    AddItem(item); 
-     */
+    _hotkeyType = hotkeyType;
+}
+
+Hotkey::Hotkey(MenuItem* parent, const std::string& title, const Rect& rect, const unsigned short hotkey, const HotkeyType hotkeyType,
+               bool toggled): MenuBase(parent, MenuItemType::Hotkey, title, rect), _hotkey(hotkey), _hotkeyType(hotkeyType), _toggled(toggled)
+{
     _hotkeySelector = new HotkeySelector(this, "Hotkey", MenuBase::GetChildRect(1));
     AddItem(_hotkeySelector);
-    AddToggle("V1", true);
-    AddToggle("V2", false);
+    
+    std::vector<HotkeyType> selectionHotkeyType;
+    selectionHotkeyType.push_back(HotkeyType::Press);
+    selectionHotkeyType.push_back(HotkeyType::Toggle);
+    
+    std::vector<std::string> selectionNames;
+    selectionNames.push_back("Press");
+    selectionNames.push_back("Toggle");
+    _selectionList = new SelectionList<HotkeyType>(this, selectionHotkeyType, selectionNames, static_cast<int>(hotkeyType));
+
+    _selectionList->OnSelectionChanged([this](auto&& selectedHotkeyType) { HotkeyTypeChanged(std::forward<decltype(selectedHotkeyType)>(selectedHotkeyType)); });
 }
 
 Hotkey::~Hotkey()
 {
     delete _hotkeySelector;
+    delete _selectionList;
 }
 
 bool* Hotkey::GetToggledPointer()

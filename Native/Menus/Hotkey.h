@@ -2,6 +2,7 @@
 #include "MenuItem.h"
 #include "HotkeyType.h"
 #include "MenuBase.h"
+#include "SelectionList.h"
 
 enum class VirtualKey : unsigned short;
 
@@ -11,13 +12,16 @@ class Hotkey : public MenuBase
     friend class HotkeySelector;
 private:
     HotkeySelector* _hotkeySelector;
+    SelectionList<HotkeyType>* _selectionList;
     unsigned short _hotkey;
     HotkeyType _hotkeyType;
     bool _toggled;
-    
+
+    void HotkeyTypeChanged(const HotkeyType hotkeyType);
+
 public:
     Hotkey(MenuItem* parent, const std::string& title, const Rect& rect, unsigned short hotkey, HotkeyType hotkeyType, bool toggled);
-    ~Hotkey();
+    ~Hotkey() override;
     bool* GetToggledPointer();
     HotkeyType* GetHotkeyTypePointer();
     unsigned short* GetHotkeyPointer();
