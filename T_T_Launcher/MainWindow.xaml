@@ -12,8 +12,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="5">
-            <CheckBox Content="Auto run" VerticalAlignment="Center"></CheckBox>
+            <CheckBox x:Name="AutoRunCheckBox" Content="Auto run" VerticalAlignment="Center"></CheckBox>
             <Label x:Name="StatusLabel" Content="Waiting for game" VerticalAlignment="Center" Margin="5,0,0,0"></Label>
+            <Button x:Name="RunButton" Content="Run" VerticalAlignment="Center" Margin="5,0,0,0" Click="RunButton_OnClick"></Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
             <Button x:Name="LobbyButton" Content="Lobby" Click="LobbyButton_OnClick"></Button>

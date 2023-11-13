@@ -56,6 +56,7 @@ namespace T_T_Launcher
                     }
                 }
 
+                bool run = false;
                 Dispatcher.Invoke(new Action(() =>
                 {
                     switch (state)
@@ -70,9 +71,10 @@ namespace T_T_Launcher
                             StatusLabel.Content = "T_T Running";
                             break;
                     }
+                    run = AutoRunCheckBox.IsChecked == true;
                 }));
 
-                if (state == GameState.Running)
+                if (state == GameState.Running && run)
                 {
                     try
                     {
@@ -88,6 +90,7 @@ namespace T_T_Launcher
                 await Task.Delay(1000);
             }
         }
+        
 
         public static void StartProcessAsAdmin(string filePath)
         {
@@ -145,6 +148,47 @@ namespace T_T_Launcher
         private void GameDataButton_OnClick(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(_gameData);
+        }
+
+        private void RunButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var state = GameState.NotRunning;
+            if (IsProcessRunning("League of Legends"))
+            {
+                state = GameState.Running;
+                if (IsProcessRunning("T_T Pandoras Box"))
+                {
+                    state = GameState.TTRunning;
+                }
+            }
+
+            Dispatcher.Invoke(new Action(() =>
+            {
+                switch (state)
+                {
+                    case GameState.NotRunning:
+                        StatusLabel.Content = "Wating for game";
+                        break;
+                    case GameState.Running:
+                        StatusLabel.Content = "Game running";
+                        break;
+                    case GameState.TTRunning:
+                        StatusLabel.Content = "T_T Running";
+                        break;
+                }
+            }));
+
+            if (state == GameState.Running)
+            {
+                try
+                {
+                    StartProcessAsAdmin(@"T_T\T_T Pandoras Box.exe");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error starting process: " + ex.Message);
+                }
+            }
         }
     }
 }
