@@ -176,7 +176,6 @@ public class TargetSelector : ITargetSelector
         _targetSelectorComboBox.SelectionChanged += (TargetSelectorMode targetSelectorMode) =>
         {
             TargetSelectorMode = targetSelectorMode;
-            Console.WriteLine(targetSelectorMode);
         };
 
         _healthWeightSlider = _menu.AddFloatSlider("Health weight", 0.5f, 0.1f, 1.0f, 0.1f, 1);
