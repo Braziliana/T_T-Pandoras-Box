@@ -35,14 +35,24 @@ Its not final and changes will be made.
 
 ### Methods
 
-- `Rect(Vector2 position, Vector2 size, Color color)`: Renders a 2D rectangle with the given position, size, and color.
-- `Circle(Vector2 position, float size, Color color, float width, float time, float speed, int type)`: Renders a 2D circle with the specified parameters.
-- `Rect3D(Vector3 start, Vector3 end, float width, Color color)`: Renders a 3D rectangle defined by two corner points, width, and color.
-- `Circle3D(Vector3 position, float size, Color color, float width, float time, float speed, int type)`: Renders a 3D circle at the specified position with the given parameters.
-- `Text(string text, Vector2 position, float size, Color color)`: Renders text at the specified position with the specified size and color.
-- `IsOnScreen(Vector2 position)`: Checks if a 2D position is on the screen.
-- `RenderLines(Vector3[] positions, float size, Color color)`: Renders a series of 3D lines using an array of positions, size, and color.
-- `RenderLines(IEnumerable<Vector3> positions, float size, Color color)`: Renders a series of 3D lines using a collection of positions, size, and color.
+- `RectFilled2D(Vector2 position, Vector2 size, Color color)`
+- `RectFilled3D(Vector3 position, Vector2 size, Color color)`
+- `RectFilledBordered2D(Vector2 position, Vector2 size, Color color, Color borderColor, float borderSize)`
+- `RectFilledBordered3D(Vector3 position, Vector2 size, Color color, Color borderColor, float borderSize)`
+- `RectBorder2D(Vector2 position, Vector2 size, Color color, float borderSize)`
+- `RectBorder3D(Vector3 position, Vector2 size, Color color, float borderSize)`
+-
+- `CircleFilled2D(Vector2 position, float size, Color color)`
+- `CircleFilled3D(Vector3 position, float size, Color color)`
+- `CircleFilledBordered2D(Vector2 position, float size, Color color, Color borderColor, float borderSize)`
+- `CircleFilledBordered3D(Vector3 position, float size, Color color, Color borderColor, float borderSize)`
+- `CircleBorder2D(Vector2 position, float size, Color color, float borderSize)`
+- `CircleBorder3D(Vector3 position, float size, Color color, float borderSize)`
+-
+- `Text(string text, Vector2 position, float size, Color color)`
+- `Text(string text, Vector2 start, Vector2 end, float size, Color color)`
+- `Text(string text, Vector2 position, float size, Color color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset)`
+- `Text(string text, Vector2 start, Vector2 end, float size, Color color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset)`
 
 ---
 
@@ -79,7 +89,6 @@ An enumeration representing various virtual key codes for key inputs.
 
 ### Key State Values
 
-- `Unknown`: Represents an unknown or undefined key state.
 - `KeyDown`: Represents that a key is in the "pressed down" state.
 - `KeyUp`: Represents that a key is in the "released" state.
 
@@ -1082,12 +1091,12 @@ A structure that represents the result of a prediction, containing both the pred
 
 ### Menu Element Methods
 
-- `AddSubMenu(string name, string description) -> ISubMenu`: Adds a sub-menu to the menu.
-- `AddToggle(string name, string description, bool toggled) -> IToggle`: Adds a toggle element to the menu.
-- `AddValueSlider(string name, string description, float value, float min, float max) -> IValueSlider`: Adds a value slider to the menu.
-- `AddHotkey(string name, string description, VirtualKey virtualKey, HotkeyType hotkeyType) -> IHotkey`: Adds a hotkey element to the menu.
-- `AddComboBox(string name, string description, int selectedIndex, string[] values) -> IComboBox`: Adds a combo box to the menu.
-- `AddEnumComboBox<T>(string name, string description, T selectedItem) -> IEnumComboBox<T>`: Adds an enum combo box to the menu, where `T` is an enum type representing the selected item.
+- `AddSubMenu(string name) -> ISubMenu`: Adds a sub-menu to the menu.
+- `AddToggle(string name, bool toggled) -> IToggle`: Adds a toggle element to the menu.
+- `AddFloatSlider(string title, float value, float minValue, float maxValue, float step, int precision) -> IValueSlider`: Adds a value slider to the menu.
+- `AddHotkey(string title, VirtualKey hotkey, HotkeyType hotkeyType, bool toggled) -> IHotkey`: Adds a hotkey element to the menu.
+- `AddComboBox(string title, string[] items, int selectedIndex) -> IComboBox`: Adds a combo box to the menu.
+- `AddEnumComboBox<T>(string title, T selectedItem) -> IEnumComboBox<T>`: Adds an enum combo box to the menu, where `T` is an enum type representing the selected item.
 
 ### Dependencies
 
