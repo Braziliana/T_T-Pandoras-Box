@@ -231,6 +231,10 @@ void Renderer::Render(const float deltaTime)
     }
     
     Menu::GetInstance()->Render();
+
+
+    _textRenderer->Draw("FPS: " + std::to_string(static_cast<int>(1.0f / (deltaTime/1000))), Vector2(10, 26), 26, Color::FromByte(255, 108, 34), TextHorizontalOffset::Left, TextVerticalOffset::Center);
+    
     
     _rectRenderer->Flush2D();
     _circleRenderer->Flush2D();

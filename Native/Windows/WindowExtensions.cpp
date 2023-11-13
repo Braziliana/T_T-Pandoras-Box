@@ -94,7 +94,7 @@ WindowCreateResult WindowExtensions::Create(const std::wstring& name, const DWOR
     wc.lpszClassName = name.c_str();
 
     if (!RegisterClassEx(&wc)) {
-        PrintLastError(L"RegisterClassEx failed with error ");
+        PrintLastError(L"RegisterClassEx name: " + name + L" failed with error ");
     }
     
     const HWND hWnd = CreateWindowEx(
