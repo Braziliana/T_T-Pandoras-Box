@@ -74,21 +74,21 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        var qSpell = _localPlayer.Q;
-        if (qSpell.IsReady && qSpell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack))
-        {
-            var target = _targetSelector.GetTarget(qSpell.Range);
-            if (target == null)
-            {
-                return;
-            }
-
-            var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.625f, 2200, 120);
-            if (prediction.HitChance > 20 && _localPlayer.Distance(prediction.Position) <= 1300)
-            {
-                _gameInput.CastSpell(SpellSlot.Q, prediction.Position);
-            }
-        }
+        // var qSpell = _localPlayer.Q;
+        // if (qSpell.IsReady && qSpell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack))
+        // {
+        //     var target = _targetSelector.GetTarget(qSpell.Range);
+        //     if (target == null)
+        //     {
+        //         return;
+        //     }
+        //
+        //     var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.625f, 2200, 120, 1240);
+        //     if (prediction.HitChance > 20 && _localPlayer.Distance(prediction.Position) <= 1300)
+        //     {
+        //         _gameInput.CastSpell(SpellSlot.Q, prediction.Position);
+        //     }
+        // }
     }
 
     public void OnRender(float deltaTime)
@@ -103,16 +103,15 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.625f, 2200, 120);
+        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.15f, 1600, 140, 800);
         //if (prediction.HitChance > 50)
         {
-            // _renderer.DrawCircle(prediction.Position, 120, Color.Cyan, 1, _gameState.Time, 1, 0);
-            //
-            // if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
-            // {
-            //     _renderer.Text(prediction.HitChance.ToString(CultureInfo.InvariantCulture), ps, 21, Color.Cyan);
-            // }
-            //_gameInput.CastSpell(SpellSlot.Q, prediction.Position);
+             _renderer.CircleBorder3D(prediction.Position, 120, Color.Cyan, 1);
+            
+             if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
+             {
+                 _renderer.Text(prediction.HitChance.ToString(CultureInfo.InvariantCulture), ps, 21, Color.Cyan);
+             }
         }
     }
 }

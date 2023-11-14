@@ -51,11 +51,6 @@ internal class GameInput : IGameInput
         {
             return false;
         }
-
-        if (screenPosition.X > 8000)
-        {
-            Console.WriteLine("WTF");
-        }
         
         return IssueOrder(screenPosition, IssueOrderType.Attack);
     }

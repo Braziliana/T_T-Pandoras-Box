@@ -6,58 +6,118 @@ namespace Api.Internal.Game.Calculations;
 
 public class Prediction : IPrediction
 {
-    public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius)
+    public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range)
     {
-        var predictedPosition = PredictPositionInternal(target, sourcePosition, delay, speed, radius);
-        var hitChance = CalculateHitChance(target, predictedPosition, sourcePosition, delay, speed, radius);
-        return new PredictionResult(predictedPosition, hitChance);
-    }
-    
-    private Vector3 PredictPositionInternal(IHero target, Vector3 sourcePosition, float delay, float speed, float radius)
-    {
-        var waypoints = target.AiManager.RemainingPath.ToArray();
-        if (waypoints.Length == 0) return target.AiManager.CurrentPosition;
-    
-        var timeElapsed = 0f;
-        var currentPosition = target.AiManager.CurrentPosition;
-    
-        for (var i = 0; i < waypoints.Length - 1; i++)
+        var (predictedPosition, elapsedTime) = PredictPositionInternal(target, sourcePosition, delay, speed, radius, range);
+        if (Vector3.Distance(sourcePosition, predictedPosition) > range)
         {
-            var waypointEnd = waypoints[i + 1];
-    
-            var distanceToNextWaypoint = Vector3.Distance(currentPosition, waypointEnd);
-            var timeToReachNextWaypoint = distanceToNextWaypoint / target.AiManager.MovementSpeed;
-
-            var remainingTravelTime = (timeElapsed + timeToReachNextWaypoint) - delay;
-            if (timeElapsed + timeToReachNextWaypoint > delay)
-            {
-                var predictedPositionAfterDelay = currentPosition + Vector3.Normalize(waypointEnd - currentPosition) * (target.AiManager.MovementSpeed * remainingTravelTime);
-    
-                var missileTravelTime = Vector3.Distance(sourcePosition, predictedPositionAfterDelay) / speed;
-    
-                if (missileTravelTime < remainingTravelTime)
-                {
-                    return predictedPositionAfterDelay;
-                }
-
-                sourcePosition = predictedPositionAfterDelay;
-            }
-    
-            timeElapsed += timeToReachNextWaypoint;
-            currentPosition = waypointEnd;
+            return new PredictionResult(predictedPosition, 0.0f);
         }
 
-        return target.AiManager.TargetPosition;
+        return new PredictionResult(predictedPosition, CalculateHitChance(target, sourcePosition, predictedPosition, radius, elapsedTime));
+    }
+    
+    private (Vector3 position, float time) PredictPositionInternal(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range)
+    {
+        var predictedPosition = target.AiManager.CurrentPosition;
+        var currentWaypointIndex = 0;
+        var timeStep = radius / speed;
+        var totalSimulationTime = (range / speed) + delay;
+        float elapsedTime = 0;
+
+        var waypoints = target.AiManager.GetRemainingPath().ToList();
+
+        while (elapsedTime < totalSimulationTime)
+        {
+            if (currentWaypointIndex >= waypoints.Count)
+            {
+                break;
+            }
+
+            var targetDirection = Vector3.Normalize(waypoints[currentWaypointIndex] - predictedPosition);
+            var distanceToNextWaypoint = Vector3.Distance(predictedPosition, waypoints[currentWaypointIndex]);
+            var distanceThisStep = target.AiManager.MovementSpeed * timeStep;
+
+            if (distanceThisStep >= distanceToNextWaypoint)
+            {
+                predictedPosition = waypoints[currentWaypointIndex];
+                currentWaypointIndex++;
+            }
+            else
+            {
+                predictedPosition += targetDirection * distanceThisStep;
+            }
+
+            elapsedTime += timeStep;
+            if (Vector3.Distance(sourcePosition, predictedPosition) > range)
+            {
+                return (predictedPosition, elapsedTime);
+            }
+        }
+
+        return (predictedPosition, elapsedTime);
     }
 
-    private float CalculateHitChance(IHero target, Vector3 predictedPosition, Vector3 sourcePosition, float delay, float speed, float radius)
+    
+    private float CalculateHitChance(IHero target, Vector3 missileStartPosition, Vector3 predictedImpactPoint, float missileCollisionRadius, float timeToImpact)
     {
-        var distanceToPredictedPosition = Vector3.Distance(predictedPosition, sourcePosition);
-        var travelTime = distanceToPredictedPosition / speed + delay;
-        var maxDistanceTargetCanMove = target.AiManager.MovementSpeed * travelTime;
-        var effectiveHitDistance = radius + maxDistanceTargetCanMove;
-        var hitChance = (radius / effectiveHitDistance) * 100f;
+        // var initialDistanceToImpact = Vector3.Distance(missileStartPosition, predictedImpactPoint);
+        // var targetPotentialMovementDistance = target.AiManager.MovementSpeed * timeToImpact;
+        // var relativeDistance = targetPotentialMovementDistance / initialDistanceToImpact;
+        //
+        // float hitChance;
+        // if (relativeDistance > 1)
+        // {
+        //     // If the target can move a greater distance than the distance to the impact point, lower hit chance
+        //     hitChance = (1 / relativeDistance) * 100;
+        // }
+        // else
+        // {
+        //     // If the target's potential movement distance is less than the distance to the impact point, higher hit chance
+        //     hitChance = (1 - relativeDistance) * 100;
+        // }
+        //
+        // // Ensuring hit chance is within 0-100%
+        // return Math.Max(0, Math.Min(100, hitChance));
+        
+        //2   
+        // float targetMaxEvasionDistance = target.AiManager.MovementSpeed * timeToImpact;
+        //
+        // float effectiveHitRadius = missileCollisionRadius + target.CollisionRadius;
+        //
+        // float hitChance;
+        // if (targetMaxEvasionDistance > effectiveHitRadius)
+        // {
+        //     hitChance = (effectiveHitRadius / targetMaxEvasionDistance) * 100;
+        // }
+        // else
+        // {
+        //     hitChance = 100;
+        // }
+        //
+        // return Math.Max(0, Math.Min(100, hitChance));
+        
+        //3
 
-        return Math.Clamp(hitChance, 0f, 100f);
+        timeToImpact -= 0.1f;
+        if (timeToImpact < 0)
+        {
+            timeToImpact = 0;
+        }
+        
+        var targetMaxEvasionDistance = target.AiManager.MovementSpeed * timeToImpact;
+        var effectiveHitRadius = missileCollisionRadius + target.CollisionRadius;
+
+        float hitChance;
+        if (targetMaxEvasionDistance > effectiveHitRadius)
+        {
+            hitChance = (effectiveHitRadius / targetMaxEvasionDistance) * 100;
+        }
+        else
+        {
+            hitChance = 100;
+        }
+
+        return Math.Max(0, Math.Min(100, hitChance));
     }
 }

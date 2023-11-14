@@ -28,7 +28,7 @@ void Toggle::Render()
     const auto renderer = Renderer::Instance();
     MenuItem::Render();
     
-    renderer->RectFilledBordered(_toggleElement.Center(), _toggleElement.Size(), _toggled ? DefaultMenuStyle.BorderColor : DefaultMenuStyle.ItemColor, DefaultMenuStyle.BorderColor, DefaultMenuStyle.ElementBorder);
+    renderer->RectFilledBordered(_toggleElement.Center(), _toggleElement.Size(), _toggled ? Color(DefaultMenuStyle.BorderColor.r, DefaultMenuStyle.BorderColor.g, DefaultMenuStyle.BorderColor.b, 1.0f) : DefaultMenuStyle.ItemColor, DefaultMenuStyle.BorderColor, DefaultMenuStyle.ElementBorder);
 }
 
 bool* Toggle::GetToggledPointer()
