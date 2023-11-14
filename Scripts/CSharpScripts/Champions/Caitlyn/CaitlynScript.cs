@@ -74,39 +74,40 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        // var qSpell = _localPlayer.Q;
-        // if (qSpell.IsReady && qSpell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack))
-        // {
-        //     var target = _targetSelector.GetTarget(qSpell.Range);
-        //     if (target == null)
-        //     {
-        //         return;
-        //     }
-        //
-        //     var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.625f, 2200, 120, 1240);
-        //     if (prediction.HitChance > 20 && _localPlayer.Distance(prediction.Position) <= 1300)
-        //     {
-        //         _gameInput.CastSpell(SpellSlot.Q, prediction.Position);
-        //     }
-        // }
+        var qSpell = _localPlayer.Q;
+        if (qSpell.IsReady && qSpell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack))
+        {
+            var target = _targetSelector.GetTarget(qSpell.Range);
+            if (target == null)
+            {
+                return;
+            }
+        
+            var prediction = _prediction.PredictPosition(target, _localPlayer.Position, qSpell.SpellData.CastTime, qSpell.SpellData.Speed, qSpell.SpellData.Width, qSpell.SpellData.Range);
+            if (prediction.HitChance > 20)
+            {
+                _gameInput.CastSpell(SpellSlot.Q, prediction.Position);
+            }
+        }
     }
 
     public void OnRender(float deltaTime)
     { 
-        if (_gameCamera.WorldToScreen(_localPlayer.Position, out var sp))
-        {
-            _renderer.Text(_localPlayer.IsDead ? "Dead" : "Alive", sp, 18, Color.Cyan);
-        }
+        // if (_gameCamera.WorldToScreen(_localPlayer.Position, out var sp))
+        // {
+        //     _renderer.Text(_localPlayer.IsDead ? "Dead" : "Alive", sp, 18, Color.Cyan);
+        // }
         var target = _targetSelector.GetTarget(_localPlayer.Q.Range);
         if (target == null)
         {
             return;
         }
-
-        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, 0.15f, 1600, 140, 800);
+        
+        var qSpell = _localPlayer.Q;
+        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, qSpell.SpellData.CastTime, qSpell.SpellData.Speed, qSpell.SpellData.Width, qSpell.SpellData.Range);
         //if (prediction.HitChance > 50)
         {
-             _renderer.CircleBorder3D(prediction.Position, 120, Color.Cyan, 1);
+               _renderer.CircleBorder3D(prediction.Position, 120, Color.Cyan, 1);
             
              if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
              {
