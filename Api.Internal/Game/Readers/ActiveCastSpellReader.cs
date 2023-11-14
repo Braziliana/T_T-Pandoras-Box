@@ -25,11 +25,13 @@ public class ActiveCastSpellReader : BaseReader, IActiveCastSpellReader
         if (spellPointer.ToInt64() <= 0x1000)
         {
             spell.IsActive = false;
+            spell.Type = ActiveSpellType.Unknown;
             return false;
         }
         if (!StartRead(spellPointer))
         {
             spell.IsActive = false;
+            spell.Type = ActiveSpellType.Unknown;
             return false;
         }
         

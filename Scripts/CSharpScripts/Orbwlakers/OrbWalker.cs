@@ -151,6 +151,11 @@ public class OrbWalker : IOrbWalkScript
             return;
         }
 
+        if (_localPlayer.ActiveCastSpell is { IsActive: true, Type: ActiveSpellType.Q or ActiveSpellType.W or ActiveSpellType.E or ActiveSpellType.R })
+        {
+            return;
+        }
+        
         if (_scriptingState.IsCombo)
         {
             Combo(deltaTime);
