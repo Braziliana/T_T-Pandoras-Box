@@ -74,19 +74,29 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        var qSpell = _localPlayer.Q;
-        if (qSpell.IsReady && qSpell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack))
+        CastSpell(_localPlayer.Q);
+        CastSpell(_localPlayer.W);
+        CastSpell(_localPlayer.E);
+        //CastSpell(_localPlayer.R);
+    }
+
+    private void CastSpell(ISpell spell)
+    {
+        if (spell.IsReady && spell.ManaCost < _localPlayer.Mana && !(_localPlayer.ActiveCastSpell.IsActive &&
+                                                                     _localPlayer.ActiveCastSpell.Type !=
+                                                                     ActiveSpellType.AutoAttack))
         {
-            var target = _targetSelector.GetTarget(qSpell.Range);
+            var target = _targetSelector.GetTarget(spell.Range);
             if (target == null)
             {
                 return;
             }
-        
-            var prediction = _prediction.PredictPosition(target, _localPlayer.Position, qSpell.SpellData.CastTime, qSpell.SpellData.Speed, qSpell.SpellData.Width, qSpell.SpellData.Range);
+
+            var prediction = _prediction.PredictPosition(target, _localPlayer.Position, spell.SpellData.CastTime,
+                spell.SpellData.Speed, spell.SpellData.Width, spell.SpellData.Range);
             if (prediction.HitChance > 20)
             {
-                _gameInput.CastSpell(SpellSlot.Q, prediction.Position);
+                _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
             }
         }
     }

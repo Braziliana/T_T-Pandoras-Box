@@ -22,6 +22,10 @@ public class Prediction : IPrediction
         var predictedPosition = target.AiManager.CurrentPosition;
         var currentWaypointIndex = 0;
         var timeStep = radius / speed;
+        if (timeStep < 0.01f)
+        {
+            timeStep = 0.01f;
+        }
         var totalSimulationTime = (range / speed) + delay;
         float elapsedTime = 0;
 

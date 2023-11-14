@@ -49,16 +49,7 @@ internal class SpellReader : BaseReader, ISpellReader
             }
         }
         
-        if (spell.Cooldown <= 0)
-        {
-            spell.Cooldown = 0;
-        }
-        if (spell.SmiteCooldown <= 0)
-        {
-            spell.SmiteCooldown = 0;
-        }
-
-        spell.IsReady = spell is { Cooldown: <= 0, Level: > 0 };
+        spell.IsReady = spell is { Cooldown: <= 0, Level: > 0 } && (spell.SmiteCooldown <= 0 || spell.Stacks >= 1);
         spell.SmiteIsReady = spell.SmiteCooldown <= 0 || spell.Stacks >= 1;
 
         if (TargetProcess.ReadPointer(ReadOffset<IntPtr>(_spellOffsets.SpellSlotSpellInfo) + (int)_spellOffsets.SpellInfoSpellData.Offset, out var spellDataPointer))
