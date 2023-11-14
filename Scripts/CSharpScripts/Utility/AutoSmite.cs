@@ -66,8 +66,18 @@ public class AutoSmite : IScript
     private readonly IRenderer _renderer;
     private readonly IGameCamera _gameCamera;
     private readonly IToggle _drawKillableMonsters;
-    private readonly int _smiteHash = "SummonerSmite".GetHashCode();
-    
+
+    private readonly HashSet<int> _smiteValidNames = new HashSet<int>
+    {
+        "SummonerSmite".GetHashCode(),
+        "S5_SummonerSmitePlayerGanker".GetHashCode(),
+        "SummonerSmiteAvatarOffensive".GetHashCode(),
+        "SummonerSmiteAvatarUtility".GetHashCode(),
+        "SummonerSmiteAvatarDefensive".GetHashCode(),
+    };
+
+    private SpellSlot _smiteSlot = SpellSlot.AutoAttack;
+
     public AutoSmite(
         IMainMenu mainMenu,
         ILocalPlayer localPlayer,
@@ -89,16 +99,14 @@ public class AutoSmite : IScript
         var menu = mainMenu.CreateMenu("AutoSmite", ScriptType.Utility);
 
         _drawKillableMonsters = menu.AddToggle("Draw monsters", true);
-        for (var i = 0; i < _monsterSettings.Length; i++)
+        foreach (var monsterSettings in _monsterSettings)
         {
-            var ms = _monsterSettings[i];
-            var subMenu = menu.AddSubMenu(ms.MonsterType.ToString());
-            _monsterSettings[i].SmiteToggle =
-                subMenu.AddToggle("Smite", true);
+            var subMenu = menu.AddSubMenu(monsterSettings.MonsterType.ToString());
+            monsterSettings.SmiteToggle = subMenu.AddToggle("Smite", true);
 
-            if (_monsterSettings[i].HasExtraSettings)
+            if (monsterSettings.HasExtraSettings)
             {
-                _monsterSettings[i].RestrictSmite =
+                monsterSettings.RestrictSmite =
                     subMenu.AddToggle("Restrict smite", true);
             }
         }
@@ -106,9 +114,8 @@ public class AutoSmite : IScript
     
     private bool CanSmite(MonsterType monsterType, ISpell spell)
     {
-        for (var i = 0; i < _monsterSettings.Length; i++)
+        foreach (var ms in _monsterSettings)
         {
-            var ms = _monsterSettings[i];
             if (ms.MonsterType != monsterType) continue;
             if (ms.RestrictSmite is null || !ms.RestrictSmite.Toggled) return ms.SmiteToggle.Toggled;
             return spell.Stacks > 1 || _heroManager.GetEnemyHeroes(1000).Any();
@@ -119,19 +126,39 @@ public class AutoSmite : IScript
 
     private ISpell? GetSmite()
     {
-        if (_localPlayer.Summoner1.NameHash == _smiteHash)
+        if (_smiteSlot != SpellSlot.Summoner1 && _smiteSlot != SpellSlot.Summoner2)
         {
-            return _localPlayer.Summoner1;
-        }
-        
-        if (_localPlayer.Summoner2.NameHash == _smiteHash)
-        {
-            return _localPlayer.Summoner2;
+            if (_smiteValidNames.Contains(_localPlayer.Summoner1.NameHash))
+            {
+                _smiteSlot = SpellSlot.Summoner1;
+                return _localPlayer.Summoner1;
+            }
+
+            if (_smiteValidNames.Contains(_localPlayer.Summoner2.NameHash))
+            {
+                _smiteSlot = SpellSlot.Summoner2;
+                return _localPlayer.Summoner2;
+            }
+
+            return null;
         }
 
-        return null;
+        switch (_smiteSlot)
+        {
+            case SpellSlot.Summoner1:
+                return _localPlayer.Summoner1;
+            case SpellSlot.Summoner2:
+                return _localPlayer.Summoner2;
+            case SpellSlot.Q:
+            case SpellSlot.W:
+            case SpellSlot.E:
+            case SpellSlot.R:
+            case SpellSlot.AutoAttack:
+            default:
+                return null;
+        }
     }
-    
+
     public void OnLoad()
     {
     }
