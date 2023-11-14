@@ -121,7 +121,10 @@ WindowCreateResult WindowExtensions::CreateOverlay(const std::wstring& name)
     const int width = GetSystemMetrics(SM_CXSCREEN);
     const int height = GetSystemMetrics(SM_CYSCREEN);
 
-    auto result = Create(name, exStyle, style, 0, 0, width, height);
+    //if you have black screen you can try to use one of bellow
+    //auto result = Create(name, exStyle, style, 1, 1, width-1, height-1); 
+    //auto result = Create(name, exStyle, style, 1, 1, width-2, height-2);
+    auto result = Create(name, exStyle, style, 1, 1, width-1, height-1);
     
     SetLayeredWindowAttributes(result.hWnd, RGB(0, 0, 0), 255, LWA_COLORKEY | LWA_ALPHA);
     SetTransparentBlur(result.hWnd);
@@ -153,7 +156,7 @@ void WindowExtensions::SetTransparentBlur(const HWND hWnd)
     //Windows7
     /*
         DWM_BLURBEHIND blurBehind = {0};
-        bb.dwFlags = DWM_BB_ENABLE;
+        blurBehind.dwFlags = DWM_BB_ENABLE;
         DwmEnableBlurBehindWindow(hWnd, &blurBehind);
      */
     
