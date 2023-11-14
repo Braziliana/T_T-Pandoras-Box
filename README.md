@@ -367,7 +367,8 @@ Extends [IHero](#ihero)
 - `AffectFlags` (AffectFlags): Flags that define which units or targets are affected by the spell.
 - `Range` (float): The effective range of the spell. It determines how far the spell can reach.
 - `ManaCost` (float[]?): An array representing the mana cost at different levels of the spell. Null if not applicable.
-- `CastTime` (float): The time it takes to cast the spell.
+- `CastTime` (float): 
+- `CastDelayTime` (float): The time it takes to cast the spell.
 - `Speed` (float): The speed at which the spell travels or is executed.
 - `Width` (float): The width or area of effect of the spell.
 - `MissileData` (MissileData?): Additional information about the spell if it involves a missile or projectile. Null if not applicable.

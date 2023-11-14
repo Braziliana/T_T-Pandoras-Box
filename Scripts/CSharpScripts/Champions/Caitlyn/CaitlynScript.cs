@@ -114,7 +114,7 @@ public class CaitlynScript : IChampionScript
         }
         
         var qSpell = _localPlayer.Q;
-        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, qSpell.SpellData.CastTime, qSpell.SpellData.Speed, qSpell.SpellData.Width, qSpell.SpellData.Range);
+        var prediction = _prediction.PredictPosition(target, _localPlayer.Position, qSpell.SpellData.CastDelayTime, qSpell.SpellData.Speed, qSpell.SpellData.Width, qSpell.SpellData.Range);
         //if (prediction.HitChance > 50)
         {
                _renderer.CircleBorder3D(prediction.Position, 120, Color.Cyan, 1);

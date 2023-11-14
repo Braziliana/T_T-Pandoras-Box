@@ -8,6 +8,7 @@ public class SpellData
     public float Range { get; set; }
     public float[]? ManaCost { get; set; }
     public float CastTime { get; set; }
+    public float CastDelayTime { get; set; }
     public float Speed { get; set; }
     public float Width { get; set; }
     public MissileData? MissileData { get; set; }

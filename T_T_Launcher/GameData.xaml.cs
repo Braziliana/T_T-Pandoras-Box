@@ -204,19 +204,30 @@ public partial class GameData : Page
 
             var range1 = Read<float[]>(spellDataDictionary, null, "castRange");
             var range2 = Read<float[]>(spellDataDictionary, null, "castRangeDisplayOverride");
+
+
+            var castTime = Read(spellDataDictionary, 0.0f, "mCastTime");
+            var delayCastOffsetPercent = Read(spellDataDictionary, 0.0f, "delayCastOffsetPercent");
+            var castDelay = (1.0f + delayCastOffsetPercent) * 0.5f;
+
+            if (castTime < 0)
+            {
+                castTime *= -1;
+            }
             
             var spellData = new SpellData
             {
                 Name = Read(itemData, string.Empty, "mScriptName") ?? string.Empty,
                 SpellFlags = Read(spellDataDictionary, SpellFlags.Unknown, "flags"),
                 AffectFlags = Read(spellDataDictionary, AffectFlags.Unknown, "mAffectsTypeFlags"),
-                CastTime = Read(spellDataDictionary, 0.0f, "mCastTime"),
+                CastTime = castTime,
                 ManaCost = Read(spellDataDictionary, new[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, "mana"),
                 Range = range2?[0] ?? range1?[0] ?? 0.0f,
                 Speed = Read(spellDataDictionary, 0.0f, "missileSpeed"),
                 Width = Read(spellDataDictionary, 0.0f, "mLineWidth"),
                 TargetingTypeData = Read(spellDataDictionary, string.Empty, "mTargetingTypeData", "__type") ?? string.Empty,
-                CastType = Read(spellDataDictionary, 0, "mCastType")
+                CastType = Read(spellDataDictionary, 0, "mCastType"),
+                CastDelayTime = castDelay
             };
 
             spellData.MissileData = MapMissile(spellDataDictionary, spellData.Name, spellData.Width, spellData.Speed);
