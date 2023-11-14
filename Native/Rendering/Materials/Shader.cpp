@@ -40,6 +40,21 @@ Shader::Shader(const std::wstring& shaderPath, const std::wstring& shaderName)
         std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ" << std::endl;
     }
 
+    //TRUNC Byte Order Mark (BOM)
+    size_t vertexStart = vertexCode.find("#version");
+    if (vertexStart != std::string::npos) {
+        vertexCode = vertexCode.substr(vertexStart);
+    } else {
+        std::cerr << "ERROR::VERTEX_SHADER::VERSION_DIRECTIVE_NOT_FOUND" << std::endl;
+    }
+    
+    size_t fragmentStart = fragmentCode.find("#version");
+    if (fragmentStart != std::string::npos) {
+        fragmentCode = fragmentCode.substr(fragmentStart);
+    } else {
+        std::cerr << "ERROR::FRAGMENT_SHADER::VERSION_DIRECTIVE_NOT_FOUND" << std::endl;
+    }
+    
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
 

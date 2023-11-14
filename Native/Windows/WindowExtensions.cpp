@@ -116,6 +116,8 @@ WindowCreateResult WindowExtensions::Create(const std::wstring& name, const DWOR
 
 WindowCreateResult WindowExtensions::CreateOverlay(const std::wstring& name)
 {
+    //https://learn.microsoft.com/en-us/archive/msdn-magazine/2014/june/windows-with-c-high-performance-window-layering-using-the-windows-composition-engine
+    //todo play around code above to check if this will work better if there will be issues with current implementation 
     constexpr DWORD exStyle = WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_LAYERED | WS_EX_NOACTIVATE;
     constexpr DWORD style = WS_POPUP;
     const int width = GetSystemMetrics(SM_CXSCREEN);
