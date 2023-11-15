@@ -118,7 +118,9 @@ namespace Api.Internal
         {
             collection.TryAddSingleton<IDamageCalculator, DamageCalculator>();
             collection.TryAddSingleton<IDamagePrediction, DamagePrediction>();
+            collection.TryAddSingleton<IHitChanceCalculator, HitChanceCalculator>();
             collection.TryAddSingleton<IPrediction, Prediction>();
+            
         }
     }
 }

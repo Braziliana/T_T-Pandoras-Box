@@ -1,24 +1,131 @@
 ﻿using System.Numerics;
 using Api.Game.Calculations;
+using Api.Game.Managers;
 using Api.Game.Objects;
 
 namespace Api.Internal.Game.Calculations;
 
 public class Prediction : IPrediction
 {
-    public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range)
+    private readonly IGameState _gameState;
+    private readonly IHitChanceCalculator _hitChanceCalculator;
+
+    public Prediction(IGameState gameState, IHitChanceCalculator hitChanceCalculator)
     {
-        var (predictedPosition, elapsedTime) = PredictPositionInternal(target, sourcePosition, delay, speed, radius, range);
-        if (Vector3.Distance(sourcePosition, predictedPosition) > range)
+        _gameState = gameState;
+        _hitChanceCalculator = hitChanceCalculator;
+    }
+
+    public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
+    {
+        var immobileDuration = ImmobileDuration(target);
+        if (immobileDuration > 0)
         {
-            return new PredictionResult(predictedPosition, 0.0f);
+            return PredictImmobile(target, sourcePosition, delay, speed, radius, range, immobileDuration, collisionType, predictionType);
+        }
+        
+        if (target.AiManager.IsDashing)
+        {
+            return PredictDashing(target, sourcePosition, delay, speed, radius, range, dashTimeThreshold, collisionType, predictionType);
         }
 
-        return new PredictionResult(predictedPosition, CalculateHitChance(target, sourcePosition, predictedPosition, radius, elapsedTime));
+        return PredictMobile(target, sourcePosition, delay, speed, radius,
+            range, reactionTime, collisionType, predictionType);
+    }
+
+    public PredictionResult PredictImmobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float immobileTime, CollisionType collisionType, PredictionType predictionType)
+    {
+        var distance = Vector3.Distance(target.AiManager.CurrentPosition, sourcePosition);
+        if (distance > range)
+        {
+            return new PredictionResult(target.AiManager.CurrentPosition, 0.0f, PredictionResultType.Immobile);
+        }
+        
+        var timeToImpact = GetTimeToHit(sourcePosition, target.AiManager.CurrentPosition, delay, speed, predictionType);
+        var predictedPosition = target.AiManager.CurrentPosition;
+        var hitChance = _hitChanceCalculator.CalculateImmobileHitChance(target, sourcePosition, radius, timeToImpact,
+            immobileTime, collisionType, predictionType);
+        
+        return new PredictionResult(predictedPosition, hitChance, PredictionResultType.Immobile);
+    }
+
+    public PredictionResult PredictDashing(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
+    {
+        var distance = Vector3.Distance(target.AiManager.TargetPosition, sourcePosition);
+        if (distance > range)
+        {
+            return new PredictionResult(target.AiManager.CurrentPosition, 0.0f, PredictionResultType.Immobile);
+        }
+        
+        var timeToImpact = GetTimeToHit(sourcePosition, target.AiManager.TargetPosition, delay, speed, predictionType);
+        
+        var hitChance = _hitChanceCalculator.CalculateDashingHitChance(target, sourcePosition, radius, timeToImpact, dashTimeThreshold, collisionType, predictionType);
+        return new PredictionResult(target.AiManager.TargetPosition, hitChance, PredictionResultType.Dashing);
+    }
+
+    public PredictionResult PredictMobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, CollisionType collisionType, PredictionType predictionType)
+    {
+        var (predictedPosition, timeToImpact) = PredictPositionInternal(target, sourcePosition, delay, speed, radius, range, predictionType);
+        if (Vector3.Distance(sourcePosition, predictedPosition) > range)
+        {
+            return new PredictionResult(predictedPosition, 0.0f, PredictionResultType.OutOfRange);
+        }
+
+        var hitChance = _hitChanceCalculator.CalculateMobileHitChance(target, sourcePosition, radius, timeToImpact, reactionTime, collisionType, predictionType);
+        return new PredictionResult(predictedPosition, hitChance, target.AiManager.IsMoving ? PredictionResultType.Moving : PredictionResultType.Stationary);
+    }
+
+    private float TravelTime(Vector3 start, Vector3 end, float speed)
+    {
+        var distance = Vector3.Distance(start, end);
+        return distance / speed;
     }
     
-    private (Vector3 position, float time) PredictPositionInternal(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range)
+    private float GetTimeToHit(Vector3 start, Vector3 end, float delay, float speed, PredictionType predictionType)
     {
+        return predictionType switch
+        {
+            PredictionType.Line => delay + TravelTime(start, end, speed),
+            PredictionType.Point => delay,
+            _ => throw new ArgumentOutOfRangeException(nameof(predictionType), predictionType, null)
+        };
+    }
+
+    public float ImmobileDuration(IHero hero)
+    {
+        return MathF.Max(GetCastDuration(hero), GetImmobileBuffDuration(hero));
+    }
+
+    private float GetCastDuration(IHero hero)
+    {
+        if (hero.ActiveCastSpell.IsActive)
+        {
+            return hero.ActiveCastSpell.EndTime - _gameState.Time;
+        }
+        return 0;
+    }
+
+    private float GetImmobileBuffDuration(IHero hero)
+    {
+        float duration = 0;
+        foreach (var buff in hero.Buffs.Where(x => x.BuffType is BuffType.Snare or BuffType.Stun))
+        {
+            var buffDuration = buff.EndTime - _gameState.Time;
+            if (duration < buff.EndTime - _gameState.Time)
+            {
+                duration = buffDuration;
+            }
+        }
+        return duration;
+    }
+    
+    private (Vector3 position, float time) PredictPositionInternal(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, PredictionType predictionType)
+    {
+        if (!target.AiManager.IsMoving)
+        {
+            return (target.Position, GetTimeToHit(target.Position, sourcePosition, delay, speed, predictionType));
+        }
+        
         var predictedPosition = target.AiManager.CurrentPosition;
         var currentWaypointIndex = 0;
         var timeStep = radius / speed;
@@ -60,68 +167,5 @@ public class Prediction : IPrediction
         }
 
         return (predictedPosition, elapsedTime);
-    }
-
-    
-    private float CalculateHitChance(IHero target, Vector3 missileStartPosition, Vector3 predictedImpactPoint, float missileCollisionRadius, float timeToImpact)
-    {
-        // var initialDistanceToImpact = Vector3.Distance(missileStartPosition, predictedImpactPoint);
-        // var targetPotentialMovementDistance = target.AiManager.MovementSpeed * timeToImpact;
-        // var relativeDistance = targetPotentialMovementDistance / initialDistanceToImpact;
-        //
-        // float hitChance;
-        // if (relativeDistance > 1)
-        // {
-        //     // If the target can move a greater distance than the distance to the impact point, lower hit chance
-        //     hitChance = (1 / relativeDistance) * 100;
-        // }
-        // else
-        // {
-        //     // If the target's potential movement distance is less than the distance to the impact point, higher hit chance
-        //     hitChance = (1 - relativeDistance) * 100;
-        // }
-        //
-        // // Ensuring hit chance is within 0-100%
-        // return Math.Max(0, Math.Min(100, hitChance));
-        
-        //2   
-        // float targetMaxEvasionDistance = target.AiManager.MovementSpeed * timeToImpact;
-        //
-        // float effectiveHitRadius = missileCollisionRadius + target.CollisionRadius;
-        //
-        // float hitChance;
-        // if (targetMaxEvasionDistance > effectiveHitRadius)
-        // {
-        //     hitChance = (effectiveHitRadius / targetMaxEvasionDistance) * 100;
-        // }
-        // else
-        // {
-        //     hitChance = 100;
-        // }
-        //
-        // return Math.Max(0, Math.Min(100, hitChance));
-        
-        //3
-
-        timeToImpact -= 0.1f;
-        if (timeToImpact < 0)
-        {
-            timeToImpact = 0;
-        }
-        
-        var targetMaxEvasionDistance = target.AiManager.MovementSpeed * timeToImpact;
-        var effectiveHitRadius = missileCollisionRadius + target.CollisionRadius;
-
-        float hitChance;
-        if (targetMaxEvasionDistance > effectiveHitRadius)
-        {
-            hitChance = (effectiveHitRadius / targetMaxEvasionDistance) * 100;
-        }
-        else
-        {
-            hitChance = 100;
-        }
-
-        return Math.Max(0, Math.Min(100, hitChance));
     }
 }

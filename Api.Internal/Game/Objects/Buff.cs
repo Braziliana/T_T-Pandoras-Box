@@ -10,7 +10,8 @@ internal class Buff : IBuff
     public float EndTime { get; set; }
     public int Count { get; set; }
     public int CountAlt { get; set; }
-    
+    public BuffType BuffType { get; set; }
+
     public void CloneFrom(IBuff buff)
     {
         Pointer = buff.Pointer;
@@ -19,6 +20,7 @@ internal class Buff : IBuff
         EndTime = buff.EndTime;
         Count = buff.Count;
         CountAlt = buff.CountAlt;
+        BuffType = buff.BuffType;
     }
 
     public override int GetHashCode()
