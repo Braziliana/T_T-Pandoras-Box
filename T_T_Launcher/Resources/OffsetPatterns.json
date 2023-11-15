@@ -1,0 +1,56 @@
+﻿[
+  {
+    "Pattern": "F3 0F 5C 35 ? ? ? ? 0F 28 F8",
+    "OffsetInPattern": 4,
+    "Category": "BaseOffsets",
+    "Name": "GameTime"
+  },
+  {
+    "Pattern": "48 8B 05 ? ? ? ? 4C 8B D2 4C 8B C1",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "LocalPlayer"
+  },
+  {
+    "Pattern": "48 8B 05 ? ? ? ? 45 33 E4 0F 57 C0",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "HeroList"
+  },
+  {
+    "Pattern": "48 8B 0D ? ? ? ? E8 ? ? ? ? E8 ? ? ? ? E8 ? ? ? ? 48 8B C8",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "MinionList"
+  },
+  {
+    "Pattern": "48 8B 0D ? ? ? ? 48 8D 54 24 ? E8 ? ? ? ? 48 8B 7C 24 ?",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "MissileList"
+  },
+  {
+    "Pattern": "48 8B 1D ? ? ? ? 48 8B 5B 28",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "TurretList"
+  },
+  {
+    "Pattern": "48 8B 05 ? ? ? ? 48 89 7C 24 ? 48 8B 58 08",
+    "OffsetInPattern": 3,
+    "Category": "BaseOffsets",
+    "Name": "InhibitorList"
+  },
+  {
+    "Pattern": "48 8D 0D ? ? ? ? 0F 10 00",
+    "OffsetInPattern": 3,
+    "Category": "GameCameraOffsets",
+    "Name": "ViewProjMatrix"
+  },
+  {
+    "Pattern": "48 8B 0D ? ? ? ? 45 33 C9 44 0F B6 C5",
+    "OffsetInPattern": 3,
+    "Category": "GameCameraOffsets",
+    "Name": "Renderer"
+  }
+]
