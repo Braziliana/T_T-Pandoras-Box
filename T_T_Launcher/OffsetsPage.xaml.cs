@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
@@ -177,6 +178,7 @@ public partial class OffsetsPage : Page
 
     private async void AutoUpdate_Click(object sender, RoutedEventArgs e)
     {
+        LogsRTB.Document = new FlowDocument();
         var gp = new GameProcess();
         gp.SetTargetProcessName("League of Legends.exe");
         gp.Hook();
@@ -230,5 +232,57 @@ public partial class OffsetsPage : Page
         if (LogsRTB.Document == null) return;
 
         LogsRTB.ScrollToEnd();
+    }
+
+    private async void ExportCSharp_Click(object sender, RoutedEventArgs e)
+    {
+        LogsRTB.Document = new FlowDocument();
+        var sb = new StringBuilder();
+        var jsonContent = await File.ReadAllTextAsync("T_T/appsettings.json");
+        var token = JToken.Parse(jsonContent);
+
+        foreach (var sectionProperty in token.Children<JProperty>())
+        {
+            if (sectionProperty.Name.Contains("Offset"))
+            {
+                Log($"class {sectionProperty.Name}");
+                Log("{");
+                if (sectionProperty.Value is JObject sectionObject)
+                {
+                    foreach (var offsetProperty in sectionObject.Properties())
+                    {
+                        Log($"IntPtr {offsetProperty.Name} = new IntPtr({offsetProperty.Value});");
+                    }
+                }
+                Log("}");
+                Log("");
+            }
+        }
+    }
+
+    private async void ExportCPP_Click(object sender, RoutedEventArgs e)
+    {
+        LogsRTB.Document = new FlowDocument();
+        var sb = new StringBuilder();
+        var jsonContent = await File.ReadAllTextAsync("T_T/appsettings.json");
+        var token = JToken.Parse(jsonContent);
+
+        foreach (var sectionProperty in token.Children<JProperty>())
+        {
+            if (sectionProperty.Name.Contains("Offset"))
+            {
+                Log($"namespace {sectionProperty.Name}");
+                Log("{");
+                if (sectionProperty.Value is JObject sectionObject)
+                {
+                    foreach (var offsetProperty in sectionObject.Properties())
+                    {
+                        Log($"\tconstexpr inline uintptr_t {offsetProperty.Name} = {offsetProperty.Value};");
+                    }
+                }
+                Log("}");
+                Log("");
+            }
+        }
     }
 }

@@ -15,8 +15,10 @@
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0, 10, 0, 10">
             <Button x:Name="Save" Content="Save" Click="Save_Click"></Button>
             <Button x:Name="AutoUpdate" Content="Auto update" Margin="10, 0, 0, 0" Click="AutoUpdate_Click"></Button>
+            <Button x:Name="ExportCSharp" Content="Export c#" Margin="10, 0, 0, 0" Click="ExportCSharp_Click"></Button>
+            <Button x:Name="ExportCPP" Content="Export c++" Margin="10, 0, 0, 0" Click="ExportCPP_Click"></Button>
         </StackPanel>
-        <RichTextBox Grid.Row="1" x:Name="LogsRTB" VerticalScrollBarVisibility="Auto">
+        <RichTextBox Grid.Row="1" x:Name="LogsRTB" IsReadOnly="True" VerticalScrollBarVisibility="Auto">
             
         </RichTextBox>
         <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
