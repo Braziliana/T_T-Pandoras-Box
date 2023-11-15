@@ -251,7 +251,7 @@ public partial class OffsetsPage : Page
                 {
                     foreach (var offsetProperty in sectionObject.Properties())
                     {
-                        Log($"IntPtr {offsetProperty.Name} = new IntPtr({offsetProperty.Value});");
+                        Log($"\tIntPtr {offsetProperty.Name} = new IntPtr({offsetProperty.Value});");
                     }
                 }
                 Log("}");
