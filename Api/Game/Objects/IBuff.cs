@@ -1,6 +1,6 @@
 ﻿namespace Api.Game.Objects;
 
-public enum BuffType
+public enum BuffType : byte
 {
     Internal = 0,
     Aura = 1,

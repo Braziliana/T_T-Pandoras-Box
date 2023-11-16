@@ -133,6 +133,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	    buff.Name = name;
 	    buff.Count = count;
 	    buff.CountAlt = countAlt;
+	    buff.BuffType = (BuffType)ReadOffset<byte>(_buffOffsets.BuffType);
 
 	    return buff;
     }

@@ -3,11 +3,12 @@
 
 public interface IBuffOffsets
 {
-    public OffsetData BuffEntryBuffStartTime { get; }
-    public OffsetData BuffEntryBuffEndTime { get; }
-    public OffsetData BuffEntryBuffCount { get; }
-    public OffsetData BuffEntryBuffCountAlt { get; }
-    public OffsetData BuffInfo { get; }
-    public OffsetData BuffInfoName { get; }
+    OffsetData BuffEntryBuffStartTime { get; }
+    OffsetData BuffEntryBuffEndTime { get; }
+    OffsetData BuffEntryBuffCount { get; }
+    OffsetData BuffEntryBuffCountAlt { get; }
+    OffsetData BuffInfo { get; }
+    OffsetData BuffInfoName { get; }
+    OffsetData BuffType { get; set; }
     IEnumerable<OffsetData> GetOffsets();
 }

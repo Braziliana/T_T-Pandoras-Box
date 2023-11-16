@@ -1,4 +1,5 @@
-﻿using Api.Game.Offsets;
+﻿using Api.Game.Objects;
+using Api.Game.Offsets;
 using Microsoft.Extensions.Configuration;
 
 namespace Api.Internal.Game.Offsets;
@@ -11,6 +12,7 @@ internal class BuffOffsets : IBuffOffsets
     public OffsetData BuffEntryBuffCountAlt { get; }
     public OffsetData BuffInfo { get; }
     public OffsetData BuffInfoName { get; }
+    public OffsetData BuffType { get; set; }
 
     public BuffOffsets(IConfiguration configuration)
     {
@@ -20,6 +22,7 @@ internal class BuffOffsets : IBuffOffsets
         BuffEntryBuffCount = new OffsetData(nameof(BuffEntryBuffCount), Convert.ToUInt32(cs[nameof(BuffEntryBuffCount)], 16), typeof(int));
         BuffEntryBuffCountAlt = new OffsetData(nameof(BuffEntryBuffCountAlt), Convert.ToUInt32(cs[nameof(BuffEntryBuffCountAlt)], 16), typeof(int));
         BuffInfo = new OffsetData(nameof(BuffInfo), Convert.ToUInt32(cs[nameof(BuffInfo)], 16), typeof(IntPtr));
+        BuffType = new OffsetData(nameof(BuffType), Convert.ToUInt32(cs[nameof(BuffType)], 16), typeof(byte));
         //TYPE IS WRONG BUT WE READ IT IN DIFFRENT WAY
         BuffInfoName = new OffsetData(nameof(BuffInfoName), Convert.ToUInt32(cs[nameof(BuffInfoName)], 16), typeof(IntPtr));
     }
@@ -31,5 +34,6 @@ internal class BuffOffsets : IBuffOffsets
         yield return BuffEntryBuffCount;
         yield return BuffEntryBuffCountAlt;
         yield return BuffInfo;
+        yield return BuffType;
     }
 }

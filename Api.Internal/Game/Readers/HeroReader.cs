@@ -49,6 +49,7 @@ internal class HeroReader : AiBaseUnitReader, IHeroReader
             return false;
         }
 
+        //Console.WriteLine(hero.Pointer.ToInt64().ToString("X"));
         hero.IsLocalHero = _localPlayer.NetworkId == hero.NetworkId;
 
         hero.SpawnCount = ReadOffset<int>(_heroOffsets.SpawnCount);
