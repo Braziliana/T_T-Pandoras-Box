@@ -54,6 +54,7 @@ internal class MinionManager : IMinionManager
     
     public void Clear()
     {
+        _itemsPool.Clear();
         _enemyLaneMinions.Clear();
         _allyLaneMinions.Clear();
     }
@@ -77,7 +78,7 @@ internal class MinionManager : IMinionManager
     
     public IEnumerable<IMinion> GetAllyMinions()
     {
-        return _allyLaneMinions.Where(x => x.IsAlive);
+        return _allyLaneMinions.Where(x => x is { IsAlive: true, IsVisible: true });
     }
 
     public IEnumerable<IMinion> GetAllyMinions(float range)
@@ -92,7 +93,7 @@ internal class MinionManager : IMinionManager
 
     public IEnumerable<IMinion> GetEnemyMinions()
     {
-        return _enemyLaneMinions.Where(x => x.IsAlive);
+        return _enemyLaneMinions.Where(x => x is { IsAlive: true, IsVisible: true });
     }
 
     public IEnumerable<IMinion> GetEnemyMinions(float range)
