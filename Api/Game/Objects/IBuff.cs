@@ -54,4 +54,6 @@ public interface IBuff
     public BuffType BuffType { get; set; }
 
     void CloneFrom(IBuff buff);
+
+    bool IsHardCC();
 }

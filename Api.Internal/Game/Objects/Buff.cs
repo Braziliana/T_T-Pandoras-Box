@@ -22,6 +22,11 @@ internal class Buff : IBuff
         CountAlt = buff.CountAlt;
         BuffType = buff.BuffType;
     }
+    
+    public bool IsHardCC()
+    {
+        return BuffType is BuffType.Snare or BuffType.Stun or BuffType.Knockup or BuffType.Asleep;
+    }
 
     public override int GetHashCode()
     {
