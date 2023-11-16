@@ -2,6 +2,7 @@
 using Api;
 using Api.Game.Calculations;
 using Api.Game.GameInputs;
+using Api.Game.Managers;
 using Api.Game.Objects;
 using Api.Menus;
 using Api.Scripts;
@@ -27,9 +28,11 @@ public class CaitlynScript : IChampionScript
     private readonly IRenderer _renderer;
     private readonly IGameState _gameState;
     private readonly IGameCamera _gameCamera;
+    private readonly ITrapManager _trapManager;
+    private readonly int trapNameHash = "CaitlynTrap".GetHashCode();
 
     private IToggle _useQInCombo;
-    
+
     public CaitlynScript(
         IMainMenu mainMenu,
         ILocalPlayer localPlayer,
@@ -39,7 +42,8 @@ public class CaitlynScript : IChampionScript
         IGameInput gameInput,
         IRenderer renderer,
         IGameState gameState,
-        IGameCamera gameCamera)
+        IGameCamera gameCamera,
+        ITrapManager trapManager)
     {
         _mainMenu = mainMenu;
         _localPlayer = localPlayer;
@@ -50,6 +54,7 @@ public class CaitlynScript : IChampionScript
         _renderer = renderer;
         _gameState = gameState;
         _gameCamera = gameCamera;
+        _trapManager = trapManager;
     }
 
     public void OnLoad()
@@ -140,13 +145,25 @@ public class CaitlynScript : IChampionScript
     {
         var spell = _localPlayer.W;
         if (spell.SpellData == null) return false;
-        
+
+        var buff = target.GetBuff("caitlynwsight");
+        if (buff != null && buff.EndTime > _gameState.Time)
+        {
+            return false;
+        }
+
+        float width = 40;
+        if (_trapManager.GetAllyTraps(target.Position, width*2).Where(x => x.ObjectNameHash == trapNameHash).Any())
+        {
+            return false;
+        }
+
         var prediction = _prediction.PredictPosition(
             target,
             _localPlayer.Position,
             spell.SpellData.CastDelayTime,
             spell.SpellData.Speed,
-            spell.SpellData.Width,
+            width,
             spell.SpellData.Range,
             0.15f,
             10.0f,
@@ -166,7 +183,7 @@ public class CaitlynScript : IChampionScript
     {
         var spell = _localPlayer.E;
         if (spell.SpellData == null) return false;
-        
+
         var prediction = _prediction.PredictPosition(
             target,
             _localPlayer.Position,
