@@ -16,7 +16,7 @@ namespace Api.Game.GameInputs
         bool Attack(IGameObject target);
         void CastEmote(int emote);
 
-        void Update();
+        void Update(float deltaTime);
         
         bool LevelUpSpell(SpellSlot spellSlot);
         bool CastSpell(SpellSlot spellSlot);

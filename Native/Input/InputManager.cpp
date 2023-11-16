@@ -75,49 +75,49 @@ LRESULT InputManager::LowLevelMouseProc(const int nCode, const WPARAM wParam, co
         const auto pMouse = reinterpret_cast<MSLLHOOKSTRUCT*>(lParam);
             
         const auto isInjected = pMouse->flags & LLMHF_INJECTED || pMouse->flags & LLMHF_LOWER_IL_INJECTED;
-            
+        auto instance = GetInstance();
         switch (wParam)
         {
         case WM_LBUTTONDOWN:
-            GetInstance()->UpdateKeyState(VK_LBUTTON, true, isInjected);
+            instance->UpdateKeyState(VK_LBUTTON, true, isInjected);
             break;
         case WM_LBUTTONUP:
-            GetInstance()->UpdateKeyState(VK_LBUTTON, false, isInjected);
+            instance->UpdateKeyState(VK_LBUTTON, false, isInjected);
             break;
         case WM_RBUTTONDOWN:
-            GetInstance()->UpdateKeyState(VK_RBUTTON, true, isInjected);
+            instance->UpdateKeyState(VK_RBUTTON, true, isInjected);
             break;
         case WM_RBUTTONUP:
-            GetInstance()->UpdateKeyState(VK_RBUTTON, false, isInjected);
+            instance->UpdateKeyState(VK_RBUTTON, false, isInjected);
             break;
         case WM_MBUTTONDOWN:
-            GetInstance()->UpdateKeyState(VK_MBUTTON, true, isInjected);
+            instance->UpdateKeyState(VK_MBUTTON, true, isInjected);
             break;
         case WM_MBUTTONUP:
-            GetInstance()->UpdateKeyState(VK_MBUTTON, false, isInjected);
+            instance->UpdateKeyState(VK_MBUTTON, false, isInjected);
             break;
         case WM_XBUTTONDOWN:
             if (HIWORD(pMouse->mouseData) == XBUTTON1)
             {
-                GetInstance()->UpdateKeyState(VK_XBUTTON1, true, isInjected);
+                instance->UpdateKeyState(VK_XBUTTON1, true, isInjected);
             }
             else if (HIWORD(pMouse->mouseData) == XBUTTON2)
             {
-                GetInstance()->UpdateKeyState(VK_XBUTTON2, true, isInjected);
+                instance->UpdateKeyState(VK_XBUTTON2, true, isInjected);
             }
             break;
         case WM_XBUTTONUP:
             if (HIWORD(pMouse->mouseData) == XBUTTON1)
             {
-                GetInstance()->UpdateKeyState(VK_XBUTTON1, false, isInjected);
+                instance->UpdateKeyState(VK_XBUTTON1, false, isInjected);
             }
             else if (HIWORD(pMouse->mouseData) == XBUTTON2)
             {
-                GetInstance()->UpdateKeyState(VK_XBUTTON2, false, isInjected);
+                instance->UpdateKeyState(VK_XBUTTON2, false, isInjected);
             }
             break;
         case WM_MOUSEMOVE:
-            GetInstance()->UpdateMousePosition(static_cast<float>(pMouse->pt.x), static_cast<float>(pMouse->pt.y), isInjected);
+            instance->UpdateMousePosition(static_cast<float>(pMouse->pt.x), static_cast<float>(pMouse->pt.y), isInjected);
             break;
         default:
             break;
@@ -128,6 +128,10 @@ LRESULT InputManager::LowLevelMouseProc(const int nCode, const WPARAM wParam, co
             pMouse->flags &= ~LLMHF_LOWER_IL_INJECTED;
 
             return CallNextHookEx(nullptr, nCode, wParam, reinterpret_cast<LPARAM>(pMouse));
+        }
+        if(instance->_blockUserMouseInput)
+        {
+            return 1;
         }
     }
         
@@ -332,6 +336,11 @@ void InputManager::RemoveKeyStateEventHandler(int key)
     _onKeyStateEvent.erase(key);
 }
 
+void InputManager::SetBlockUserMouseInput(const bool blockInput)
+{
+    _blockUserMouseInput = blockInput;
+}
+
 INPUT InputManager::CreateMouseClickInput(unsigned short vkCode, bool down)
 {
     INPUT input;
@@ -488,4 +497,9 @@ void InputManagerKeyboardSend(unsigned short vkCode)
 void InputManagerSendInputs(INPUT* inputs, unsigned count)
 {
     InputManager::SendInputs(inputs, count);
+}
+
+void InputManagerSetBlockUserMouseInput(const bool blockInput)
+{
+    InputManager::GetInstance()->SetBlockUserMouseInput(blockInput);
 }

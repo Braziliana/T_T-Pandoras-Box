@@ -25,5 +25,6 @@ namespace Api.Inputs
         void MouseSend(MouseButton mouseButton, Vector2 position);
         void MouseSetPosition(Vector2 position);
         Vector2 GetMousePosition();
+        void BlockMouseInput(bool blockMouseInput);
     }
 }

@@ -7,8 +7,10 @@ public interface IAttackableUnit : IGameObject
     bool IsDead { get; set; }
     float Mana { get; set; }
     float MaxMana { get; set; }
+    float ManaPercent { get; }
     float Health { get; set; }
     float MaxHealth { get; set; }
+    float HealthPercent { get; }
     float Armor { get; set; }
     float BonusArmor { get; set; }
     float TotalArmor { get; }

@@ -9,8 +9,10 @@ internal class AttackableUnit : GameObject, IAttackableUnit
     public bool IsDead { get; set; }
     public float Mana { get; set; }
     public float MaxMana { get; set; }
+    public float ManaPercent => Mana / MaxMana;
     public float Health { get; set; }
     public float MaxHealth { get; set; }
+    public float HealthPercent => Health / MaxHealth;
     public float Armor { get; set; }
     public float BonusArmor { get; set; }
     public float TotalArmor => Armor + BonusArmor;

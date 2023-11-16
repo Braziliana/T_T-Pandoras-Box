@@ -4,6 +4,7 @@ using Api.Game.Calculations;
 using Api.Game.GameInputs;
 using Api.Game.Managers;
 using Api.Game.Objects;
+using Api.Game.ObjectTypes;
 using Api.Menus;
 using Api.Scripts;
 using Api.Utils;
@@ -34,6 +35,7 @@ public class OrbWalker : IOrbWalkScript
     private readonly Timer _attackTimer;
     private readonly Timer _moveTimer;
     
+    private readonly IToggle _blockAutoAttacks;
     private readonly IToggle _supportMode;
     private readonly IToggle _drawAttackRange;
     private readonly IToggle _drawKillableMinions;
@@ -82,6 +84,7 @@ public class OrbWalker : IOrbWalkScript
         _extraWindupSlider = menu.AddFloatSlider("Extra windup", 25, 0, 100, 1, 0);
         _stoppingDistanceSlider = menu.AddFloatSlider("Stopping distance", 70, 0, 250, 1, 0);
 
+        _blockAutoAttacks  = menu.AddToggle("Block auto attacks", false);
         _supportMode = menu.AddToggle("Support mode", false);
         _drawAttackRange = menu.AddToggle("Draw attack range", true);
         _drawKillableMinions = menu.AddToggle("Draw killable minions", true);
@@ -132,7 +135,11 @@ public class OrbWalker : IOrbWalkScript
 
     private bool Attack(IAttackableUnit attackableUnit)
     {
-        if(!_attackTimer.IsReady) return false;
+        if ((_blockAutoAttacks.Toggled && attackableUnit.GameObjectType == GameObjectType.Hero) ||
+            !_attackTimer.IsReady)
+        {
+            return false;
+        }
 
         if (!_gameInput.Attack(attackableUnit)) return false;
         

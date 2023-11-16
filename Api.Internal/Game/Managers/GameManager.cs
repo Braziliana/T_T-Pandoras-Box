@@ -71,7 +71,7 @@ internal class GameManager : IGameManager
             return;
         }
         
-        GameInput.Update();
+        GameInput.Update(deltaTime);
         _gameCameraReader.ReadCamera(GameCamera);
         
         UpdateLocalPlayer();

@@ -69,6 +69,8 @@ private:
     void UpdateMousePosition(float x, float y, bool isInjected);
     void PostMouseMoveEvent(const MouseMoveEvent& event);
 
+    bool _blockUserMouseInput = false;
+
 public:
     InputManager(InputManager const&) = delete;
     void operator=(InputManager const&) = delete;
@@ -88,6 +90,7 @@ public:
     int AddKeyStateEventHandler(KeyStateEventHandler handler);
     int AddKeyStateEventHandler(std::function<void(KeyStateEvent)> handler);
     void RemoveKeyStateEventHandler(int key);
+    void SetBlockUserMouseInput(bool blockInput);
 
     static INPUT CreateMouseClickInput(unsigned short vkCode, bool down);
     static INPUT CreateMouseMoveInput(const Vector2& position);
@@ -118,6 +121,8 @@ extern "C" {
     __declspec(dllexport) void InputManagerRemoveMouseMoveHandler(int key);
     __declspec(dllexport) int InputManagerAddKeyStateEventHandler(KeyStateEventHandler handler);
     __declspec(dllexport) void InputManagerRemoveKeyStateEventHandler(int key);
+
+    __declspec(dllexport) void InputManagerSetBlockUserMouseInput(bool blockInput);
     
     __declspec(dllexport) INPUT InputManagerCreateMouseClickInput(unsigned short vkCode, bool down);
     __declspec(dllexport) INPUT InputManagerCreateMouseMoveInput(const Vector2* position);

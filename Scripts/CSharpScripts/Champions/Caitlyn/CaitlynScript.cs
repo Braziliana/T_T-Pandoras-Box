@@ -29,7 +29,7 @@ public class CaitlynScript : IChampionScript
     private readonly IGameState _gameState;
     private readonly IGameCamera _gameCamera;
     private readonly ITrapManager _trapManager;
-    private readonly int trapNameHash = "CaitlynTrap".GetHashCode();
+    private readonly int _trapNameHash = "CaitlynTrap".GetHashCode();
 
     private IToggle _useQInCombo;
     private IToggle _useWInCombo;
@@ -88,6 +88,11 @@ public class CaitlynScript : IChampionScript
 
     public void OnUpdate(float deltaTime)
     {
+        if (!_localPlayer.IsAlive)
+        {
+            return;
+        }
+        
         if (_scriptingState.IsCombo == false)
         {
             return;
@@ -167,7 +172,7 @@ public class CaitlynScript : IChampionScript
         }
 
         float width = 80;
-        if (_trapManager.GetAllyTraps(target.Position, width*2).Where(x => x.ObjectNameHash == trapNameHash).Any())
+        if (_trapManager.GetAllyTraps(target.Position, width*2).Where(x => x.ObjectNameHash == _trapNameHash).Any())
         {
             return false;
         }

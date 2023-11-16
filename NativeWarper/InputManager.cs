@@ -123,6 +123,9 @@ public class InputManager : IInputManager, IDisposable
 
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern void InputManagerSendInputs(Input[] inputs, uint count);
+
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern void InputManagerSetBlockUserMouseInput(bool blockInput);
     
     #endregion
     
@@ -242,5 +245,10 @@ public class InputManager : IInputManager, IDisposable
         var mousePos = Vector2.Zero;
         InputManagerGetMousePosition(ref mousePos);
         return mousePos;
+    }
+
+    public void BlockMouseInput(bool blockMouseInput)
+    {
+        InputManagerSetBlockUserMouseInput(blockMouseInput);
     }
 }
