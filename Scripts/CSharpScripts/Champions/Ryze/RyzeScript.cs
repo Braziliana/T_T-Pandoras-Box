@@ -92,9 +92,35 @@ public class RyzeScript : IChampionScript
         }
     }
 
+    private float[] spellRanges = new float[3];
     private float GetMinSpellRange()
     {
-        return MathF.Min(_localPlayer.Q.Range, MathF.Min(_localPlayer.W.Range, _localPlayer.E.Range));
+        if (_localPlayer.Q.IsReady)
+        {
+            spellRanges[0] = _localPlayer.Q.Range;
+        }
+        else
+        {
+            spellRanges[0] = float.MaxValue;
+        }
+        if (_localPlayer.W.IsReady)
+        {
+            spellRanges[1] = _localPlayer.W.Range;
+        }
+        else
+        {
+            spellRanges[1] = float.MaxValue;
+        }
+        if (_localPlayer.E.IsReady)
+        {
+            spellRanges[2] = _localPlayer.E.Range;
+        }
+        else
+        {
+            spellRanges[2] = float.MaxValue;
+        }
+
+        return spellRanges.Min();
     }
     
     public void OnUpdate(float deltaTime)
