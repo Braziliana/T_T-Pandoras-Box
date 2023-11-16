@@ -7,14 +7,14 @@ public enum BuffType : byte
     CombatEnhancer = 2,
     CombatDehancer = 3,
     SpellShield = 4,
-    Stun = 5,
+    Stun = 5, //CC
     Invisibility = 6,
     Silence = 7,
-    Taunt = 8,
+    Taunt = 8, 
     Berserk = 9,
     Polymorph = 10,
     Slow = 11,
-    Snare = 12,
+    Snare = 12,//CC
     Damage = 13,
     Heal = 14,
     Haste = 15,

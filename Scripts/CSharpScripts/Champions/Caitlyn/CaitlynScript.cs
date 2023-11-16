@@ -32,6 +32,13 @@ public class CaitlynScript : IChampionScript
     private readonly int trapNameHash = "CaitlynTrap".GetHashCode();
 
     private IToggle _useQInCombo;
+    private IToggle _useWInCombo;
+    private IToggle _useEInCombo;
+
+    private IValueSlider _QHitChance;
+    private IValueSlider _WHitChance;
+    private IValueSlider _EHitChance;
+
 
     public CaitlynScript(
         IMainMenu mainMenu,
@@ -62,6 +69,13 @@ public class CaitlynScript : IChampionScript
         _menu = _mainMenu.CreateMenu("Caitlin", ScriptType.Champion);
         var comboMenu = _menu.AddSubMenu("Combo");
         _useQInCombo = comboMenu.AddToggle("Use Q in combo", true);
+        _useWInCombo = comboMenu.AddToggle("Use W in combo", true);
+        _useEInCombo = comboMenu.AddToggle("Use E in combo", true);
+
+        var hitchanceMenu = _menu.AddSubMenu("hit chcnce");
+        _QHitChance = hitchanceMenu.AddFloatSlider("Q hit chcance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
+        _WHitChance = hitchanceMenu.AddFloatSlider("W hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
+        _EHitChance = hitchanceMenu.AddFloatSlider("E hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
     }
 
     public void OnUnload()
@@ -79,7 +93,7 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        if (CanCast(_localPlayer.Q))
+        if (_useQInCombo.Toggled && CanCast(_localPlayer.Q))
         {
             var target = _targetSelector.GetTarget(_localPlayer.Q.Range);
             if (target != null && CastQ(target))
@@ -88,7 +102,7 @@ public class CaitlynScript : IChampionScript
             }
         }
 
-        if (CanCast(_localPlayer.W))
+        if (_useWInCombo.Toggled && CanCast(_localPlayer.W))
         {
             var target = _targetSelector.GetTarget(_localPlayer.W.Range);
             if (target != null && CastW(target))
@@ -97,7 +111,7 @@ public class CaitlynScript : IChampionScript
             }
         }
 
-        if (CanCast(_localPlayer.E))
+        if (_useEInCombo.Toggled && CanCast(_localPlayer.E))
         {
             var target = _targetSelector.GetTarget(_localPlayer.E.Range);
             if (target != null && CastE(target))
@@ -132,7 +146,7 @@ public class CaitlynScript : IChampionScript
             CollisionType.None,
             PredictionType.Line);
 
-        if (prediction.HitChance < 80)
+        if (prediction.HitChance < _QHitChance.Value)
         {
             return false;
         }
@@ -152,7 +166,7 @@ public class CaitlynScript : IChampionScript
             return false;
         }
 
-        float width = 40;
+        float width = 80;
         if (_trapManager.GetAllyTraps(target.Position, width*2).Where(x => x.ObjectNameHash == trapNameHash).Any())
         {
             return false;
@@ -170,7 +184,7 @@ public class CaitlynScript : IChampionScript
             CollisionType.None,
             PredictionType.Point);
 
-        if (prediction.HitChance < 80)
+        if (prediction.HitChance < _WHitChance.Value)
         {
             return false;
         }
@@ -196,7 +210,7 @@ public class CaitlynScript : IChampionScript
             CollisionType.Minion,
             PredictionType.Line);
 
-        if (prediction.HitChance < 80)
+        if (prediction.HitChance < _EHitChance.Value)
         {
             return false;
         }
@@ -206,36 +220,7 @@ public class CaitlynScript : IChampionScript
     }
 
     public void OnRender(float deltaTime)
-    { 
-        // if (_gameCamera.WorldToScreen(_localPlayer.Position, out var sp))
-        // {
-        //     _renderer.Text(_localPlayer.IsDead ? "Dead" : "Alive", sp, 18, Color.Cyan);
-        // }
-        var target = _targetSelector.GetTarget(_localPlayer.Q.Range);
-        if (target == null)
-        {
-            return;
-        }
-        
-        var spell = _localPlayer.Q;
-        var prediction = _prediction.PredictPosition(target,
-            _localPlayer.Position,
-            spell.SpellData.CastDelayTime,
-            spell.SpellData.Speed,
-            spell.SpellData.Width,
-            spell.SpellData.Range,
-            0.1f,
-            0.0f,
-            CollisionType.None,
-            PredictionType.Line);
-        //if (prediction.HitChance > 50)
-        {
-               _renderer.CircleBorder3D(prediction.Position, 120, Color.Cyan, 1);
-            
-             if (_gameCamera.WorldToScreen(prediction.Position, out var ps))
-             {
-                 _renderer.Text(prediction.HitChance.ToString(CultureInfo.InvariantCulture), ps, 21, Color.Cyan);
-             }
-        }
+    {
+
     }
 }

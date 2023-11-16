@@ -39,7 +39,7 @@ internal class AiBaseUnit : AttackableUnit, IAiBaseUnit
         }
         else
         {
-            attackSpeed = baseAttackSpeed * (1.0f + BonusAttackSpeed);
+            aattackSpeed = baseAttackSpeed * (1.0f + BonusAttackSpeed);
         }
         
         return MathF.Round(attackSpeed * 1000.0f) / 1000.0f;

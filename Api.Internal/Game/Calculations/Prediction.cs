@@ -108,7 +108,7 @@ public class Prediction : IPrediction
     private float GetImmobileBuffDuration(IHero hero)
     {
         float duration = 0;
-        foreach (var buff in hero.Buffs.Where(x => x.BuffType is BuffType.Snare or BuffType.Stun))
+        foreach (var buff in hero.Buffs.Where(x => x.BuffType is BuffType.Snare or BuffType.Stun or BuffType.Knockup or BuffType.Asleep))
         {
             var buffDuration = buff.EndTime - _gameState.Time;
             if (duration < buff.EndTime - _gameState.Time)
