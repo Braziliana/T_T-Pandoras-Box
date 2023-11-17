@@ -32,6 +32,10 @@ internal class GameInput : IGameInput
         switch (issueOrderType)
         {
             case IssueOrderType.Move:
+                if (_currentTask is not null && !_currentTask.IsCompleted)
+                {
+                    return false;
+                }
                 _inputManager.MouseSend(MouseButton.Right, position);
                 break;
             case IssueOrderType.Attack:
@@ -190,12 +194,12 @@ internal class GameInput : IGameInput
             _inputManager.BlockMouseInput(true);
             var prevPos = MousePosition;
             _inputManager.MouseSetPosition(position);
-            await Task.Delay(1);
+            await Task.Delay(_ticksToResetMouse);
             _inputManager.KeyboardSend(virtualKey);
             _inputManager.MouseSend(mouseButton);
-            await Task.Delay(_delay);
-            _inputManager.MouseSetPosition(prevPos);
             await Task.Delay(_ticksToResetMouse);
+            _inputManager.MouseSetPosition(prevPos);
+            await Task.Delay(1);
             _inputManager.BlockMouseInput(false);
             MousePosition = prevPos;
             _mouseInputBlocked = false;
@@ -217,15 +221,15 @@ internal class GameInput : IGameInput
             _inputManager.BlockMouseInput(true);
             var prevPos = MousePosition;
             _inputManager.MouseSetPosition(position);
-            await Task.Delay(1);
+            await Task.Delay(_ticksToResetMouse);
             _inputManager.KeyboardSendDown(press);
             _inputManager.KeyboardSend(virtualKey);
             _inputManager.MouseSend(mouseButton);
             await Task.Delay(1);
             _inputManager.KeyboardSendUp(press);
-            await Task.Delay(_delay);
-            _inputManager.MouseSetPosition(prevPos);
             await Task.Delay(_ticksToResetMouse);
+            _inputManager.MouseSetPosition(prevPos);
+            await Task.Delay(1);
             _inputManager.BlockMouseInput(false);
             MousePosition = prevPos;
             _mouseInputBlocked = false;

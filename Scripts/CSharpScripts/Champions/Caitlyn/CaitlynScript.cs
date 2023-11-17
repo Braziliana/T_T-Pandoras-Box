@@ -50,8 +50,9 @@ public class CaitlynScript : IChampionScript
     private IValueSlider _WReactionTime;
     private IValueSlider _EReactionTime;
 
-    
     private IToggle _autoWCC;
+    private IToggle _autoQCC;
+    private IToggle _autoWDashing;
 
     public CaitlynScript(
         IMainMenu mainMenu,
@@ -101,7 +102,10 @@ public class CaitlynScript : IChampionScript
         _WReactionTime = hitchanceMenu.AddFloatSlider("W reaction time", 0.00f, 0.0f, 300f, 5f, 2);
         _EReactionTime = hitchanceMenu.AddFloatSlider("E reaction time", 50f, 0.0f, 300f, 5f, 2);
 
-        _autoWCC = _menu.AddToggle("Auto W CC enemy", true);
+        var autoMenu = _menu.AddSubMenu("Auto");
+        _autoQCC = autoMenu.AddToggle("Auto Q CC enemy", true);
+        _autoWCC = autoMenu.AddToggle("Auto W CC enemy", true);
+        _autoWDashing = autoMenu.AddToggle("Auto W dashing enemy", true);
     }
 
     public void OnUnload()
@@ -119,7 +123,7 @@ public class CaitlynScript : IChampionScript
             return;
         }
 
-        if (AutoWCC())
+        if (Auto())
         {
             return;
         }
@@ -149,26 +153,54 @@ public class CaitlynScript : IChampionScript
         return duration;
     }
     
-    private bool AutoWCC()
+    private bool Auto()
     {
-        if (!_autoWCC.Toggled || !CanCast(_localPlayer.W))
+        if ((!_autoWCC.Toggled && !_autoWDashing.Toggled) || !CanCast(_localPlayer.W))
         {
             return false;
         }
-        var enemies = _heroManager.GetEnemyHeroes(_localPlayer.W.Range);
+
+        var enemies = _heroManager.GetEnemyHeroes();
 
         foreach (var enemy in enemies)
         {
             var immobileTime = GetImmobileBuffDuration(enemy);
-            if (immobileTime > _localPlayer.W.SpellData.CastDelayTime + 0.1f)
+            var distance = Vector3.Distance(_localPlayer.Position, enemy.Position);
+            if (distance <= _localPlayer.W.Range && _autoWCC.Toggled)
             {
-                CastW(enemy);
-                return true;
+                if (immobileTime > _localPlayer.W.SpellData.CastDelayTime + 0.1f)
+                {
+                    if (CastW(enemy))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            if (_autoWDashing.Toggled && enemy.AiManager.IsDashing)
+            {
+                if (CastW(enemy))
+                {
+                    return true;
+                }
+            }
+
+            if(distance <= _localPlayer.Q.Range && _autoQCC.Toggled)
+            {
+                if (immobileTime > _localPlayer.Q.SpellData.CastDelayTime)
+                {
+                    if (CastQ(enemy))
+                    {
+                        return true;
+                    }
+                }
             }
         }
         
         return false;
     }
+
+
 
     private bool Combo()
     {
@@ -185,17 +217,18 @@ public class CaitlynScript : IChampionScript
 
         var distance = Vector3.Distance(_localPlayer.Position, target.Position);
 
+
+        if (_useEInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.E) && CastE(target))
+        {
+            return true;
+        }
+
         if (_useQInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.Q) && CastQ(target))
         {
             return true;
         }
 
         if (_useWInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.W) && CastW(target))
-        {
-            return true;
-        }
-
-        if (_useEInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.E) && CastE(target))
         {
             return true;
         }
@@ -208,6 +241,15 @@ public class CaitlynScript : IChampionScript
         if (_scriptingState.IsCombo == false)
         {
             return false;
+        }
+
+        if (_useEInHarass.Toggled && CanCast(_localPlayer.E))
+        {
+            var target = _targetSelector.GetTarget(_localPlayer.E.Range);
+            if (target != null && CastE(target))
+            {
+                return true;
+            }
         }
 
         if (_useQInHarass.Toggled && CanCast(_localPlayer.Q))
@@ -223,15 +265,6 @@ public class CaitlynScript : IChampionScript
         {
             var target = _targetSelector.GetTarget(_localPlayer.W.Range);
             if (target != null && CastW(target))
-            {
-                return true;
-            }
-        }
-
-        if (_useEInHarass.Toggled && CanCast(_localPlayer.E))
-        {
-            var target = _targetSelector.GetTarget(_localPlayer.E.Range);
-            if (target != null && CastE(target))
             {
                 return true;
             }
@@ -268,9 +301,8 @@ public class CaitlynScript : IChampionScript
         {
             return false;
         }
-        
-        _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
-        return true;
+
+        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
     }
 
     private bool CastW(IHero target)
@@ -308,8 +340,7 @@ public class CaitlynScript : IChampionScript
             return false;
         }
         
-        _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
-        return true;
+        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
     }
 
     private bool CastE(IHero target)
@@ -334,8 +365,7 @@ public class CaitlynScript : IChampionScript
             return false;
         }
         
-        _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
-        return true;
+        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
     }
 
     public void OnRender(float deltaTime)

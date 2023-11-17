@@ -62,7 +62,8 @@ public class RyzeScript : IChampionScript
     private IValueSlider _EMinManaHaras;
 
     private IValueSlider _QHitChance;
-    
+    private IValueSlider _QReactionTime;
+
     public void OnLoad()
     {
         _menu = _mainMenu.CreateMenu("Ryze", ScriptType.Champion);
@@ -82,6 +83,7 @@ public class RyzeScript : IChampionScript
 
         var hitchanceMenu = _menu.AddSubMenu("hit chcnce");
         _QHitChance = hitchanceMenu.AddFloatSlider("Q hit chcance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
+        _QReactionTime = hitchanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
     }
 
     public void OnUnload()
@@ -221,7 +223,7 @@ public class RyzeScript : IChampionScript
             spell.SpellData.Speed,
             spell.SpellData.Width,
             spell.SpellData.Range,
-            0.1f,
+            _QReactionTime.Value / 1000,
             0.0f,
             CollisionType.Minion,
             PredictionType.Line);
@@ -230,33 +232,22 @@ public class RyzeScript : IChampionScript
         {
             return false;
         }
-        
-        _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
-        return true;
+
+        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
     }
 
     private bool CastW(IHero target)
     {
         var spell = _localPlayer.W;
-        if (spell.SpellData == null) return false;
 
-        // var buff = target.GetBuff("caitlynwsight");
-        // if (buff != null && buff.EndTime > _gameState.Time)
-        // {
-        //     return false;
-        // }
-        
-        _gameInput.CastSpell(spell.SpellSlot, target);
-        return true;
+        return _gameInput.CastSpell(spell.SpellSlot, target);
     }
 
     private bool CastE(IHero target)
     {
         var spell = _localPlayer.E;
-        if (spell.SpellData == null) return false;
 
-        _gameInput.CastSpell(spell.SpellSlot, target);
-        return true;
+        return _gameInput.CastSpell(spell.SpellSlot, target);
     }
 
     public void OnRender(float deltaTime)
