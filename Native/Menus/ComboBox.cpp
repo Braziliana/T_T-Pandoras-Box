@@ -42,6 +42,11 @@ void ComboBox::Render()
     MenuBase::Render();
 }
 
+void ComboBox::SetSelection(const int index)
+{
+    _selectionList->SetSelectedItem(index);
+}
+
 void ComboBox::SetComboBoxSelectionChangedCallback(ComboBoxSelectionChangedCallback comboBoxSelectionChangedCallback)
 {
     _comboBoxSelectionChangedCallback = comboBoxSelectionChangedCallback;
@@ -60,4 +65,9 @@ void RegisterComboBoxSelectionChangedCallback(ComboBox* instance, const ComboBox
 int* ComboBoxGetSelectedIndexPointer(ComboBox* instance)
 {
     return instance->GetSelectedIndexPointer();
+}
+
+void ComboBoxSetSelection(ComboBox* instance, const int index)
+{
+    instance->SetSelection(index);
 }

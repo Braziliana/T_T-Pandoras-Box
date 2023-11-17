@@ -22,12 +22,16 @@ public unsafe class Toggle : MenuItem, IToggle
         _toggled = (bool*)ToggleGetToggledPointer(ptr);
     }
 
-    public override void LoadSettings(ISettingsProvider settingsProvider)
-    {
-        
-    }
-
     public override void SaveSettings(ISettingsProvider settingsProvider)
     {
+        settingsProvider.SetValue(SaveId, Toggled);
+    }
+
+    public override void LoadSettings(ISettingsProvider settingsProvider)
+    {
+        if (settingsProvider.ReadValue(SaveId, out bool value))
+        {
+            Toggled = value;
+        }
     }
 }

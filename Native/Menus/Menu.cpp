@@ -6,10 +6,15 @@ Menu* MenuGetInstance()
     return Menu::GetInstance();
 }
 
+void MenuSetCloseCallback(Menu* instance, const MenuCallback callback)
+{
+    instance->SetCloseCallback(callback);
+}
+
 Menu* Menu::_instance = nullptr;
 std::once_flag Menu::_initInstanceFlag;
 
-Menu::Menu(const std::string& title, const Rect rect): MenuBase(nullptr, MenuItemType::Menu, title, rect), _isMoving(false), _mouseMoveHandlerId(0), _keyStateEventHandlerId(0)
+Menu::Menu(const std::string& title, const Rect rect): MenuBase(nullptr, MenuItemType::Menu, title, rect), _closeCallback(nullptr), _isMoving(false), _mouseMoveHandlerId(0), _keyStateEventHandlerId(0)
 {
     const auto im = InputManager::GetInstance();
     _mouseMoveHandlerId = im->AddMouseMoveHandler([this](const MouseMoveEvent event) { this->OnMouseMoveEvent(event); });
@@ -61,6 +66,10 @@ bool Menu::OnKeyStateEvent(KeyStateEvent event)
     if(event.key == VK_LSHIFT && event.isDown)
     {
         _open = !_open;
+        if(!_open && _closeCallback != nullptr)
+        {
+            _closeCallback();
+        }
         return true;
     }
     if(event.key == VK_LBUTTON)
@@ -76,4 +85,9 @@ bool Menu::OnKeyStateEvent(KeyStateEvent event)
         }
     }
     return MenuBase::OnKeyStateEvent(event);
+}
+
+void Menu::SetCloseCallback(const MenuCallback callback)
+{
+    _closeCallback = callback;
 }

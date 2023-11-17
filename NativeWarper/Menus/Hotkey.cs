@@ -35,12 +35,26 @@ public unsafe class Hotkey : MenuItem, IHotkey
         _virtualKey = HotkeyGetHotkeyPointer(ptr);
     }
 
-    public override void LoadSettings(ISettingsProvider settingsProvider)
-    {
-        
-    }
-
     public override void SaveSettings(ISettingsProvider settingsProvider)
     {
+        settingsProvider.SetValue($"{SaveId}.{nameof(Enabled)}", Enabled);
+        settingsProvider.SetValue($"{SaveId}.{nameof(VirtualKey)}", VirtualKey);
+        settingsProvider.SetValue($"{SaveId}.{nameof(HotkeyType)}", HotkeyType);
+    }
+
+    public override void LoadSettings(ISettingsProvider settingsProvider)
+    {
+        if (settingsProvider.ReadValue($"{SaveId}.{nameof(Enabled)}", out bool value))
+        {
+            Enabled = value;
+        }
+        if (settingsProvider.ReadValue($"{SaveId}.{nameof(VirtualKey)}", out VirtualKey virtualKey))
+        {
+            VirtualKey = virtualKey;
+        }
+        if (settingsProvider.ReadValue($"{SaveId}.{nameof(HotkeyType)}", out HotkeyType hotkeyType))
+        {
+            HotkeyType = hotkeyType;
+        }
     }
 }

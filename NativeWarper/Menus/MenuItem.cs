@@ -13,10 +13,18 @@ public unsafe abstract class MenuItem : IMenuElement
     [DllImport("Native.dll")]
     private static extern IntPtr MenuItemRender(IntPtr instance);
     
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern IntPtr MenuItemGetId(IntPtr instance);
+    
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern void FreeMenuItemIdBuffer(IntPtr strPtr);
+    
+    //FreeMenuItemIdBuffer
+    
     protected IntPtr Ptr;
     private string _title;
     
-    public string Title
+    public string Name
     {
         get => _title;
         set
@@ -32,9 +40,23 @@ public unsafe abstract class MenuItem : IMenuElement
         _title = title;
     }
 
-    public string SaveId { get; }
-    public string Name { get; }
-    public string Description { get; }
+    public string SaveId
+    {
+        get
+        {
+            var strPtr = MenuItemGetId(Ptr);
+            var saveId = Marshal.PtrToStringAnsi(strPtr);
+            FreeMenuItemIdBuffer(strPtr);
+            if (string.IsNullOrWhiteSpace(saveId))
+            {
+                return _title;
+            }
+
+            return saveId.ToLower().Replace(" ", "_");
+        }
+    }
+
+    public string Description { get; } = string.Empty;
 
     public virtual void Render()
     {

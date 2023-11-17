@@ -43,9 +43,13 @@ public:
 
     virtual void Close();
     virtual void Open();
+
+    std::string GetId();
 };
 
 extern "C" {
     __declspec(dllexport) void MenuItemSetTitle(MenuItem* instance, const char* title);
     __declspec(dllexport) void MenuItemRender(MenuItem* instance);
+    __declspec(dllexport) const char* MenuItemGetId(MenuItem* instance);
+    __declspec(dllexport) void FreeMenuItemIdBuffer(const char* instance);
 }

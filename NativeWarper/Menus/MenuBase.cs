@@ -22,50 +22,73 @@ public unsafe class MenuBase : MenuItem
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr MenuBaseAddComboBox(IntPtr instance, string title, string[] items, int itemCount, int selectedIndex);
 
+    protected readonly List<IMenuElement> _items;
+    
     public MenuBase(IntPtr menuPointer, string title) : base(menuPointer, title)
     {
         this.menuPointer = menuPointer;
+        _items = new List<IMenuElement>();
     }
 
     public ISubMenu AddSubMenu(string title)
     {
-        return new SubMenu(MenuBaseAddSubMenu(menuPointer, title), title);
+        var item = new SubMenu(MenuBaseAddSubMenu(menuPointer, title), title);
+        _items.Add(item);
+        return item;
     }
 
     public IToggle AddToggle(string title, bool toggled)
     {
-        return new Toggle(MenuBaseAddToggle(menuPointer, title, toggled), title);
+        var item = new Toggle(MenuBaseAddToggle(menuPointer, title, toggled), title);
+        _items.Add(item);
+        return item;
     }
 
     public IValueSlider AddFloatSlider(string title, float value, float minValue, float maxValue, float step, int precision)
     {
-        return new FloatSlider(MenuBaseAddFloatSlider(menuPointer, title, value, minValue, maxValue, step, precision), title);
+        var item = new FloatSlider(MenuBaseAddFloatSlider(menuPointer, title, value, minValue, maxValue, step, precision), title);
+        _items.Add(item);
+        return item;
     }
 
     public IHotkey AddHotkey(string title, VirtualKey hotkey, HotkeyType hotkeyType, bool toggled)
     {
         var hotkeyItem = MenuBaseAddHotkey(menuPointer, title, (ushort)hotkey, (int)hotkeyType, toggled);
-        return new Hotkey(hotkeyItem, title);
+        var item = new Hotkey(hotkeyItem, title);
+        _items.Add(item);
+        return item;
     }
 
     public IComboBox AddComboBox(string title, string[] items, int selectedIndex)
     {
         var comboBox = MenuBaseAddComboBox(menuPointer, title, items, items.Length, selectedIndex);
-        return new ComboBox(comboBox, title, items, selectedIndex);
+        var item = new ComboBox(comboBox, title, items, selectedIndex);
+        _items.Add(item);
+        return item;
     }
 
     public IEnumComboBox<T> AddEnumComboBox<T>(string title, T selectedItem)  where T : Enum
     {
         var items = (string[])Enum.GetNames(typeof(T));
         var comboBox = MenuBaseAddComboBox(menuPointer, title, items, items.Length, Array.IndexOf(items, selectedItem.ToString()));
-        return new EnumComboBox<T>(comboBox, title, selectedItem);
+        var item = new EnumComboBox<T>(comboBox, title, selectedItem);
+        _items.Add(item);
+        return item;
     }
     
     public override void LoadSettings(ISettingsProvider settingsProvider)
     {
+        foreach (var item in _items)
+        {
+            item.LoadSettings(settingsProvider);
+        }
     }
 
     public override void SaveSettings(ISettingsProvider settingsProvider)
     {
+        foreach (var item in _items)
+        {
+            item.SaveSettings(settingsProvider);
+        }
     }
 }

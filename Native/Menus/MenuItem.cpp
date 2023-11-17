@@ -12,6 +12,20 @@ void MenuItemRender(MenuItem* instance)
 {
     instance->Render();
 }
+const char* MenuItemGetId(MenuItem* instance)
+{
+    const std::string id = instance->GetId();
+    const auto result = new char[id.size() + 1];
+    strcpy_s(result, id.size() + 1, id.c_str());
+    return result;
+}
+
+
+void FreeMenuItemIdBuffer(const char* instance)
+{
+    delete[] instance;
+}
+
 
 MenuItem::MenuItem(MenuItem* parent, const MenuItemType menuItemType, std::string title, const Rect rect)
     : _parent(parent), _menuItemType(menuItemType), _title(std::move(title)), _rect(rect)
@@ -77,4 +91,14 @@ void MenuItem::Close()
 
 void MenuItem::Open()
 {
+}
+
+std::string MenuItem::GetId()
+{
+    if(_parent == nullptr)
+    {
+        return _title;
+    }
+
+    return _parent->GetId() + "." + _title;
 }

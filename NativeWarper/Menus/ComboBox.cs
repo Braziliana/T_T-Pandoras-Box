@@ -1,5 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 using Api.Menus;
+using Api.Settings;
+
+using Newtonsoft.Json.Linq;
 
 namespace NativeWarper.Menus;
 
@@ -10,11 +13,15 @@ public unsafe class ComboBox : MenuBase, IComboBox
     
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     public static extern void RegisterComboBoxSelectionChangedCallback(IntPtr instance, IntPtr handler);
-    
-    
+
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    public static extern void ComboBoxSetSelection(IntPtr instance, int index);
+
+
+
     private readonly int* _selectedIndexPointer;
     
-    public int SelectedIndex { get => *_selectedIndexPointer; set => *_selectedIndexPointer = value; }
+    public int SelectedIndex { get => *_selectedIndexPointer; set => ComboBoxSetSelection(Ptr, value); }
     public string[] Items { get; set; }
     public event Action<int>? SelectionChanged;
     
@@ -35,6 +42,19 @@ public unsafe class ComboBox : MenuBase, IComboBox
     private void OnSelectionChanged(int selectedIndex)
     {
         SelectionChanged?.Invoke(selectedIndex);
+    }
+
+    public override void SaveSettings(ISettingsProvider settingsProvider)
+    {
+        settingsProvider.SetValue(SaveId, SelectedIndex);
+    }
+
+    public override void LoadSettings(ISettingsProvider settingsProvider)
+    {
+        if (settingsProvider.ReadValue(SaveId, out int selectedIndex))
+        {
+            SelectedIndex = selectedIndex;
+        }
     }
 }
 
@@ -63,7 +83,6 @@ public unsafe class EnumComboBox<T> : MenuBase, IEnumComboBox<T> where T : Enum
     public T SelectedItem { get => _items[*_selectedIndexPointer]; set => *_selectedIndexPointer = GetIndexOfSelectedItem(value); }
     public event Action<T>? SelectionChanged;
     
-    
     public int GetIndexOfSelectedItem(T selectedItem)
     {
         for (var i = 0; i < _items.Length; i++)
@@ -75,5 +94,19 @@ public unsafe class EnumComboBox<T> : MenuBase, IEnumComboBox<T> where T : Enum
         }
 
         return -1;
+    }
+    
+    public override void SaveSettings(ISettingsProvider settingsProvider)
+    {
+        var index = *_selectedIndexPointer;
+        settingsProvider.SetValue(SaveId, index);
+    }
+
+    public override void LoadSettings(ISettingsProvider settingsProvider)
+    {
+        if (settingsProvider.ReadValue(SaveId, out int selectedIndex))
+        {
+            ComboBox.ComboBoxSetSelection(Ptr, selectedIndex);
+        }
     }
 }

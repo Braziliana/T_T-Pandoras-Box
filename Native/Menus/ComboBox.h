@@ -24,6 +24,7 @@ public:
     }
 
     void Render() override;
+    void SetSelection(int index);
     
     void SetComboBoxSelectionChangedCallback(ComboBoxSelectionChangedCallback comboBoxSelectionChangedCallback);
     void SetComboBoxSelectionChangedCallback(std::function<void(int)> handler);
@@ -33,4 +34,5 @@ extern "C"
 {
     __declspec(dllexport) void RegisterComboBoxSelectionChangedCallback(ComboBox* instance, ComboBoxSelectionChangedCallback callback);
     __declspec(dllexport) int* ComboBoxGetSelectedIndexPointer(ComboBox* instance);
+    __declspec(dllexport) void ComboBoxSetSelection(ComboBox* instance, int index);
 }

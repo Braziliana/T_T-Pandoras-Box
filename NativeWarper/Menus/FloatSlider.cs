@@ -41,11 +41,16 @@ public unsafe class FloatSlider : MenuItem, IValueSlider
         _precision = (int*)FloatSliderGetPrecisionPointer(ptr);
     }
 
-    public override void LoadSettings(ISettingsProvider settingsProvider)
-    {
-    }
-
     public override void SaveSettings(ISettingsProvider settingsProvider)
     {
+        settingsProvider.SetValue(SaveId, Value);
+    }
+
+    public override void LoadSettings(ISettingsProvider settingsProvider)
+    {
+        if (settingsProvider.ReadValue(SaveId, out float value))
+        {
+            Value = value;
+        }
     }
 }
