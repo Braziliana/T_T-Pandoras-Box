@@ -23,13 +23,12 @@ public class OrbWalker : IOrbWalkScript
     private readonly IGameManager _gameManager;
     private readonly ILocalPlayer _localPlayer;
     private readonly IRenderer _renderer;
-    private readonly IGameState _gameState;
     private readonly IMinionSelector _minionSelector;
     private readonly IGameInput _gameInput;
     private readonly ITargetSelector _targetSelector;
     private readonly ITurretManager _turretManager;
-    private readonly IGameCamera _gameCamera;
     private readonly IRandomGenerator _randomGenerator;
+    private readonly ISpellCaster _spellCaster;
 
     private readonly Timer _humanizerTimer;
     private readonly Timer _attackTimer;
@@ -51,7 +50,6 @@ public class OrbWalker : IOrbWalkScript
         IGameManager gameManager,
         ILocalPlayer localPlayer,
         IRenderer renderer,
-        IGameState gameState,
         IMinionSelector minionSelector,
         IGameInput gameInput,
         Timer humanizerTimer,
@@ -59,13 +57,13 @@ public class OrbWalker : IOrbWalkScript
         Timer attackTimer,
         ITargetSelector targetSelector,
         ITurretManager turretManager,
-        IGameCamera gameCamera, IRandomGenerator randomGenerator)
+        IRandomGenerator randomGenerator,
+        ISpellCaster spellCaster)
     {
         _scriptingState = scriptingState;
         _gameManager = gameManager;
         _localPlayer = localPlayer;
         _renderer = renderer;
-        _gameState = gameState;
         _minionSelector = minionSelector;
         _gameInput = gameInput;
         
@@ -74,8 +72,8 @@ public class OrbWalker : IOrbWalkScript
         _attackTimer = attackTimer;
         _targetSelector = targetSelector;
         _turretManager = turretManager;
-        _gameCamera = gameCamera;
         _randomGenerator = randomGenerator;
+        _spellCaster = spellCaster;
 
         var menu = mainMenu.CreateMenu(Name, ScriptType.OrbWalker);
         _humanizerSliderAddRandomDelay = menu.AddToggle("Humanizer random delay", true);
@@ -158,7 +156,7 @@ public class OrbWalker : IOrbWalkScript
             return;
         }
 
-        if (_localPlayer.ActiveCastSpell is { IsActive: true, Type: ActiveSpellType.Q or ActiveSpellType.W or ActiveSpellType.E or ActiveSpellType.R })
+        if (_spellCaster.IsCasting)
         {
             return;
         }

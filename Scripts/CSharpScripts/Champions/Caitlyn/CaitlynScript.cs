@@ -27,11 +27,10 @@ public class CaitlynScript : IChampionScript
     private readonly ITargetSelector _targetSelector;
     private readonly IPrediction _prediction;
     private readonly IGameInput _gameInput;
-    private readonly IRenderer _renderer;
     private readonly IGameState _gameState;
-    private readonly IGameCamera _gameCamera;
     private readonly ITrapManager _trapManager;
     private readonly IHeroManager _heroManager;
+    private readonly ISpellCaster _spellCaster;
     private readonly int _trapNameHash = "CaitlynTrap".GetHashCode();
 
     private IToggle _useQInCombo;
@@ -50,8 +49,8 @@ public class CaitlynScript : IChampionScript
     private IValueSlider _WReactionTime;
     private IValueSlider _EReactionTime;
 
-    private IToggle _autoWCC;
     private IToggle _autoQCC;
+    private IToggle _autoWCC;
     private IToggle _autoWDashing;
 
     public CaitlynScript(
@@ -61,11 +60,10 @@ public class CaitlynScript : IChampionScript
         ITargetSelector targetSelector,
         IPrediction prediction,
         IGameInput gameInput,
-        IRenderer renderer,
         IGameState gameState,
-        IGameCamera gameCamera,
         ITrapManager trapManager,
-        IHeroManager heroManager)
+        IHeroManager heroManager,
+        ISpellCaster spellCaster)
     {
         _mainMenu = mainMenu;
         _localPlayer = localPlayer;
@@ -73,11 +71,10 @@ public class CaitlynScript : IChampionScript
         _targetSelector = targetSelector;
         _prediction = prediction;
         _gameInput = gameInput;
-        _renderer = renderer;
         _gameState = gameState;
-        _gameCamera = gameCamera;
         _trapManager = trapManager;
         _heroManager = heroManager;
+        _spellCaster = spellCaster;
     }
 
     public void OnLoad()
@@ -155,18 +152,13 @@ public class CaitlynScript : IChampionScript
     
     private bool Auto()
     {
-        if ((!_autoWCC.Toggled && !_autoWDashing.Toggled) || !CanCast(_localPlayer.W))
-        {
-            return false;
-        }
-
         var enemies = _heroManager.GetEnemyHeroes();
 
         foreach (var enemy in enemies)
         {
             var immobileTime = GetImmobileBuffDuration(enemy);
             var distance = Vector3.Distance(_localPlayer.Position, enemy.Position);
-            if (distance <= _localPlayer.W.Range && _autoWCC.Toggled)
+            if (distance <= _localPlayer.W.Range && _autoWCC.Toggled && CanCast(_localPlayer.W))
             {
                 if (immobileTime > _localPlayer.W.SpellData.CastDelayTime + 0.1f)
                 {
@@ -177,7 +169,7 @@ public class CaitlynScript : IChampionScript
                 }
             }
 
-            if (_autoWDashing.Toggled && enemy.AiManager.IsDashing)
+            if (_autoWDashing.Toggled && enemy.AiManager.IsDashing && CanCast(_localPlayer.W))
             {
                 if (CastW(enemy))
                 {
@@ -185,7 +177,7 @@ public class CaitlynScript : IChampionScript
                 }
             }
 
-            if(distance <= _localPlayer.Q.Range && _autoQCC.Toggled)
+            if(distance <= _localPlayer.Q.Range && _autoQCC.Toggled && CanCast(_localPlayer.Q))
             {
                 if (immobileTime > _localPlayer.Q.SpellData.CastDelayTime)
                 {
@@ -218,7 +210,7 @@ public class CaitlynScript : IChampionScript
         var distance = Vector3.Distance(_localPlayer.Position, target.Position);
 
 
-        if (_useEInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.E) && CastE(target))
+        if (_useEInCombo.Toggled && distance <= _localPlayer.E.Range && CanCast(_localPlayer.E) && CastE(target))
         {
             return true;
         }
@@ -228,7 +220,7 @@ public class CaitlynScript : IChampionScript
             return true;
         }
 
-        if (_useWInCombo.Toggled && distance <= _localPlayer.Q.Range && CanCast(_localPlayer.W) && CastW(target))
+        if (_useWInCombo.Toggled && distance <= _localPlayer.W.Range && CanCast(_localPlayer.W) && CastW(target))
         {
             return true;
         }
@@ -238,7 +230,7 @@ public class CaitlynScript : IChampionScript
 
     private bool Harass()
     {
-        if (_scriptingState.IsCombo == false)
+        if (_scriptingState.IsHaras == false)
         {
             return false;
         }
@@ -275,34 +267,13 @@ public class CaitlynScript : IChampionScript
 
     private bool CanCast(ISpell spell)
     {
-        return spell.IsReady &&
-               spell.ManaCost < _localPlayer.Mana &&
-               !(_localPlayer.ActiveCastSpell.IsActive && _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack);
+        return _spellCaster.CanCast(spell);
     }
 
     private bool CastQ(IHero target)
     {
-        var spell = _localPlayer.Q;
-        if (spell.SpellData == null) return false;
-        
-        var prediction = _prediction.PredictPosition(
-            target,
-            _localPlayer.Position,
-            spell.SpellData.CastDelayTime,
-            spell.SpellData.Speed,
-            spell.SpellData.Width,
-            spell.SpellData.Range,
-            _QReactionTime.Value / 1000,
-            0.0f,
-            CollisionType.None,
-            PredictionType.Line);
-
-        if (prediction.HitChance < _QHitChance.Value)
-        {
-            return false;
-        }
-
-        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
+        return _spellCaster.TryCastPredicted(_localPlayer.Q, target, _QReactionTime.Value / 1000.0f, 0.0f,
+            _QHitChance.Value, CollisionType.None, PredictionType.Line);
     }
 
     private bool CastW(IHero target)
@@ -317,55 +288,24 @@ public class CaitlynScript : IChampionScript
         }
 
         float width = 60;
-        if (_trapManager.GetAllyTraps(target.Position, 200).Where(x => x.ObjectNameHash == _trapNameHash).Any())
+        if (_trapManager.GetAllyTraps(target.Position, 200).Any(x => x.ObjectNameHash == _trapNameHash))
         {
             return false;
         }
 
-        var trapDelay = 0.1f;
-        var prediction = _prediction.PredictPosition(
-            target,
-            _localPlayer.Position,
-            spell.SpellData.CastDelayTime + trapDelay,
-            spell.SpellData.Speed,
-            width,
-            spell.SpellData.Range,
-            _WReactionTime.Value / 1000,
-            10.0f,
-            CollisionType.None,
-            PredictionType.Point);
 
-        if (prediction.HitChance < _WHitChance.Value)
-        {
-            return false;
-        }
-        
-        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
+        var spellData = spell.SpellData;
+        if (spellData == null) return false;
+        return _spellCaster.TryCastPredicted(spell, target, spellData.CastDelayTime + 0.1f, 0.0f,
+            width, spellData.Range, _WReactionTime.Value / 1000.0f, 0.0f,
+            _WHitChance.Value, CollisionType.None, PredictionType.Point);
     }
 
     private bool CastE(IHero target)
     {
-        var spell = _localPlayer.E;
-        if (spell.SpellData == null) return false;
-
-        var prediction = _prediction.PredictPosition(
-            target,
-            _localPlayer.Position,
-            spell.SpellData.CastDelayTime,
-            spell.SpellData.Speed,
-            spell.SpellData.Width,
-            spell.SpellData.Range,
-            _EReactionTime.Value / 1000,
-            0.0f,
-            CollisionType.Minion,
-            PredictionType.Line);
-
-        if (prediction.HitChance < _EHitChance.Value)
-        {
-            return false;
-        }
         
-        return _gameInput.CastSpell(spell.SpellSlot, prediction.Position);
+        return _spellCaster.TryCastPredicted(_localPlayer.E, target, _EReactionTime.Value / 1000.0f, 0.0f,
+            _EHitChance.Value, CollisionType.None, PredictionType.Line);
     }
 
     public void OnRender(float deltaTime)

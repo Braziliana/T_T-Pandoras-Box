@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Scripts.CSharpScripts;
 using Scripts.CSharpScripts.Champions.Caitlyn;
+using Scripts.CSharpScripts.Champions.Ezreal;
 using Scripts.CSharpScripts.Champions.Ryze;
 using Scripts.CSharpScripts.Orbwlakers;
 using Scripts.CSharpScripts.Utility;
@@ -36,6 +37,7 @@ public static class ScriptsServiceInstaller
         collection.AddSingleton<IScript, Tracker>();
         collection.AddSingleton<IScript, AutoSmite>();
         collection.AddSingleton<IScript, CaitlynScript>();
+        collection.AddSingleton<IScript, EzrealScript>();
         collection.AddSingleton<IScript, RyzeScript>();
         collection.AddSingleton<IScript, ProjectileViewer>();
         collection.AddSingleton<IScript, TargetSelector>();

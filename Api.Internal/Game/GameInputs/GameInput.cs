@@ -168,7 +168,7 @@ internal class GameInput : IGameInput
         {
             return false;
         }
-        return SendInput(MouseButton.Left, position, MapSpellSlot(spellSlot));
+        return SendInput(position, MapSpellSlot(spellSlot));
     }
 
     public bool CastSpell(SpellSlot spellSlot, Vector3 position)
@@ -179,6 +179,32 @@ internal class GameInput : IGameInput
     public bool CastSpell(SpellSlot spellSlot, IGameObject target)
     {
         return CastSpell(spellSlot, target.Position);
+    }
+
+    private bool SendInput(Vector2 position, VirtualKey virtualKey)
+    {
+        if (_currentTask is not null && !_currentTask.IsCompleted)
+        {
+            return false;
+        }
+
+        _currentTask = Task.Factory.StartNew(async () =>
+        {
+            _mouseInputBlocked = true;
+            _inputManager.BlockMouseInput(true);
+            var prevPos = MousePosition;
+            _inputManager.MouseSetPosition(position);
+            await Task.Delay(_ticksToResetMouse);
+            _inputManager.KeyboardSend(virtualKey);
+            await Task.Delay(_ticksToResetMouse);
+            _inputManager.MouseSetPosition(prevPos);
+            await Task.Delay(_ticksToResetMouse);
+            _inputManager.BlockMouseInput(false);
+            MousePosition = prevPos;
+            _mouseInputBlocked = false;
+        });
+
+        return true;
     }
 
     private bool SendInput(MouseButton mouseButton, Vector2 position, VirtualKey virtualKey)
@@ -199,7 +225,7 @@ internal class GameInput : IGameInput
             _inputManager.MouseSend(mouseButton);
             await Task.Delay(_ticksToResetMouse);
             _inputManager.MouseSetPosition(prevPos);
-            await Task.Delay(1);
+            await Task.Delay(_ticksToResetMouse);
             _inputManager.BlockMouseInput(false);
             MousePosition = prevPos;
             _mouseInputBlocked = false;
@@ -225,11 +251,10 @@ internal class GameInput : IGameInput
             _inputManager.KeyboardSendDown(press);
             _inputManager.KeyboardSend(virtualKey);
             _inputManager.MouseSend(mouseButton);
-            await Task.Delay(1);
             _inputManager.KeyboardSendUp(press);
             await Task.Delay(_ticksToResetMouse);
             _inputManager.MouseSetPosition(prevPos);
-            await Task.Delay(1);
+            await Task.Delay(_ticksToResetMouse);
             _inputManager.BlockMouseInput(false);
             MousePosition = prevPos;
             _mouseInputBlocked = false;
