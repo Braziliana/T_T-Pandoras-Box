@@ -26,6 +26,7 @@ internal class LuaBinder
     private readonly IScriptingState _scriptingState;
     private readonly ITargetSelector _targetSelector;
     private readonly IPrediction _prediction;
+    private readonly ISpellCaster _spellCaster;
 
     public LuaBinder(
         IGameManager gameManager,
@@ -38,7 +39,8 @@ internal class LuaBinder
         IMinionSelector minionSelector,
         IScriptingState scriptingState,
         ITargetSelector targetSelector,
-        IPrediction prediction)
+        IPrediction prediction,
+        ISpellCaster spellCaster)
     {
         _gameManager = gameManager;
         _renderer = renderer;
@@ -51,6 +53,7 @@ internal class LuaBinder
         _scriptingState = scriptingState;
         _targetSelector = targetSelector;
         _prediction = prediction;
+        _spellCaster = spellCaster;
     }
 
     public Lua Create()
@@ -63,6 +66,7 @@ internal class LuaBinder
         lua["GameCamera"] = _gameManager.GameCamera;
         lua["Hero"] = _gameManager.LocalPlayer;
         lua["GameState"] = _gameManager.GameState;
+        lua["SpellCaster"] = _spellCaster;
 
         var objectManager = _gameManager.ObjectManager;
         lua["MinionManager"] = objectManager.MinionManager;
@@ -99,7 +103,9 @@ internal class LuaBinder
         lua.RegisterEnum<KeyState>();
         lua.RegisterEnum<IssueOrderType>();
         lua.RegisterEnum<DamageType>();
-
+        lua.RegisterEnum<CollisionType>();
+        lua.RegisterEnum<PredictionType>();
+        
         BindMenu(lua);
         
         return lua;
