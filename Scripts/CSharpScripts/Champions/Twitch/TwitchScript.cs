@@ -159,13 +159,18 @@ public class TwitchScript : IChampionScript
         if (stacks < 1) return 0.0f;
         
         var physicalDamage = _eDamage[spell.Level-1] + 0.35f * stacks * _localPlayer.BonusAttackDamage + _eStackDamage[spell.Level - 1];
-        var magicDamage = (0.30f * _localPlayer.AbilityPower) * stacks;
+        var magicDamage = (0.30f * stacks * _localPlayer.AbilityPower);
         
         return _damageCalculator.GetPhysicalDamage(_localPlayer, target, physicalDamage) + _damageCalculator.GetMagicDamage(_localPlayer, target, magicDamage);
     }
 
     private bool Combo()
-    {        
+    {
+        if (_scriptingState.IsCombo == false)
+        {
+            return false;
+        }
+        
         var target = _targetSelector.GetTarget();
         if (target == null)
         {
@@ -202,6 +207,11 @@ public class TwitchScript : IChampionScript
 
     private bool Harass()
     {
+        if (_scriptingState.IsHaras == false)
+        {
+            return false;
+        }
+        
         var target = _targetSelector.GetTarget();
         if (target == null)
         {
