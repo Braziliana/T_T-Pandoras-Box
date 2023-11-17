@@ -40,6 +40,7 @@ public class MainMenu : MenuBase, IMainMenu
 
     public void RemoveMenu(IMenu menu)
     {
+        RemoveItem(menu);
     }
 
     public IMenu CreateMenu(string title, ScriptType scriptType)

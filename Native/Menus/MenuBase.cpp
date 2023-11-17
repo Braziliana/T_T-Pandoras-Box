@@ -41,6 +41,11 @@ ComboBox* MenuBaseAddComboBox(MenuBase* instance, const char* title, const char*
     return instance->AddComboBox(title, itemsVec, selectedIndex);
 }
 
+void MenuBaseRemoveItem(MenuBase* instance, const MenuItem* menuItem)
+{
+    instance->RemoveItem(menuItem);
+}
+
 //----------------------
 
 Rect MenuBase::GetChildRect(const float slots) const
@@ -190,7 +195,7 @@ bool MenuBase::OnMouseMoveEvent(const MouseMoveEvent event)
     return false;
 }
 
-void MenuBase::ChildOpened(MenuItem* menuItem)
+void MenuBase::ChildOpened(const MenuItem* menuItem) const
 {
     for (const auto item : _items)
     {
@@ -208,10 +213,10 @@ bool MenuBase::OnKeyStateEvent(const KeyStateEvent event)
         _open = !_open;
         if(_open && _parent != nullptr)
         {
-            auto parentType =  _parent->GetType();
+            const auto parentType = _parent->GetType();
             if(parentType == MenuItemType::Menu || parentType == MenuItemType::SubMenu)
             {
-                auto menuBase = static_cast<MenuBase*>(_parent);
+                const auto menuBase = dynamic_cast<MenuBase*>(_parent);
                 menuBase->ChildOpened(this);
             }
         }

@@ -22,12 +22,21 @@ public unsafe class MenuBase : MenuItem
     [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr MenuBaseAddComboBox(IntPtr instance, string title, string[] items, int itemCount, int selectedIndex);
 
+    [DllImport("Native.dll", CallingConvention = CallingConvention.Cdecl)]
+    private static extern void MenuBaseRemoveItem(IntPtr instance, IntPtr menuItem);
+
     protected readonly List<IMenuElement> _items;
     
     public MenuBase(IntPtr menuPointer, string title) : base(menuPointer, title)
     {
         this.menuPointer = menuPointer;
         _items = new List<IMenuElement>();
+    }
+
+    public void RemoveItem(IMenuElement menuItem)
+    {
+        _items.Remove(menuItem);
+        MenuBaseRemoveItem(Ptr, menuItem.GetPtr());
     }
 
     public ISubMenu AddSubMenu(string title)

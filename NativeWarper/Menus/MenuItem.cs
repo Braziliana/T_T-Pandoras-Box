@@ -65,4 +65,9 @@ public unsafe abstract class MenuItem : IMenuElement
 
     public abstract void LoadSettings(ISettingsProvider settingsProvider);
     public abstract void SaveSettings(ISettingsProvider settingsProvider);
+
+    public IntPtr GetPtr()
+    {
+        return Ptr;
+    }
 }

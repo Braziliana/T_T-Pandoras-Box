@@ -44,7 +44,7 @@ public:
     void AddItem(MenuItem* item);
     void RemoveItem(const MenuItem* itemToRemove);
     bool OnMouseMoveEvent(MouseMoveEvent event) override;
-    void ChildOpened(MenuItem* menuItem);
+    void ChildOpened(const MenuItem* menuItem) const;
     bool OnKeyStateEvent(KeyStateEvent event) override;
     
     void HandleHotkeys(KeyStateEvent event) const;
@@ -60,4 +60,6 @@ extern "C" {
     __declspec(dllexport) FloatSlider* MenuBaseAddFloatSlider(MenuBase* instance, const char* title, float value, float minValue, float maxValue, float step, int precision);
     __declspec(dllexport) Hotkey* MenuBaseAddHotkey(MenuBase* instance, const char* title, unsigned short hotkey, int hotkeyType, bool toggled);
     __declspec(dllexport) ComboBox* MenuBaseAddComboBox(MenuBase* instance, const char* title, const char** items, int itemsCount, int selectedIndex);
+
+    __declspec(dllexport) void MenuBaseRemoveItem(MenuBase* instance, const MenuItem* menuItem);
 }

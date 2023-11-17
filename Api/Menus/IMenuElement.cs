@@ -16,5 +16,6 @@ namespace Api.Menus
         void Render();
         void LoadSettings(ISettingsProvider settingsProvider);
         void SaveSettings(ISettingsProvider settingsProvider);
+        IntPtr GetPtr();
     }
 }
