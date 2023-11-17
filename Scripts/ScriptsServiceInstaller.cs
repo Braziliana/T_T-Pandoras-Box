@@ -9,6 +9,7 @@ using Scripts.CSharpScripts;
 using Scripts.CSharpScripts.Champions.Caitlyn;
 using Scripts.CSharpScripts.Champions.Ezreal;
 using Scripts.CSharpScripts.Champions.Ryze;
+using Scripts.CSharpScripts.Champions.Twitch;
 using Scripts.CSharpScripts.Orbwlakers;
 using Scripts.CSharpScripts.Utility;
 using Scripts.LuaScripts;
@@ -38,6 +39,7 @@ public static class ScriptsServiceInstaller
         collection.AddSingleton<IScript, AutoSmite>();
         collection.AddSingleton<IScript, CaitlynScript>();
         collection.AddSingleton<IScript, EzrealScript>();
+        collection.AddSingleton<IScript, TwitchScript>();
         collection.AddSingleton<IScript, RyzeScript>();
         collection.AddSingleton<IScript, ProjectileViewer>();
         collection.AddSingleton<IScript, TargetSelector>();

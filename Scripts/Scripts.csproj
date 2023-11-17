@@ -18,8 +18,4 @@
     <PackageReference Include="NLua" Version="1.6.3" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CSharpScripts\Champions\Twitch\" />
-  </ItemGroup>
-
 </Project>

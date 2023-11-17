@@ -14,6 +14,7 @@ public interface ISpellCaster
 
     bool TryCast(ISpell spell, IAttackableUnit target);
     bool TryCast(ISpell spell, Vector3 position);
+    bool TryCast(ISpell spell);
     bool TrySelfCast(ISpell spell);
     bool CanCast(ISpell spell);
     bool IsInRange(ISpell spell, Vector3 position);

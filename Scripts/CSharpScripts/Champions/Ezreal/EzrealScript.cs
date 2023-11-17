@@ -93,14 +93,14 @@ namespace Scripts.CSharpScripts.Champions.Ezreal
             _useQInHarass = harassMenu.AddToggle("Use Q in harass", true);
             _useWInHarass = harassMenu.AddToggle("Use W in harass", true);
 
-            var hitchanceMenu = _menu.AddSubMenu("Hit chcnce");
-            _QHitChance = hitchanceMenu.AddFloatSlider("Q hit chcance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
-            _WHitChance = hitchanceMenu.AddFloatSlider("W hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
-            _RHitChance = hitchanceMenu.AddFloatSlider("R hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
+            var hitChanceMenu = _menu.AddSubMenu("Hit chance");
+            _QHitChance = hitChanceMenu.AddFloatSlider("Q hit chance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
+            _WHitChance = hitChanceMenu.AddFloatSlider("W hit chance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
+            _RHitChance = hitChanceMenu.AddFloatSlider("R hit chance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
 
-            _QReactionTime = hitchanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
-            _WReactionTime = hitchanceMenu.AddFloatSlider("W reaction time", 0.00f, 0.0f, 300f, 5f, 2);
-            _RReactionTime = hitchanceMenu.AddFloatSlider("R reaction time", 50f, 0.0f, 300f, 5f, 2);
+            _QReactionTime = hitChanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
+            _WReactionTime = hitChanceMenu.AddFloatSlider("W reaction time", 0.00f, 0.0f, 300f, 5f, 2);
+            _RReactionTime = hitChanceMenu.AddFloatSlider("R reaction time", 50f, 0.0f, 300f, 5f, 2);
 
             var autoMenu = _menu.AddSubMenu("Auto");
             _autoQCC = autoMenu.AddToggle("Auto Q CC enemy", true);

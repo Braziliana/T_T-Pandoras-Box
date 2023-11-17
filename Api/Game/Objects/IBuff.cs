@@ -50,7 +50,8 @@ public interface IBuff
     public float StartTime { get; set; }
     public float EndTime { get; set; }
     public int Count { get; set; }
-    public int CountAlt { get; set; }
+    public int CountAlt1 { get; set; }
+    public int CountAlt2 { get; set; }
     public BuffType BuffType { get; set; }
 
     void CloneFrom(IBuff buff);

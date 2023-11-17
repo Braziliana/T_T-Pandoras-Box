@@ -94,6 +94,22 @@ namespace Api.Internal.Game.GameInputs
             return false;
         }
 
+        public bool TryCast(ISpell spell)
+        {
+            if (!CanCast(spell))
+            {
+                return false;
+            }
+
+            if (_gameInput.CastSpell(spell.SpellSlot))
+            {
+                _nextCast = _gameState.Time + spell.SpellData.CastDelayTime;
+                return true;
+            }
+            
+            return false;
+        }
+
         public bool TrySelfCast(ISpell spell)
         {
             if (!CanCast(spell))

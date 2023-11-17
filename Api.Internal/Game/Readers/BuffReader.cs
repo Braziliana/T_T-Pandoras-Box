@@ -91,13 +91,20 @@ internal class BuffReader : BaseReader, IBuffReader
 		    return null;
 	    }
 
-	    var countAlt = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt);
-	    if (countAlt < 0)
+	    var countAlt1 = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt1);
+	    if (countAlt1 < 0)
 	    {
 		    return null;
 	    }
 
-	    var startTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffStartTime);
+
+        var countAlt2 = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt2);
+        if (countAlt2 < 0)
+        {
+            return null;
+        }
+
+        var startTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffStartTime);
 	    if (startTime > _gameState.Time + 0.01f || startTime < 0)
 	    {
 		    return null;
@@ -132,8 +139,9 @@ internal class BuffReader : BaseReader, IBuffReader
 	    buff.EndTime = endTime;
 	    buff.Name = name;
 	    buff.Count = count;
-	    buff.CountAlt = countAlt;
-	    buff.BuffType = (BuffType)ReadOffset<byte>(_buffOffsets.BuffType);
+	    buff.CountAlt1 = countAlt1;
+        buff.CountAlt2 = countAlt2;
+        buff.BuffType = (BuffType)ReadOffset<byte>(_buffOffsets.BuffType);
 
 	    return buff;
     }

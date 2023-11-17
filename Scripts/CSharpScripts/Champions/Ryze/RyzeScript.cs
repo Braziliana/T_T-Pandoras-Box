@@ -68,16 +68,16 @@ public class RyzeScript : IChampionScript
         _useEInCombo = comboMenu.AddToggle("Use E in combo", true);
 
         var harassMenu = _menu.AddSubMenu("Haras");
-        _useQInHaras = harassMenu.AddToggle("Use Q in haras", true);
+        _useQInHaras = harassMenu.AddToggle("Use Q in harass", true);
         _QMinManaHaras = harassMenu.AddFloatSlider("Q min mana percent", 50.0f, 0.0f, 100.0f, 5f, 0);
-        _useWInHaras = harassMenu.AddToggle("Use W in haras", true);
+        _useWInHaras = harassMenu.AddToggle("Use W in harass", true);
         _WMinManaHaras = harassMenu.AddFloatSlider("W min mana percent", 50.0f, 0.0f, 100.0f, 5f, 0);
-        _useEInHaras = harassMenu.AddToggle("Use E in haras", true);
+        _useEInHaras = harassMenu.AddToggle("Use E in harass", true);
         _EMinManaHaras = harassMenu.AddFloatSlider("E min mana percent", 50.0f, 0.0f, 100.0f, 5f, 0);
 
-        var hitchanceMenu = _menu.AddSubMenu("hit chcnce");
-        _QHitChance = hitchanceMenu.AddFloatSlider("Q hit chcance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
-        _QReactionTime = hitchanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
+        var hitChanceMenu = _menu.AddSubMenu("Hit chance");
+        _QHitChance = hitChanceMenu.AddFloatSlider("Q hit chance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
+        _QReactionTime = hitChanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
     }
 
     public void OnUnload()

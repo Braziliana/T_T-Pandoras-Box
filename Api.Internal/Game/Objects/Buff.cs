@@ -9,7 +9,8 @@ internal class Buff : IBuff
     public float StartTime { get; set; }
     public float EndTime { get; set; }
     public int Count { get; set; }
-    public int CountAlt { get; set; }
+    public int CountAlt1 { get; set; }
+    public int CountAlt2 { get; set; }
     public BuffType BuffType { get; set; }
 
     public void CloneFrom(IBuff buff)
@@ -19,7 +20,8 @@ internal class Buff : IBuff
         StartTime = buff.StartTime;
         EndTime = buff.EndTime;
         Count = buff.Count;
-        CountAlt = buff.CountAlt;
+        CountAlt1 = buff.CountAlt1;
+        CountAlt2 = buff.CountAlt2;
         BuffType = buff.BuffType;
     }
     

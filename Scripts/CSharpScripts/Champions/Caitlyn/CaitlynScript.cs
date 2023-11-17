@@ -90,14 +90,14 @@ public class CaitlynScript : IChampionScript
         _useWInHarass = harassMenu.AddToggle("Use W in harass", true);
         _useEInHarass = harassMenu.AddToggle("Use E in harass", true);
 
-        var hitchanceMenu = _menu.AddSubMenu("Hit chcnce");
-        _QHitChance = hitchanceMenu.AddFloatSlider("Q hit chcance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
-        _WHitChance = hitchanceMenu.AddFloatSlider("W hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
-        _EHitChance = hitchanceMenu.AddFloatSlider("E hit chcance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
+        var hitChanceMenu = _menu.AddSubMenu("Hit chance");
+        _QHitChance = hitChanceMenu.AddFloatSlider("Q hit chance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
+        _WHitChance = hitChanceMenu.AddFloatSlider("W hit chance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
+        _EHitChance = hitChanceMenu.AddFloatSlider("E hit chance", 0.9f, 0.0f, 1.0f, 0.05f, 2);
 
-        _QReactionTime = hitchanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
-        _WReactionTime = hitchanceMenu.AddFloatSlider("W reaction time", 0.00f, 0.0f, 300f, 5f, 2);
-        _EReactionTime = hitchanceMenu.AddFloatSlider("E reaction time", 50f, 0.0f, 300f, 5f, 2);
+        _QReactionTime = hitChanceMenu.AddFloatSlider("Q reaction time", 50f, 0.0f, 300f, 5f, 2);
+        _WReactionTime = hitChanceMenu.AddFloatSlider("W reaction time", 0.00f, 0.0f, 300f, 5f, 2);
+        _EReactionTime = hitChanceMenu.AddFloatSlider("E reaction time", 50f, 0.0f, 300f, 5f, 2);
 
         var autoMenu = _menu.AddSubMenu("Auto");
         _autoQCC = autoMenu.AddToggle("Auto Q CC enemy", true);
@@ -157,7 +157,7 @@ public class CaitlynScript : IChampionScript
         foreach (var enemy in enemies)
         {
             var immobileTime = GetImmobileBuffDuration(enemy);
-            var distance = Vector3.Distance(_localPlayer.Position, enemy.Position);
+            var distance = enemy.Distance(_localPlayer);
             if (distance <= _localPlayer.W.Range && _autoWCC.Toggled && CanCast(_localPlayer.W))
             {
                 if (immobileTime > _localPlayer.W.SpellData.CastDelayTime + 0.1f)
@@ -303,7 +303,6 @@ public class CaitlynScript : IChampionScript
 
     private bool CastE(IHero target)
     {
-        
         return _spellCaster.TryCastPredicted(_localPlayer.E, target, _EReactionTime.Value / 1000.0f, 0.0f,
             _EHitChance.Value, CollisionType.None, PredictionType.Line);
     }
