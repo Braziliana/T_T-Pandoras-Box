@@ -20,5 +20,6 @@ public interface IAttackableUnit : IGameObject
     bool Targetable { get; set; }
     float CollisionRadius { get; set; }
     bool IsAlive { get; }
+    float MovementSpeed { get; set; }
     public UnitData? UnitData { get; set; }
 }

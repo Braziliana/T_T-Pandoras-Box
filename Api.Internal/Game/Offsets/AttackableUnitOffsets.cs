@@ -18,6 +18,7 @@ internal class AttackableUnitOffsets : IAttackableUnitOffsets
     public OffsetData MagicResistance { get; }
     public OffsetData BonusMagicResistance { get; }
     public OffsetData Targetable { get; }
+    public OffsetData MovementSpeed { get; }
     
     public AttackableUnitOffsets(IConfiguration configuration)
     {
@@ -33,6 +34,7 @@ internal class AttackableUnitOffsets : IAttackableUnitOffsets
         MagicResistance = new OffsetData(nameof(MagicResistance), Convert.ToUInt32(cs[nameof(MagicResistance)], 16), typeof(float));
         BonusMagicResistance = new OffsetData(nameof(BonusMagicResistance), Convert.ToUInt32(cs[nameof(BonusMagicResistance)], 16), typeof(float));
         Targetable = new OffsetData(nameof(Targetable), Convert.ToUInt32(cs[nameof(Targetable)], 16), typeof(bool));
+        MovementSpeed = new OffsetData(nameof(MovementSpeed), Convert.ToUInt32(cs[nameof(MovementSpeed)], 16), typeof(float));
     }
         
     public IEnumerable<OffsetData> GetOffsets()
@@ -47,5 +49,6 @@ internal class AttackableUnitOffsets : IAttackableUnitOffsets
         yield return MagicResistance;
         yield return BonusMagicResistance;
         yield return Targetable;
+        yield return MovementSpeed;
     }
 }

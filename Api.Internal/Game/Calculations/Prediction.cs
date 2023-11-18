@@ -217,26 +217,29 @@ public class Prediction : IPrediction
         // }
         // return (predictedPosition, elapsedTime);
 
-        var totalDistance = target.AiManager.MovementSpeed * delay;
-        var waypoints = target.AiManager.GetRemainingPath().ToList();
+        var totalDistance = target.MovementSpeed * delay;
+        var waypoints = target.AiManager.GetRemainingPath().ToArray();
         var currentPosition = waypoints[0];
 
-        for (var i = 0; i < waypoints.Count - 1; i++)
+        for (var i = 1; i < waypoints.Length; i++)
         {
-            var nextPosition = waypoints[i + 1];
+            var nextPosition = waypoints[i];
             var distanceToNext = Vector3.Distance(currentPosition, nextPosition);
 
-            if (totalDistance >= distanceToNext)
+            if(Math.Abs(totalDistance - distanceToNext) < float.Epsilon)
             {
-                totalDistance -= distanceToNext;
-                currentPosition = nextPosition;
+                return (nextPosition, delay);
             }
-            else
+
+            if (distanceToNext > totalDistance)
             {
                 var direction = Vector3.Normalize(nextPosition - currentPosition);
                 var finalPosition = currentPosition + direction * totalDistance;
                 return (finalPosition, delay);
             }
+
+            currentPosition = nextPosition;
+            totalDistance -= distanceToNext;
         }
 
         return (currentPosition, delay);
@@ -266,7 +269,7 @@ public class Prediction : IPrediction
             
             var targetDirection = Vector3.Normalize(waypoints[currentWaypointIndex] - predictedPosition);
             var distanceToNextWaypoint = Vector3.Distance(predictedPosition, waypoints[currentWaypointIndex]);
-            var distanceThisStep = target.AiManager.MovementSpeed * timeStep;
+            var distanceThisStep = target.MovementSpeed * timeStep;
 
             if (distanceThisStep >= distanceToNextWaypoint)
             {

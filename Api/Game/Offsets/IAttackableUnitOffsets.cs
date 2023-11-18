@@ -12,5 +12,6 @@ public interface IAttackableUnitOffsets
     OffsetData MagicResistance { get; }
     OffsetData BonusMagicResistance { get; }
     OffsetData Targetable { get; }
+    OffsetData MovementSpeed { get; }
     IEnumerable<OffsetData> GetOffsets();
 }

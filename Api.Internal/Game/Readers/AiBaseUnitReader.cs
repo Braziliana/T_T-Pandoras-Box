@@ -80,7 +80,10 @@ internal class AiBaseUnitReader : AttackableUnitReader, IAiBaseUnitReader
         
         aiBaseUnit.AbilityPower = ReadOffset<float>(_aiBaseUnitOffsets.AbilityPower, memoryBuffer);
         aiBaseUnit.MagicPenetration = ReadOffset<float>(_aiBaseUnitOffsets.MagicPenetration, memoryBuffer);
+        aiBaseUnit.MagicPenetrationPercent = ReadOffset<float>(_aiBaseUnitOffsets.MagicPenetrationPercent, memoryBuffer);
         aiBaseUnit.Lethality = ReadOffset<float>(_aiBaseUnitOffsets.Lethality, memoryBuffer);
+        aiBaseUnit.ArmorPenetrationPercent = ReadOffset<float>(_aiBaseUnitOffsets.ArmorPenetrationPercent, memoryBuffer);
+        
         aiBaseUnit.Level = ReadOffset<int>(_aiBaseUnitOffsets.Level, memoryBuffer);
 
         if (aiBaseUnit.Level is > 30 or < 1)

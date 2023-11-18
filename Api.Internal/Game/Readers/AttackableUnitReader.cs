@@ -40,7 +40,7 @@ internal class AttackableUnitReader : GameObjectReader, IAttackableUnitReader
         attackableUnit.MagicResistance = ReadOffset<float>(_attackableUnitOffsets.MagicResistance);
         attackableUnit.BonusMagicResistance = ReadOffset<float>(_attackableUnitOffsets.BonusMagicResistance);
         attackableUnit.Targetable = ReadOffset<bool>(_attackableUnitOffsets.Targetable);
-
+        attackableUnit.MovementSpeed = ReadOffset<float>(_attackableUnitOffsets.MovementSpeed);
         if (!attackableUnit.RequireFullUpdate)
         {
             return true;
@@ -79,6 +79,7 @@ internal class AttackableUnitReader : GameObjectReader, IAttackableUnitReader
         attackableUnit.MagicResistance = ReadOffset<float>(_attackableUnitOffsets.MagicResistance, memoryBuffer);
         attackableUnit.BonusMagicResistance = ReadOffset<float>(_attackableUnitOffsets.BonusMagicResistance, memoryBuffer);
         attackableUnit.Targetable = ReadOffset<bool>(_attackableUnitOffsets.Targetable, memoryBuffer);
+        attackableUnit.MovementSpeed = ReadOffset<float>(_attackableUnitOffsets.MovementSpeed, memoryBuffer);
 
         if (!attackableUnit.RequireFullUpdate)
         {

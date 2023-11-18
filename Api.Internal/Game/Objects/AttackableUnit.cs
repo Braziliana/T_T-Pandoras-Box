@@ -23,6 +23,7 @@ internal class AttackableUnit : GameObject, IAttackableUnit
     public float CollisionRadius { get; set; }
 
     public virtual bool IsAlive => Health > 0 && !IsDead;
+    public float MovementSpeed { get; set; }
     public UnitData? UnitData { get; set; }
 
     public override string ToString()
