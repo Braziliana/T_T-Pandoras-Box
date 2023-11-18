@@ -2,12 +2,13 @@
 using Api.Game.GameInputs;
 using Api.Game.Objects;
 using Api.Inputs;
+using Api.Menus;
+using Api.Scripts;
 
 namespace Api.Internal.Game.GameInputs;
 
 internal class GameInput : IGameInput
 {
-    private readonly int _delay = 5;
     private readonly IInputManager _inputManager;
     private readonly IGameCamera _gameCamera;
     private readonly ILocalPlayer _localPlayer;
@@ -15,14 +16,21 @@ internal class GameInput : IGameInput
     private bool _mouseInputBlocked = false;
     private int _ticksToResetMouse = 1;
 
+    private readonly IValueSlider _castSpellMouseHoldDuration;
+    
     public GameInput(
         IInputManager inputManager,
         IGameCamera gameCamera,
-        ILocalPlayer localPlayer)
+        ILocalPlayer localPlayer,
+        IMainMenu mainMenu)
     {
         _inputManager = inputManager;
         _gameCamera = gameCamera;
         _localPlayer = localPlayer;
+        
+        var gameInputMenu = mainMenu.CreateMenu("GameInput", ScriptType.Input);
+        _castSpellMouseHoldDuration = gameInputMenu.AddFloatSlider("Cast extra hoover time", 1, 0, 50, 1, 2);
+        
     }
 
     public Vector2 MousePosition { get; private set; }
@@ -168,7 +176,7 @@ internal class GameInput : IGameInput
         {
             return false;
         }
-        return SendInput(position, MapSpellSlot(spellSlot));
+        return SendSpellInput(position, MapSpellSlot(spellSlot));
     }
 
     public bool CastSpell(SpellSlot spellSlot, Vector3 position)
@@ -199,6 +207,32 @@ internal class GameInput : IGameInput
             await Task.Delay(_ticksToResetMouse);
             _inputManager.MouseSetPosition(prevPos);
             await Task.Delay(_ticksToResetMouse);
+            _inputManager.BlockMouseInput(false);
+            MousePosition = prevPos;
+            _mouseInputBlocked = false;
+        });
+
+        return true;
+    }
+    
+    private bool SendSpellInput(Vector2 position, VirtualKey virtualKey)
+    {
+        if (_currentTask is not null && !_currentTask.IsCompleted)
+        {
+            return false;
+        }
+
+        _currentTask = Task.Factory.StartNew(async () =>
+        {
+            _mouseInputBlocked = true;
+            _inputManager.BlockMouseInput(true);
+            var prevPos = MousePosition;
+            _inputManager.MouseSetPosition(position);
+            await Task.Delay(_ticksToResetMouse + (int)_castSpellMouseHoldDuration.Value);
+            _inputManager.KeyboardSend(virtualKey);
+            await Task.Delay(_ticksToResetMouse);
+            _inputManager.MouseSetPosition(prevPos);
+            await Task.Delay(_ticksToResetMouse + (int)_castSpellMouseHoldDuration.Value);
             _inputManager.BlockMouseInput(false);
             MousePosition = prevPos;
             _mouseInputBlocked = false;

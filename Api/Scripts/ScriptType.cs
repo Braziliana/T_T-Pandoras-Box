@@ -13,6 +13,7 @@ namespace Api.Scripts
         OrbWalker,
         TargetSelector,
         Utility,
-        Champion
+        Champion,
+        Input
     }
 }
