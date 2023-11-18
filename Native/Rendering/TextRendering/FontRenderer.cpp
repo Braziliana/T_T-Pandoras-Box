@@ -32,14 +32,14 @@ FontRenderer::FontRenderer(Font* font)
 
     std::vector<VertexPositionUv> verts3D;
     // First Triangle
-    verts3D.push_back({{ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f }});
-    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
-    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 1.0f }});
+    verts3D.push_back({{ 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f }}); // Flipped V coordinate
+    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 1.0f }}); // Flipped V coordinate
+    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 0.0f }});
 
     // Second Triangle
-    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 0.0f }});
-    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 1.0f }});
-    verts3D.push_back({{ size, 0.0f, size }, { 1.0f, 1.0f }});
+    verts3D.push_back({{ size, 0.0f, 0.0f }, { 1.0f, 1.0f }}); // Flipped V coordinate
+    verts3D.push_back({{ 0.0f, 0.0f, size }, { 0.0f, 0.0f }});
+    verts3D.push_back({{ size, 0.0f, size }, { 1.0f, 0.0f }}); 
     
     const auto shader = ShaderManager::GetInstance().CreateShader(L"Font");
     _fontMaterial = new TexturedMaterial(_font->GetFontTexture(), shader);
@@ -58,6 +58,11 @@ void FontRenderer::Draw(const std::string& text, const Vector2& position, const 
     for(const auto& c : text)
     {
         auto instanceData = _font->GetInstance(c, characterPosition, scale, color);
+        
+        if(!_buffer2D->CanAdd())
+        {
+            Flush2D();
+        }
         _buffer2D->Add(instanceData);
     }
 }
@@ -68,6 +73,11 @@ void FontRenderer::Draw(const std::string& text, const Vector3& position, const 
     for(const auto& c : text)
     {
         auto instanceData = _font->GetInstance(c, characterPosition, scale, color);
+        
+        if(!_buffer3D->CanAdd())
+        {
+            Flush3D();
+        }
         _buffer3D->Add(instanceData);
     }
 }

@@ -191,9 +191,7 @@ public class CaitlynScript : IChampionScript
         
         return false;
     }
-
-
-
+    
     private bool Combo()
     {
         if (_scriptingState.IsCombo == false)

@@ -18,6 +18,11 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
     {
+        if(radius <= 0)
+        {
+            radius = 30;
+        }
+
         var immobileDuration = ImmobileDuration(target);
         if (immobileDuration > 0)
         {
@@ -35,6 +40,11 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictImmobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float immobileTime, CollisionType collisionType, PredictionType predictionType)
     {
+        if (radius <= 0)
+        {
+            radius = 30;
+        }
+
         var distance = Vector3.Distance(target.AiManager.CurrentPosition, sourcePosition);
         if (distance > range)
         {
@@ -51,6 +61,11 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictDashing(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
     {
+        if (radius <= 0)
+        {
+            radius = 30;
+        }
+
         var distance = Vector3.Distance(target.AiManager.TargetPosition, sourcePosition);
         if (distance > range)
         {
@@ -65,6 +80,11 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictMobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, CollisionType collisionType, PredictionType predictionType)
     {
+        if (radius <= 0)
+        {
+            radius = 30;
+        }
+
         var (predictedPosition, timeToImpact) = PredictPositionInternal(target, sourcePosition, delay, speed, radius, range, predictionType);
         if (Vector3.Distance(sourcePosition, predictedPosition) > range)
         {
@@ -121,6 +141,11 @@ public class Prediction : IPrediction
     
     private (Vector3 position, float time) PredictPositionInternal(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, PredictionType predictionType)
     {
+        if (radius <= 0)
+        {
+            radius = 30;
+        }
+
         if (!target.AiManager.IsMoving)
         {
             return (target.Position, GetTimeToHit(target.Position, sourcePosition, delay, speed, predictionType));

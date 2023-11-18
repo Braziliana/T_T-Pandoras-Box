@@ -90,23 +90,39 @@ void CircleRenderer::Release()
 
 void CircleRenderer::Filled(const Vector2& position, const float size, const Color& color) const
 {
+    if(!_buffer2D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size, size, 1.0f), color, Color(0, 0, 0, 0), 0});
 }
 
 void CircleRenderer::Filled(const Vector3& position, const float size, const Color& color) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush3D();
+    }
     _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), color, Color(0, 0, 0, 0), 0});
 }
 
 void CircleRenderer::FilledBordered(const Vector2& position, const float size, const Color& color, const Color& borderColor,
     float borderSize) const
 {
+    if(!_buffer2D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer2D->Add(CircleData{Vector3(position.x, position.y, 0.0f), Vector3(size, size, 1.0f), color, borderColor, borderSize});
 }
 
 void CircleRenderer::FilledBordered(const Vector3& position, const float size, const Color& color, const Color& borderColor,
                                     const float borderSize) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush3D();
+    }
     _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), color, borderColor, borderSize});
 }
 
@@ -117,6 +133,10 @@ void CircleRenderer::Border(const Vector2& position, const float size, const Col
 
 void CircleRenderer::Border(const Vector3& position, const float size, const Color& color, const float borderSize) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush3D();
+    }
     _buffer3D->Add(CircleData{position, Vector3(size, 1.0f, size), Color(0, 0, 0, 0), color, borderSize});
 }
 

@@ -76,7 +76,7 @@ public class InhibitorManager : IInhibitorManager
                 _itemsPool.CancelNext();
                 continue;
             }
-            
+
             _items.Add(item.NetworkId, item);
             
             if (_localPlayer.IsEnemy(item))

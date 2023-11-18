@@ -108,6 +108,11 @@ void RendererTextRect2D(const char* text, const Vector2* start, const Vector2* e
     Renderer::Instance()->Text(text, *start, *end, size, *color, textHorizontalOffset, textVerticalOffset);
 }
 
+void RendererText3D(const char* text, const Vector3* position, float size, const Color* color,
+    TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset)
+{
+    Renderer::Instance()->Text(text, *position, size, *color, textHorizontalOffset, textVerticalOffset);
+}
 
 void RendererSet3DMatrix(const glm::mat4* matrix)
 {
@@ -168,6 +173,12 @@ void Renderer::Text(const std::string& text, const Vector2& start, const Vector2
                     const TextHorizontalOffset textHorizontalOffset, const TextVerticalOffset textVerticalOffset) const
 {
     _textRenderer->Draw(text, start, end, size, color, textHorizontalOffset, textVerticalOffset);
+}
+
+void Renderer::Text(const std::string& text, const Vector3& position, float size, const Color& color,
+    TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const
+{
+    _textRenderer->Draw(text, position, size, color, textHorizontalOffset, textVerticalOffset);
 }
 
 

@@ -48,6 +48,13 @@ namespace Api
             TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
         public void Text(string text, Vector2 start, Vector2 end, float size, Color color,
             TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
+        
+        
+        public void Text(string text, Vector3 position, float size, Color color);
+
+        void Text(string text, Vector3 position, float size, Color color, TextHorizontalOffset textHorizontalOffset,
+            TextVerticalOffset textVerticalOffset);
+        
         bool IsOnScreen(Vector2 position);
         void SetProjectionViewMatrix(Matrix4x4 matrix4X4);
     }

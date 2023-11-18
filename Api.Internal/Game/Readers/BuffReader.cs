@@ -38,7 +38,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	        return;
         }
         
-        var size = (int)(end.ToInt64() - start.ToInt64()) / 0x8;
+        var size = ((int)(end.ToInt64() - start.ToInt64()) / 0x8) + 1;
         if (size > 100)
         {
 	        return;
@@ -61,7 +61,7 @@ internal class BuffReader : BaseReader, IBuffReader
 			        {
 				        altBuf.CloneFrom(buff);
 			        }
-			        else if (altBuf.Count < buff.Count && altBuf.StartTime < buff.StartTime)
+			        else if ((altBuf.Count < buff.Count && altBuf.CountAlt2 < buff.CountAlt2) && altBuf.StartTime < buff.StartTime)
 			        {
 				        altBuf.CloneFrom(buff);
 			        }
@@ -80,21 +80,22 @@ internal class BuffReader : BaseReader, IBuffReader
 	    {
 		    return null;
 	    }
-	    if (!StartRead(ptr))
+	    
+		if (!StartRead(ptr))
 	    {
 		    return null;
 	    }
 
-	    var count = ReadOffset<int>(_buffOffsets.BuffEntryBuffCount);
+        var count = ReadOffset<int>(_buffOffsets.BuffEntryBuffCount);
 	    if (count < 0)
 	    {
-		    return null;
+            return null;
 	    }
 
 	    var countAlt1 = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt1);
 	    if (countAlt1 < 0)
-	    {
-		    return null;
+        {
+            return null;
 	    }
 
 
@@ -105,35 +106,35 @@ internal class BuffReader : BaseReader, IBuffReader
         }
 
         var startTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffStartTime);
-	    if (startTime > _gameState.Time + 0.01f || startTime < 0)
-	    {
-		    return null;
+	    if (startTime > _gameState.Time + 0.1f || startTime < 0)
+        {
+            return null;
 	    }
 	    
 	    var endTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffEndTime);
 	    if (endTime < _gameState.Time || endTime < 0 || endTime < startTime)
-	    {
-		    return null;
-	    }
-	    
-	    
-	    var buffInfoPtr = ReadOffset<IntPtr>(_buffOffsets.BuffInfo);
-	    if (buffInfoPtr.ToInt64() < 0x1000)
-	    {
-		    return null;
+        {
+            return null;
 	    }
 
-	    string name = string.Empty;
-	    if (TargetProcess.ReadPointer(buffInfoPtr + (int)_buffOffsets.BuffInfoName.Offset, out var buffNamePtr))
-	    {
-		    name = ReadCharArray(buffNamePtr, Encoding.ASCII);
-		    if (string.IsNullOrWhiteSpace(name) || name.Count(char.IsLetter) < 3)
-		    {
-			    return null;
-		    }   
-	    }
 
-	    var buff = _buffPool.Get();
+		var buffInfoPtr = ReadOffset<IntPtr>(_buffOffsets.BuffInfo);
+		if (buffInfoPtr.ToInt64() < 0x1000)
+		{
+			return null;
+		}
+
+		string name = string.Empty;
+		if (TargetProcess.ReadPointer(buffInfoPtr + (int)_buffOffsets.BuffInfoName.Offset, out var buffNamePtr))
+		{
+			name = ReadCharArray(buffNamePtr, Encoding.ASCII);
+			if (string.IsNullOrWhiteSpace(name) || name.Count(char.IsLetter) < 3)
+			{
+				return null;
+			}
+		}
+
+		var buff = _buffPool.Get();
 	    buff.Pointer = ptr;
 	    buff.StartTime = startTime;
 	    buff.EndTime = endTime;
@@ -143,7 +144,7 @@ internal class BuffReader : BaseReader, IBuffReader
         buff.CountAlt2 = countAlt2;
         buff.BuffType = (BuffType)ReadOffset<byte>(_buffOffsets.BuffType);
 
-	    return buff;
+        return buff;
     }
 
     protected override IMemoryBuffer CreateBatchReadContext()

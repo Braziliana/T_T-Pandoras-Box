@@ -214,7 +214,15 @@ public partial class GameData : Page
             {
                 castTime *= -1;
             }
-            
+
+            var width = Read(spellDataDictionary, 0.0f, "mLineWidth");
+            if (width <= 0) 
+            {
+                width = Read<float[]>(spellDataDictionary, null, "castRadius")?[0] ?? 0;
+                //castRadius
+            }
+
+
             var spellData = new SpellData
             {
                 Name = Read(itemData, string.Empty, "mScriptName") ?? string.Empty,
@@ -224,7 +232,7 @@ public partial class GameData : Page
                 ManaCost = Read(spellDataDictionary, new[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}, "mana"),
                 Range = range2?[0] ?? range1?[0] ?? 0.0f,
                 Speed = Read(spellDataDictionary, 0.0f, "missileSpeed"),
-                Width = Read(spellDataDictionary, 0.0f, "mLineWidth"),
+                Width = width,
                 TargetingTypeData = Read(spellDataDictionary, string.Empty, "mTargetingTypeData", "__type") ?? string.Empty,
                 CastType = Read(spellDataDictionary, 0, "mCastType"),
                 CastDelayTime = castDelay

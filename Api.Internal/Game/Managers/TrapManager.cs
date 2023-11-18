@@ -64,6 +64,7 @@ internal class TrapManager : ITrapManager
     {
         _allayTraps.Clear();
         _enemyTraps.Clear();
+        _itemsPool.Clear();
     }
 
     public void Update(float deltaTime)

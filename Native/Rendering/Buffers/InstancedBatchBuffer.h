@@ -56,10 +56,16 @@ public:
     }
 
     void Add(const InstanceDataType& instanceData) {
-        if (_instanceDataVector.size() >= _instancesMaxCount) {
-            Flush();
-        }
         _instanceDataVector.push_back(instanceData);
+    }
+
+    bool CanAdd()
+    {
+        if (_instanceDataVector.size() >= _instancesMaxCount) {
+            return false;
+        }
+
+        return true;
     }
 
     void Flush() {
@@ -84,5 +90,10 @@ public:
         glDeleteVertexArrays(1, &_vao);
         _instanceDataVector.clear();
         _instanceDataVector.shrink_to_fit();
+    }
+
+    int Size()
+    {
+        return _instanceDataVector.size();
     }
 };

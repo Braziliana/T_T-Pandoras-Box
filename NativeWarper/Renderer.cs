@@ -63,6 +63,10 @@ public class Renderer : IRenderer
     [DllImport("Native.dll", CharSet = CharSet.Ansi)]
     private static extern void RendererTextRect2D(string text, ref Vector2 start, ref Vector2 end, float size, ref Color color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
     
+
+    [DllImport("Native.dll", CharSet = CharSet.Ansi)]
+    private static extern void RendererText3D(string text, ref Vector3 position, float size, ref Color color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
+   
     [DllImport("Native.dll", CharSet = CharSet.Ansi)]
     private static extern void RendererSet3DMatrix(ref Matrix4x4 matrix);
     
@@ -170,6 +174,16 @@ public class Renderer : IRenderer
         RendererTextRect2D(text, ref start, ref end, size, ref color, textHorizontalOffset, textVerticalOffset);
     }
 
+    public void Text(string text, Vector3 position, float size, Color color)
+    {
+        Text(text, position, size, color, TextHorizontalOffset.Center, TextVerticalOffset.Center);
+    }
+    
+    public void Text(string text, Vector3 position, float size, Color color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset)
+    {
+        RendererText3D(text, ref position, size, ref color, textHorizontalOffset, textVerticalOffset);
+    }
+    
     public bool IsOnScreen(Vector2 position)
     {
         return position.X > 0 && position.X <= _gameCamera.RendererWidth && 

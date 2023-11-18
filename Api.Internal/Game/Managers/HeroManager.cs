@@ -54,6 +54,8 @@ public class HeroManager : IHeroManager
     {
         _itemsPool.Clear();
         _items.Clear();
+        _allayList.Clear();
+        _enemyList.Clear();
         
         if (!_itemsArray.Read())
         {
@@ -75,7 +77,6 @@ public class HeroManager : IHeroManager
             }
             
             _items.Add(item.NetworkId, item);
-            
             if (_localPlayer.IsEnemy(item))
             {
                 _enemyList.Add(item);

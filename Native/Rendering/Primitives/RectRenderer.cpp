@@ -89,11 +89,19 @@ void RectRenderer::Release()
 
 void RectRenderer::Filled(const Vector2& position, const Vector2& size, const Color& color) const
 {
+    if(!_buffer2D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color, Color{0.0f, 0.0f, 0.0f, 0.0f}, 0.0f});
 }
 
 void RectRenderer::Filled(const Vector3& position, const Vector2& size, const Color& color) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush3D();
+    }
     _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), color, Color{0.0f, 0.0f, 0.0f, 0.0f}, 0.0f});
 }
 
@@ -106,22 +114,38 @@ float BorderSize(const Vector2& size, const float borderSize)
 void RectRenderer::FilledBordered(const Vector2& position, const Vector2& size, const Color& color, const Color& borderColor,
                                   const float borderSize) const
 {
+    if(!_buffer2D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), color, borderColor, borderSize});
 }
 
 void RectRenderer::FilledBordered(const Vector3& position, const Vector2& size, const Color& color, const Color& borderColor,
                                   const float borderSize) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush3D();
+    }
     _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), color, borderColor, borderSize});
 }
 
 void RectRenderer::Border(const Vector2& position, const Vector2& size, const Color& color, const float borderSize) const
 {
+    if(!_buffer2D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer2D->Add(RectData{Vector3(position.x, position.y, 0.0f), Vector3(size.x, size.y, 1.0f), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, borderSize});
 }
 
 void RectRenderer::Border(const Vector3& position, const Vector2& size, const Color& color, const float borderSize) const
 {
+    if(!_buffer3D->CanAdd())
+    {
+        Flush2D();
+    }
     _buffer3D->Add(RectData{position, Vector3(size.x, 1.0f, size.y), Color{0.0f, 0.0f, 0.0f, 0.0f}, color, borderSize});
 }
 

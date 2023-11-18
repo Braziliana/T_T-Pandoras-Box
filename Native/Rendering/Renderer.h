@@ -63,6 +63,8 @@ public:
     void Text(const std::string& text, const Vector2& position, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
     void Text(const std::string& text, const Vector2& start, const Vector2& end, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
 
+    void Text(const std::string& text, const Vector3& position, float size, const Color& color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset) const;
+
     static Renderer* CreateInstance(HDC hdc, int width, int height);
     static Renderer* Instance();
     static void Destroy();
@@ -94,6 +96,8 @@ extern "C" {
     
     __declspec(dllexport) void RendererText2D(const char* text, const Vector2* position, float size, const Color* color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
     __declspec(dllexport) void RendererTextRect2D(const char* text, const Vector2* start, const Vector2* end, float size, const Color* color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
+
+    __declspec(dllexport) void RendererText3D(const char* text, const Vector3* position, float size, const Color* color, TextHorizontalOffset textHorizontalOffset, TextVerticalOffset textVerticalOffset);
 
     __declspec(dllexport) void RendererSet3DMatrix(const glm::mat4* matrix);
 }

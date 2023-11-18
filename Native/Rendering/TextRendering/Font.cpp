@@ -111,7 +111,7 @@ FontCharacterInstance Font::GetInstance(char c, Vector3& position, const float s
 
     position.x += ch.advance * scale; 
     return  {
-            {xPos, 0.0f, zPos},
+            {xPos, position.y, zPos},
             {ch.size.x * scale, 1.0f, ch.size.y * scale},
             ch.uv,
             ch.uvSize,

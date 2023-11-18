@@ -83,11 +83,11 @@ public class TwitchScript : IChampionScript
         var comboMenu = _menu.AddSubMenu("Combo");
         _useQInCombo = comboMenu.AddToggle("Use Q in combo", true);
         _useWInCombo = comboMenu.AddToggle("Use W in combo", true);
-        _useEInCombo = comboMenu.AddToggle("Use E in combo 5 stacks", true);
+        _useEInCombo = comboMenu.AddToggle("Use E in combo 6 stacks", true);
 
         var harassMenu = _menu.AddSubMenu("Harass");
         _useWInHarass = harassMenu.AddToggle("Use W in harass", true);
-        _useEInHarass = harassMenu.AddToggle("Use E in harass 5 stacks", true);
+        _useEInHarass = harassMenu.AddToggle("Use E in harass 6 stacks", true);
         
         var hitChanceMenu = _menu.AddSubMenu("Hit chance");
         _WHitChance = hitChanceMenu.AddFloatSlider("W hit chance", 0.8f, 0.0f, 1.0f, 0.05f, 2);
@@ -139,7 +139,7 @@ public class TwitchScript : IChampionScript
             return 0;
         }
         
-        if(buff.CountAlt2 > 6 || buff.CountAlt2 < 0)
+        if(buff.CountAlt2 is > 6 or < 0)
         {
             return 0;
         }
@@ -247,10 +247,11 @@ public class TwitchScript : IChampionScript
 
     private bool Auto()
     {
-        var enemies = _heroManager.GetEnemyHeroes();
+        var enemies = _heroManager.GetEnemyHeroes().ToList();
         if (_autoEKs.Toggled && CanCast(_localPlayer.E))
         {
             var eSpell = _localPlayer.E;
+
             foreach (var hero in enemies.Where(x => x.Distance(_localPlayer) <= eSpell.Range))
             {
                 if (hero.Health < GetEDamage(hero))
@@ -299,7 +300,10 @@ public class TwitchScript : IChampionScript
     private bool CastW(IHero target)
     {
         return _spellCaster.TryCastPredicted(_localPlayer.W, target, _WReactionTime.Value / 1000.0f, 0.0f,
-            _WHitChance.Value, CollisionType.None, PredictionType.Point);
+           _WHitChance.Value, CollisionType.None, PredictionType.Point);
+
+        //return _spellCaster.TryCastPredicted(_localPlayer.W, target, _WReactionTime.Value / 1000.0f, 0.0f,
+        //    _WHitChance.Value, CollisionType.None, PredictionType.Point);
     }
 
     private bool CastE()
@@ -316,10 +320,7 @@ public class TwitchScript : IChampionScript
     {
         foreach (var enemyHero in _heroManager.GetEnemyHeroes(_localPlayer.E.Range))
         {
-            if (_gameCamera.WorldToScreen(enemyHero.Position, out var screenPosition))
-            {
-                _renderer.Text(GetEStacks(enemyHero).ToString(), screenPosition, 16, Color.Cyan, TextHorizontalOffset.Center, TextVerticalOffset.Center);
-            }
+            _renderer.Text(GetEStacks(enemyHero).ToString() + "\0", enemyHero.Position, 36, Color.Cyan);
         }
     }
 }
