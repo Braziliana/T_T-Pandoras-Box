@@ -39,11 +39,11 @@ internal class BuffReader : BaseReader, IBuffReader
         }
         
         var size = ((int)(end.ToInt64() - start.ToInt64()) / 0x8) + 1;
-        if (size > 100)
+        if (size > 255)
         {
 	        return;
         }
-        
+
         for (var i = 0; i < size; i++)
         {
 	        var ptr = start + 0x8 * i;
@@ -106,13 +106,13 @@ internal class BuffReader : BaseReader, IBuffReader
         }
 
         var startTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffStartTime);
-	    if (startTime > _gameState.Time + 0.1f || startTime < 0)
+	    if (startTime > _gameState.Time + 1f || startTime < 0)
         {
             return null;
 	    }
 	    
 	    var endTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffEndTime);
-	    if (endTime < _gameState.Time || endTime < 0 || endTime < startTime)
+	    if (endTime < _gameState.Time + 0.5f || endTime < 0 || endTime + 0.5f < startTime)
         {
             return null;
 	    }
