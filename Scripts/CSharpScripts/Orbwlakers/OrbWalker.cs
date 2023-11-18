@@ -98,7 +98,7 @@ public class OrbWalker : IOrbWalkScript
     
     private float GetAttackTime()
     {
-        return MathF.Max(1.0f / _localPlayer.AttackSpeed, _pingSlider.Value / 100);
+        return MathF.Max(1.0f / _localPlayer.AttackSpeed, _pingSlider.Value / 1000);
     }
 
     private float GetWindupTime()

@@ -285,7 +285,6 @@ public class CaitlynScript : IChampionScript
             return false;
         }
 
-        float width = 60;
         if (_trapManager.GetAllyTraps(target.Position, 200).Any(x => x.ObjectNameHash == _trapNameHash))
         {
             return false;
@@ -295,7 +294,7 @@ public class CaitlynScript : IChampionScript
         var spellData = spell.SpellData;
         if (spellData == null) return false;
         return _spellCaster.TryCastPredicted(spell, target, spellData.CastDelayTime + 0.1f, 0.0f,
-            width, spellData.Range, _WReactionTime.Value / 1000.0f, 0.0f,
+            spellData.Width, spellData.Range, _WReactionTime.Value / 1000.0f, 0.0f,
             _WHitChance.Value, CollisionType.None, PredictionType.Point);
     }
 

@@ -320,7 +320,7 @@ public class TwitchScript : IChampionScript
     {
         foreach (var enemyHero in _heroManager.GetEnemyHeroes(_localPlayer.E.Range))
         {
-            _renderer.Text(GetEDamage(enemyHero).ToString(), enemyHero.Position, 36, Color.Cyan);
+            _renderer.Text(GetEStacks(enemyHero).ToString(), enemyHero.Position, 36, Color.Cyan);
         }
     }
 }

@@ -2,6 +2,8 @@
 using Api.Game.Calculations;
 using Api.Game.Managers;
 using Api.Game.Objects;
+using Api.Menus;
+using Api.Scripts;
 
 namespace Api.Internal.Game.Calculations;
 
@@ -10,19 +12,28 @@ public class Prediction : IPrediction
     private readonly IGameState _gameState;
     private readonly IHitChanceCalculator _hitChanceCalculator;
 
-    public Prediction(IGameState gameState, IHitChanceCalculator hitChanceCalculator)
+    
+    private readonly IValueSlider _pingSlider;
+    private readonly IValueSlider _rangePercent;
+    private readonly IValueSlider _radiusPercent;
+    private readonly IValueSlider _extraDelay;
+    
+    public Prediction(IGameState gameState, IHitChanceCalculator hitChanceCalculator, IMainMenu mainMenu)
     {
         _gameState = gameState;
         _hitChanceCalculator = hitChanceCalculator;
+
+        var predictionMenu = mainMenu.CreateMenu("Prediction", ScriptType.Prediction);
+        _pingSlider = predictionMenu.AddFloatSlider("Ping", 35, 0, 250, 1, 2);
+        _rangePercent = predictionMenu.AddFloatSlider("Spell range modifier", 1.0f, 0, 1, 0.05f, 2);
+        _radiusPercent = predictionMenu.AddFloatSlider("Spell width modifier", 1.0f, 0, 1, 0.05f, 2);
+        _extraDelay = predictionMenu.AddFloatSlider("Spell extra delay", 0.0f, 0, 100, 1f, 2);
     }
+
+    public float Ping { get; set; }
 
     public PredictionResult PredictPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
     {
-        if(radius <= 0)
-        {
-            radius = 30;
-        }
-
         var immobileDuration = ImmobileDuration(target);
         if (immobileDuration > 0)
         {
@@ -40,6 +51,9 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictImmobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float immobileTime, CollisionType collisionType, PredictionType predictionType)
     {
+        delay += _pingSlider.Value/2000.0f + _extraDelay.Value/1000.0f;
+        radius *= _radiusPercent.Value;
+        range *= _rangePercent.Value;
         if (radius <= 0)
         {
             radius = 30;
@@ -61,6 +75,9 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictDashing(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float dashTimeThreshold, CollisionType collisionType, PredictionType predictionType)
     {
+        delay += _pingSlider.Value/2000.0f + _extraDelay.Value/1000.0f;
+        radius *= _radiusPercent.Value;
+        range *= _rangePercent.Value;
         if (radius <= 0)
         {
             radius = 30;
@@ -80,6 +97,9 @@ public class Prediction : IPrediction
 
     public PredictionResult PredictMobile(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range, float reactionTime, CollisionType collisionType, PredictionType predictionType)
     {
+        delay += _pingSlider.Value/2000.0f + _extraDelay.Value/1000.0f;
+        radius *= _radiusPercent.Value;
+        range *= _rangePercent.Value;
         if (radius <= 0)
         {
             radius = 30;
