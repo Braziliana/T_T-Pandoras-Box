@@ -12,7 +12,9 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
     public OffsetData BonusAttackDamage { get; }
     public OffsetData AbilityPower { get; }
     public OffsetData MagicPenetration { get; }
+    public OffsetData MagicPenetrationPercent { get; }
     public OffsetData Lethality { get; }
+    public OffsetData ArmorPenetrationPercent { get; }
     public OffsetData Level { get; set; }
 
     public AiBaseUnitOffsets(IConfiguration configuration)
@@ -26,7 +28,9 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
         BonusAttackDamage = new OffsetData(nameof(BonusAttackDamage), Convert.ToUInt32(cs[nameof(BonusAttackDamage)], 16), typeof(float));
         AbilityPower = new OffsetData(nameof(AbilityPower), Convert.ToUInt32(cs[nameof(AbilityPower)], 16), typeof(float));
         MagicPenetration = new OffsetData(nameof(MagicPenetration), Convert.ToUInt32(cs[nameof(MagicPenetration)], 16), typeof(float));
+        MagicPenetrationPercent = new OffsetData(nameof(MagicPenetrationPercent), Convert.ToUInt32(cs[nameof(MagicPenetrationPercent)], 16), typeof(float));
         Lethality = new OffsetData(nameof(Lethality), Convert.ToUInt32(cs[nameof(Lethality)], 16), typeof(float));
+        ArmorPenetrationPercent = new OffsetData(nameof(ArmorPenetrationPercent), Convert.ToUInt32(cs[nameof(ArmorPenetrationPercent)], 16), typeof(float));
         Level = new OffsetData(nameof(Level), Convert.ToUInt32(cs[nameof(Level)], 16), typeof(int));
     }
     
@@ -39,7 +43,9 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
         yield return BonusAttackDamage;
         yield return AbilityPower;
         yield return MagicPenetration;
+        yield return MagicPenetrationPercent;
         yield return Lethality;
+        yield return ArmorPenetrationPercent;
         yield return Level;
     }
 }

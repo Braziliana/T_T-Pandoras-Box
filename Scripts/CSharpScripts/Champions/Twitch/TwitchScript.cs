@@ -158,7 +158,7 @@ public class TwitchScript : IChampionScript
         var stacks = GetEStacks(target);
         if (stacks < 1) return 0.0f;
         
-        var physicalDamage = _eDamage[spell.Level-1] + 0.35f * stacks * _localPlayer.BonusAttackDamage + _eStackDamage[spell.Level - 1];
+        var physicalDamage = _eDamage[spell.Level-1] + 0.35f * stacks * _localPlayer.BonusAttackDamage + _eStackDamage[spell.Level - 1] * stacks;
         var magicDamage = (0.30f * stacks * _localPlayer.AbilityPower);
         
         return _damageCalculator.GetPhysicalDamage(_localPlayer, target, physicalDamage) + _damageCalculator.GetMagicDamage(_localPlayer, target, magicDamage);
@@ -320,7 +320,7 @@ public class TwitchScript : IChampionScript
     {
         foreach (var enemyHero in _heroManager.GetEnemyHeroes(_localPlayer.E.Range))
         {
-            _renderer.Text(GetEStacks(enemyHero).ToString() + "\0", enemyHero.Position, 36, Color.Cyan);
+            _renderer.Text(GetEDamage(enemyHero).ToString(), enemyHero.Position, 36, Color.Cyan);
         }
     }
 }

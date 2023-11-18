@@ -95,6 +95,7 @@ internal class GameManager : IGameManager
         {
             LocalPlayer.Pointer = localPlayerPointer;
             LocalPlayer.IsLocalHero = true;
+            //Console.WriteLine(LocalPlayer.Pointer.ToString("X"));
             _heroReader.ReadHero(LocalPlayer);
         }
         else

@@ -24,17 +24,17 @@ internal class DamageCalculator : IDamageCalculator
 
     public float GetPhysicalDamage(IAiBaseUnit source, IAttackableUnit destination, float damage)
     {
-        return GetDamage(damage, destination.TotalArmor, source.Lethality, 0.0f);
+        return GetDamage(damage, destination.TotalArmor, source.FlatArmorPenetration, source.ArmorPenetrationPercent);
     }
     
     public float GetMagicDamage(IAiBaseUnit source, IAttackableUnit destination, float damage)
     {
-        return GetDamage(damage, destination.TotalMagicResistance, source.MagicPenetration, 0.0f);
+        return GetDamage(damage, destination.TotalMagicResistance, source.MagicPenetration, source.MagicPenetrationPercent);
     }
     
     public float GetDamage(float damage, float resistance, float flatPenetration, float percentPenetration)
     {
-        //resistance -= resistance * percentPenetration;
+        resistance *= percentPenetration;
         resistance -= flatPenetration;
 
         float damageMultiplier;

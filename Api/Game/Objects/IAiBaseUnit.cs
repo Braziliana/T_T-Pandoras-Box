@@ -14,6 +14,9 @@ public interface IAiBaseUnit : IAttackableUnit
 	float BasicAttackWindup { get; set; }
 	float AbilityPower { get; set; }
 	float MagicPenetration { get; set; }
+	float MagicPenetrationPercent { get; set; }
 	float Lethality { get; set; }
+	float FlatArmorPenetration { get; }
+	float ArmorPenetrationPercent { get; set; }
 	int Level { get; set; }
 }

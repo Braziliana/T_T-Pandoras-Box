@@ -6,6 +6,7 @@ namespace Api.Internal.Game.Objects;
 internal class AiBaseUnit : AttackableUnit, IAiBaseUnit
 {
     public int CurrentTargetIndex { get; set; }
+    public float ArmorPenetrationPercent { get; set; }
     public int Level { get; set; }
     public float BaseAttackRange { get; set; }
     public float AttackRange => BaseAttackRange + CollisionRadius;
@@ -18,6 +19,7 @@ internal class AiBaseUnit : AttackableUnit, IAiBaseUnit
     public float BasicAttackWindup { get; set; }
     public float AbilityPower { get; set; }
     public float MagicPenetration { get; set; }
+    public float MagicPenetrationPercent { get; set; }
     public float Lethality { get; set; }
     
     public float FlatArmorPenetration => GetFlatArmorPenetration();
