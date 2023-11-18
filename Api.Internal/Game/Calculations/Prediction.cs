@@ -239,7 +239,7 @@ public class Prediction : IPrediction
             }
         }
 
-        return (target.AiManager.TargetPosition, delay); // This will be the last waypoint if the time is long enough
+        return (currentPosition, delay);
     }
 
 
