@@ -294,7 +294,7 @@ public class Prediction : IPrediction
                 missileTravelDistance += elapsedTime * speed;
             }
             
-            if (missileTravelDistance + halfTargetCollision + halfMissileCollision >= distanceFromSource)
+            if (MathF.Abs(missileTravelDistance - distanceFromSource) <= halfMissileCollision / 2)
             {
                 return (predictedPosition, elapsedTime);
             }

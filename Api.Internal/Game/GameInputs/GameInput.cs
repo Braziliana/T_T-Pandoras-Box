@@ -37,13 +37,13 @@ internal class GameInput : IGameInput
 
     public bool IssueOrder(Vector2 position, IssueOrderType issueOrderType)
     {
+        if (_currentTask is not null && !_currentTask.IsCompleted)
+        {
+            return false;
+        }
         switch (issueOrderType)
         {
             case IssueOrderType.Move:
-                if (_currentTask is not null && !_currentTask.IsCompleted)
-                {
-                    return false;
-                }
                 _inputManager.MouseSend(MouseButton.Right, position);
                 break;
             case IssueOrderType.Attack:
@@ -125,29 +125,10 @@ internal class GameInput : IGameInput
 
         return true;
     }
-
-    private bool CanCast(SpellSlot spellSlot)
-    {
-        if (_currentTask is not null && !_currentTask.IsCompleted)
-        {
-            return false;
-        }
-        
-        if (_localPlayer.ActiveCastSpell.IsActive)
-        {
-            if (_localPlayer.ActiveCastSpell.Type != ActiveSpellType.Unknown &&
-                _localPlayer.ActiveCastSpell.Type != ActiveSpellType.AutoAttack)
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
     
     public bool CastSpell(SpellSlot spellSlot)
     {
-        if (!CanCast(spellSlot))
+        if (_currentTask is not null && !_currentTask.IsCompleted)
         {
             return false;
         }
@@ -158,7 +139,7 @@ internal class GameInput : IGameInput
 
     public bool SelfCastSpell(SpellSlot spellSlot)
     {
-        if (!CanCast(spellSlot))
+        if (_currentTask is not null && !_currentTask.IsCompleted)
         {
             return false;
         }
@@ -172,7 +153,7 @@ internal class GameInput : IGameInput
 
     public bool CastSpell(SpellSlot spellSlot, Vector2 position)
     {
-        if (!CanCast(spellSlot))
+        if (_currentTask is not null && !_currentTask.IsCompleted)
         {
             return false;
         }
@@ -227,6 +208,7 @@ internal class GameInput : IGameInput
             _mouseInputBlocked = true;
             _inputManager.BlockMouseInput(true);
             var prevPos = MousePosition;
+            await Task.Delay(_ticksToResetMouse);
             _inputManager.MouseSetPosition(position);
             await Task.Delay(_ticksToResetMouse + (int)_castSpellMouseHoldDuration.Value);
             _inputManager.KeyboardSend(virtualKey);
