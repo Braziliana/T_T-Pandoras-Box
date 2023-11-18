@@ -57,15 +57,11 @@ internal class BuffReader : BaseReader, IBuffReader
 	        {
 		        if (buffDictionary.TryGetValue(buff.Name, out var altBuf))
 		        {
-			        if (altBuf.EndTime < buff.EndTime)
-			        {
-				        altBuf.CloneFrom(buff);
-			        }
-			        else if ((altBuf.Count < buff.Count && altBuf.CountAlt2 < buff.CountAlt2) && altBuf.StartTime < buff.StartTime)
-			        {
-				        altBuf.CloneFrom(buff);
-			        }
-		        }
+					if (altBuf.Count < buff.Count || altBuf.CountAlt2 < buff.CountAlt2)
+					{
+						altBuf.CloneFrom(buff);
+					}
+                }
 		        else
 		        {
 			        buffDictionary.Add(buff.Name, buff);
@@ -86,37 +82,28 @@ internal class BuffReader : BaseReader, IBuffReader
 		    return null;
 	    }
 
-        var count = ReadOffset<int>(_buffOffsets.BuffEntryBuffCount);
-	    if (count < 0)
+		var buffType = ReadOffset<sbyte>(_buffOffsets.BuffType);
+		if(buffType < 0 || buffType > 38)
+		{
+			return null;
+		}
+
+        var count = ReadOffset<byte>(_buffOffsets.BuffEntryBuffCount);
+	    if (count < 1)
 	    {
             return null;
 	    }
 
-	    var countAlt1 = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt1);
-	    if (countAlt1 < 0)
-        {
-            return null;
-	    }
-
-
-        var countAlt2 = ReadOffset<int>(_buffOffsets.BuffEntryBuffCountAlt2);
-        if (countAlt2 < 0)
-        {
-            return null;
-        }
+	    var countAlt1 = ReadOffset<byte>(_buffOffsets.BuffEntryBuffCountAlt1);
+        var countAlt2 = ReadOffset<byte>(_buffOffsets.BuffEntryBuffCountAlt2);
 
         var startTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffStartTime);
-	    if (startTime > _gameState.Time + 1f || startTime < 0)
+	    if (startTime < 0)
         {
             return null;
 	    }
 	    
 	    var endTime = ReadOffset<float>(_buffOffsets.BuffEntryBuffEndTime);
-	    if (endTime < _gameState.Time + 0.5f || endTime < 0 || endTime + 0.5f < startTime)
-        {
-            return null;
-	    }
-
 
 		var buffInfoPtr = ReadOffset<IntPtr>(_buffOffsets.BuffInfo);
 		if (buffInfoPtr.ToInt64() < 0x1000)
@@ -142,7 +129,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	    buff.Count = count;
 	    buff.CountAlt1 = countAlt1;
         buff.CountAlt2 = countAlt2;
-        buff.BuffType = (BuffType)ReadOffset<byte>(_buffOffsets.BuffType);
+        buff.BuffType = (BuffType)buffType;
 
         return buff;
     }
