@@ -106,7 +106,7 @@ namespace Scripts.CSharpScripts.Champions.Ezreal
             _autoQCC = autoMenu.AddToggle("Auto Q CC enemy", true);
             _autoWCC = autoMenu.AddToggle("Auto W CC enemy", true);
             _autoRCC = autoMenu.AddToggle("Auto R CC enemy", true);
-            _autoQDashing = autoMenu.AddToggle("Auto W dashing enemy", true);
+            _autoQDashing = autoMenu.AddToggle("Auto Q dashing enemy", true);
         }
 
         public void OnRender(float deltaTime)
