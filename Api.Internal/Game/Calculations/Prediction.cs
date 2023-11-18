@@ -166,27 +166,98 @@ public class Prediction : IPrediction
             radius = 30;
         }
 
-        if (!target.AiManager.IsMoving)
+        if (predictionType == PredictionType.Point)
         {
-            return (target.Position, GetTimeToHit(target.Position, sourcePosition, delay, speed, predictionType));
+            return PredictPointCastPosition(target, sourcePosition, delay, radius, range);
         }
+
+        return PredictLineCastPosition(target, sourcePosition, delay, speed, radius, range);
+    }
+
+
+    private (Vector3 position, float time) PredictPointCastPosition(IHero target, Vector3 sourcePosition, float delay,
+        float radius, float range)
+    {
+        // var halfTargetCollision = target.CollisionRadius / 2;
+        // var halfMissileCollision = radius / 2;
+        // var timeStep = target.AiManager.MovementSpeed > 0 ? halfMissileCollision / target.AiManager.MovementSpeed : 0.01f;
+        //
+        // var predictedPosition = target.AiManager.CurrentPosition;
+        // var waypoints = target.AiManager.GetRemainingPath().ToList();
+        // float elapsedTime = 0;
+        // var currentWaypointIndex = 0;
+        // while (elapsedTime < delay)
+        // {
+        //     if (currentWaypointIndex >= waypoints.Count)
+        //     {
+        //         break;
+        //     }
+        //     
+        //     var targetDirection = Vector3.Normalize(waypoints[currentWaypointIndex] - predictedPosition);
+        //     var distanceToNextWaypoint = Vector3.Distance(predictedPosition, waypoints[currentWaypointIndex]);
+        //     var distanceThisStep = target.AiManager.MovementSpeed * timeStep;
+        //
+        //     if (distanceThisStep >= distanceToNextWaypoint)
+        //     {
+        //         predictedPosition = waypoints[currentWaypointIndex];
+        //         currentWaypointIndex++;
+        //     }
+        //     else
+        //     {
+        //         predictedPosition += targetDirection * distanceThisStep;
+        //     }
+        //
+        //     var distanceFromSource = Vector3.Distance(sourcePosition, predictedPosition);
+        //     if (distanceFromSource > range)
+        //     {
+        //         return (predictedPosition, elapsedTime);
+        //     }
+        //     
+        //     elapsedTime += timeStep;
+        // }
+        // return (predictedPosition, elapsedTime);
+
+        var totalDistance = target.AiManager.MovementSpeed * delay;
+        var waypoints = target.AiManager.GetRemainingPath().ToList();
+        var currentPosition = waypoints[0];
+
+        for (var i = 0; i < waypoints.Count - 1; i++)
+        {
+            var nextPosition = waypoints[i + 1];
+            var distanceToNext = Vector3.Distance(currentPosition, nextPosition);
+
+            if (totalDistance >= distanceToNext)
+            {
+                totalDistance -= distanceToNext;
+                currentPosition = nextPosition;
+            }
+            else
+            {
+                var direction = Vector3.Normalize(nextPosition - currentPosition);
+                var finalPosition = currentPosition + direction * totalDistance;
+                return (finalPosition, delay);
+            }
+        }
+
+        return (target.AiManager.TargetPosition, delay); // This will be the last waypoint if the time is long enough
+    }
+
+
+    private (Vector3 position, float time) PredictLineCastPosition(IHero target, Vector3 sourcePosition, float delay, float speed, float radius, float range)
+    {
+        var halfTargetCollision = target.CollisionRadius / 2;
+        var halfMissileCollision = radius / 2;
+
+        var travelTime = range / speed;
+        var timeStep = halfMissileCollision / speed;
         
         var predictedPosition = target.AiManager.CurrentPosition;
         var currentWaypointIndex = 0;
-        var timeStep = radius / speed;
-        if (timeStep < 0.01f)
-        {
-            timeStep = 0.01f;
-        }
-        var totalSimulationTime = (range / speed) + delay;
         float elapsedTime = 0;
 
         var waypoints = target.AiManager.GetRemainingPath().ToList();
-
-        var halfTargetCollision = target.CollisionRadius / 2;
-        var halfMissileCollision = radius / 2;
-        
-        while (elapsedTime < totalSimulationTime)
+        var missileTravelDistance = 0.0f;
+        while (elapsedTime < travelTime)
         {
             if (currentWaypointIndex >= waypoints.Count)
             {
@@ -217,16 +288,12 @@ public class Prediction : IPrediction
             
             if (elapsedTime >= delay)
             {
-                if (predictionType == PredictionType.Point)
-                {
-                    return (predictedPosition, elapsedTime);
-                }
-
-                var missileTravel = elapsedTime * speed;
-                if (missileTravel + halfTargetCollision + halfMissileCollision >= distanceFromSource)
-                {
-                    return (predictedPosition, elapsedTime);
-                }
+                missileTravelDistance += elapsedTime * speed;
+            }
+            
+            if (missileTravelDistance + halfTargetCollision + halfMissileCollision >= distanceFromSource)
+            {
+                return (predictedPosition, elapsedTime);
             }
         }
 
