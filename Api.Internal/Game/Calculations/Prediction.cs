@@ -183,13 +183,16 @@ public class Prediction : IPrediction
 
         var waypoints = target.AiManager.GetRemainingPath().ToList();
 
+        var halfTargetCollision = target.CollisionRadius / 2;
+        var halfMissileCollision = radius / 2;
+        
         while (elapsedTime < totalSimulationTime)
         {
             if (currentWaypointIndex >= waypoints.Count)
             {
                 break;
             }
-
+            
             var targetDirection = Vector3.Normalize(waypoints[currentWaypointIndex] - predictedPosition);
             var distanceToNextWaypoint = Vector3.Distance(predictedPosition, waypoints[currentWaypointIndex]);
             var distanceThisStep = target.AiManager.MovementSpeed * timeStep;
@@ -204,10 +207,26 @@ public class Prediction : IPrediction
                 predictedPosition += targetDirection * distanceThisStep;
             }
 
-            elapsedTime += timeStep;
-            if (Vector3.Distance(sourcePosition, predictedPosition) > range)
+            var distanceFromSource = Vector3.Distance(sourcePosition, predictedPosition);
+            if (distanceFromSource > range)
             {
                 return (predictedPosition, elapsedTime);
+            }
+            
+            elapsedTime += timeStep;
+            
+            if (elapsedTime >= delay)
+            {
+                if (predictionType == PredictionType.Point)
+                {
+                    return (predictedPosition, elapsedTime);
+                }
+
+                var missileTravel = elapsedTime * speed;
+                if (missileTravel + halfTargetCollision + halfMissileCollision >= distanceFromSource)
+                {
+                    return (predictedPosition, elapsedTime);
+                }
             }
         }
 
