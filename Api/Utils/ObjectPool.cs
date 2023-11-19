@@ -28,8 +28,9 @@ public class ObjectPool<T>
             return _create();
         }
         
+        var item = _items[_currentIndex];
         _currentIndex--;
-        return _items[_currentIndex];
+        return item;
     }
 
     public void Stash(T item)

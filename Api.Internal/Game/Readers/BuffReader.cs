@@ -44,7 +44,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	        return;
         }
 
-        for (var i = 0; i < size; i++)
+        for (var i = 0; i < size; i+=2)
         {
 	        var ptr = start + 0x8 * i;
 	        if (ptr.ToInt64() < 0x1000)
@@ -66,7 +66,7 @@ internal class BuffReader : BaseReader, IBuffReader
 		        {
 			        buffDictionary.Add(buff.Name, buff);
 		        }
-	        }
+            }
         }
     }
     
@@ -83,7 +83,7 @@ internal class BuffReader : BaseReader, IBuffReader
 	    }
 
 		var buffType = ReadOffset<sbyte>(_buffOffsets.BuffType);
-		if(buffType < 0 || buffType > 38)
+		if(buffType < 0 || buffType > 60)
 		{
 			return null;
 		}
