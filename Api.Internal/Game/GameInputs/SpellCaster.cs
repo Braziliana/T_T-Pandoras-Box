@@ -70,7 +70,7 @@ namespace Api.Internal.Game.GameInputs
                 return false;
             }
 
-            return TryCast(spell, target.Position);
+            return TryCast(spell, prediction.Position);
         }
 
         public bool TryCast(ISpell spell, IAttackableUnit target)

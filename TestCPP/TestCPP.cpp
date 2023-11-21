@@ -29,7 +29,7 @@ byte* GetFunctionBytes(byte* func, int size) {
     auto result = new byte[size];
 
     for (auto i = 0; i < size; i++) {
-
+        result[i] = func[i];
     }
 
     return result;
@@ -49,15 +49,6 @@ struct SpellbookParamCast
 
 int main(int argc, char* argv[])
 {
-    auto s = std::make_shared<SpellbookParamCast>();
-    std::vector<std::pair<BuffInstance*, std::shared_ptr<SpellbookParamCast>*>>* test = new  std::vector<std::pair<BuffInstance*, std::shared_ptr<SpellbookParamCast>*>>();
-    test->push_back({new BuffInstance(), &s });
-    test->push_back({ new BuffInstance(), &s });
-
-    std::cout << std::hex << (DWORD64)test << std::endl;
-    std::cout << std::hex << (DWORD64)test->begin()._Ptr << std::endl;
-    std::cout << std::hex << (DWORD64)test->end()._Ptr << std::endl;
-    
     //0x0 Start
     //0x8 End
 
