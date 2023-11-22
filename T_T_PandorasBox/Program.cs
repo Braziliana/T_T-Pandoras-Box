@@ -53,6 +53,21 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+if(args.Any(x => x == "Hybrid=true"))
+{
+    var process = host.Services.GetRequiredService<ITargetProcess>();
+    process.SetTargetProcessName("League of Legends.exe");
+    process.Hook();
+    if (process.LoadDll("T_THybrid.dll"))
+    {
+        Console.WriteLine("Dll Loaded");
+    }
+    else
+    {
+        Console.WriteLine("Failed to load dll");
+    }
+}
+
 var overlay = host.Services.GetRequiredService<Overlay>();
 overlay.Run();
 

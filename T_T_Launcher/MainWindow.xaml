@@ -15,6 +15,8 @@
             <CheckBox x:Name="AutoRunCheckBox" Content="Auto run" VerticalAlignment="Center"></CheckBox>
             <Label x:Name="StatusLabel" Content="Waiting for game" VerticalAlignment="Center" Margin="5,0,0,0"></Label>
             <Button x:Name="RunButton" Content="Run" VerticalAlignment="Center" Margin="5,0,0,0" Click="RunButton_OnClick"></Button>
+
+            <CheckBox x:Name="HybridCheckBox" Content="Hybrid runs external and internal" VerticalAlignment="Center" Margin="5,0,0,0"></CheckBox>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5">
             <Button x:Name="LobbyButton" Content="Lobby" Click="LobbyButton_OnClick"></Button>

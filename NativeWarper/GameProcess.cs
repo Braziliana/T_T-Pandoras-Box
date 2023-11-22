@@ -118,6 +118,9 @@ public unsafe class GameProcess : ITargetProcess
 
     [DllImport("Native.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
     public static extern IntPtr PatternScannerFindOffsetWithMask(byte[] pattern, string mask, uint patternSize, int pos);
+    
+    [DllImport("Native.dll", CharSet = CharSet.Unicode, CallingConvention = CallingConvention.Cdecl)]
+    private static extern bool ProcessLoadDll(string processName);
 
     private readonly Dictionary<uint, IMemoryBuffer> _buffers = new Dictionary<uint, IMemoryBuffer>();
     private readonly Dictionary<uint, byte[]> _byteBuffers = new Dictionary<uint, byte[]>();
@@ -244,6 +247,14 @@ public unsafe class GameProcess : ITargetProcess
     public IntPtr FindOffset(byte[] pattern, string mask, uint patternSize, int pos)
     {
         return PatternScannerFindOffsetWithMask(pattern, mask, patternSize, pos);
+    }
+
+    public bool LoadDll(string name)
+    {
+        var executablePath = AppDomain.CurrentDomain.BaseDirectory;
+        var dllPath = Path.Combine(executablePath, name);
+        
+        return ProcessLoadDll(dllPath);
     }
     
     public void Dispose()

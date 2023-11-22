@@ -41,6 +41,8 @@ public:
     bool Hook();
     static DWORD GetProcessId(const std::wstring& processName);
     static uintptr_t GetModuleBaseAddress(DWORD processId, const std::wstring& moduleName);
+
+    bool LoadDll(const std::wstring& dllPath) const;
 };
 
 template <typename T>
@@ -61,9 +63,12 @@ extern "C" {
     __declspec(dllexport) Process* GetProcess();
     __declspec(dllexport) void ProcessSetTargetProcessName(const wchar_t* processName);
     __declspec(dllexport) bool ProcessRead(uintptr_t address, unsigned int size, unsigned char* result);
-    __declspec(dllexport) bool ProcessReadBuffer(uintptr_t address, MemoryBuffer* memoryBuffer);
+    __declspec(dllexport) bool ProcessReadBuffer(uintptr_t address, const MemoryBuffer* memoryBuffer);
     __declspec(dllexport) bool ProcessReadModule(unsigned int offset, unsigned int size, unsigned char* result);
-    __declspec(dllexport) bool ProcessReadModuleBuffer(unsigned int offset, MemoryBuffer* memoryBuffer);
+    __declspec(dllexport) bool ProcessReadModuleBuffer(unsigned int offset, const MemoryBuffer* memoryBuffer);
+
+    
+    __declspec(dllexport) bool ProcessLoadDll(const wchar_t* processName);
     
     __declspec(dllexport) bool ProcessHook();
     __declspec(dllexport) bool ProcessIsRunning();

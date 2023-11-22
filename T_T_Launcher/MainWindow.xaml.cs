@@ -78,7 +78,7 @@ namespace T_T_Launcher
                 {
                     try
                     {
-                        StartProcessAsAdmin(@"T_T\T_T Pandoras Box.exe");
+                        StartProcessAsAdmin(@"T_T\T_T Pandoras Box.exe", HybridCheckBox.IsChecked ?? false);
                     }
                     catch (Exception ex)
                     {
@@ -90,9 +90,8 @@ namespace T_T_Launcher
                 await Task.Delay(1000);
             }
         }
-        
 
-        public static void StartProcessAsAdmin(string filePath)
+        public static void StartProcessAsAdmin(string filePath, bool isHybrid)
         {
             var currentExecutablePath = Assembly.GetExecutingAssembly().Location;
             var currentDirectory = Path.GetDirectoryName(currentExecutablePath);
@@ -114,6 +113,11 @@ namespace T_T_Launcher
                 Verb = "runas",
                 WorkingDirectory = workingDirectory,
             };
+
+            if (isHybrid)
+            {
+                processStartInfo.ArgumentList.Add("Hybrid=true");
+            }
 
             try
             {
@@ -182,7 +186,7 @@ namespace T_T_Launcher
             {
                 try
                 {
-                    StartProcessAsAdmin(@"T_T\T_T Pandoras Box.exe");
+                    StartProcessAsAdmin(@"T_T\T_T Pandoras Box.exe", HybridCheckBox.IsChecked ?? false);
                 }
                 catch (Exception ex)
                 {

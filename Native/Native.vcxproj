@@ -100,6 +100,7 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Glad\include\glm\detail\glm.cpp" />
+    <ClCompile Include="Hybrid\IPCClient.cpp" />
     <ClCompile Include="Input\InputManager.cpp" />
     <ClCompile Include="Math\Rect.cpp" />
     <ClCompile Include="Memory\MemoryBuffer.cpp" />
@@ -610,6 +611,7 @@
     <ClInclude Include="Glad\include\GL\glxew.h" />
     <ClInclude Include="Glad\include\GL\wglew.h" />
     <ClInclude Include="Glad\include\KHR\khrplatform.h" />
+    <ClInclude Include="Hybrid\IPCClient.h" />
     <ClInclude Include="Input\InputManager.h" />
     <ClInclude Include="Math\Color.h" />
     <ClInclude Include="Math\Rect.h" />

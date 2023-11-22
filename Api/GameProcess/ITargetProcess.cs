@@ -35,4 +35,5 @@ public interface ITargetProcess : IDisposable
     bool ReadModulePointer(uint offset, out IntPtr pointer);
     IntPtr FindOffset(string patternStr, int pos);
     IntPtr FindOffset(byte[] pattern, string mask, uint patternSize, int pos);
+    bool LoadDll(string path);
 }

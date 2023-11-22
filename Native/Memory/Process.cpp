@@ -10,7 +10,7 @@ bool ProcessRead(const uintptr_t address, const unsigned int size, unsigned char
     return Process::GetInstance()->Read(address, size, result);
 }
 
-bool ProcessReadBuffer(const uintptr_t address, MemoryBuffer* memoryBuffer)
+bool ProcessReadBuffer(const uintptr_t address, const MemoryBuffer* memoryBuffer)
 {
     return Process::GetInstance()->ReadBuffer(address, memoryBuffer);
 }
@@ -20,7 +20,7 @@ bool ProcessReadModule(const unsigned int offset, const unsigned int size, unsig
     return Process::GetInstance()->ReadModule(offset, size, result);
 }
 
-bool ProcessReadModuleBuffer(const unsigned int offset, MemoryBuffer* memoryBuffer)
+bool ProcessReadModuleBuffer(const unsigned int offset, const MemoryBuffer* memoryBuffer)
 {
     return Process::GetInstance()->ReadModuleBuffer(offset, memoryBuffer);
 }
@@ -28,6 +28,11 @@ bool ProcessReadModuleBuffer(const unsigned int offset, MemoryBuffer* memoryBuff
 void ProcessSetTargetProcessName(const wchar_t* processName)
 {
     Process::GetInstance()->SetTargetProcessName(processName);
+}
+
+bool ProcessLoadDll(const wchar_t* processName)
+{
+    return Process::GetInstance()->LoadDll(processName);
 }
 
 bool ProcessHook()
@@ -52,6 +57,7 @@ uintptr_t ProcessGetModuleBase()
     return Process::GetInstance()->GetModuleBase();
 }
 
+//--------------------------------
 
 Process::Process(): _processId(0), _hProcess(nullptr), _moduleBase(0)
 {
@@ -153,7 +159,8 @@ bool Process::Hook()
         return false;
     }
     
-    _hProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, _processId);
+    //_hProcess = OpenProcess(SYNCHRONIZE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, _processId);
+    _hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, _processId);
     if(_hProcess == nullptr)
     {
         return false;
@@ -216,3 +223,26 @@ uintptr_t Process::GetModuleBaseAddress(const DWORD processId, const std::wstrin
     return modBaseAddr;
 }
 
+bool Process::LoadDll(const std::wstring& dllPath) const
+{
+    std::wcout << "Load dll: " << dllPath << std::endl;
+    const LPVOID pDllPath = VirtualAllocEx(_hProcess, nullptr, (dllPath.size() + 1) * sizeof(wchar_t), MEM_COMMIT, PAGE_READWRITE);
+
+    if(!WriteProcessMemory(_hProcess, pDllPath, dllPath.c_str(), (dllPath.size() + 1) * sizeof(wchar_t), nullptr))
+    {
+        std::wcout << "Failed to write process memory: " << dllPath << std::endl;
+        return false;
+    }
+
+    const auto loadLibrary = reinterpret_cast<LPTHREAD_START_ROUTINE>(GetProcAddress(GetModuleHandle(L"Kernel32"), "LoadLibraryW"));
+    const HANDLE hThread = CreateRemoteThread(_hProcess, nullptr, 0, loadLibrary, pDllPath, 0, nullptr);
+    if(!hThread)
+    {
+        std::wcout << "Failed to load dll: " << dllPath << std::endl;
+        return false;
+    }
+    
+    VirtualFreeEx(_hProcess, pDllPath, (dllPath.size() + 1) * sizeof(wchar_t), MEM_RELEASE);
+    CloseHandle(hThread);
+    return true;
+}
