@@ -57,6 +57,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -244,8 +245,13 @@
     <ClInclude Include="Communication\Packet.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Offsets.h" />
+    <ClInclude Include="SpoofCall.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="spoofer.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

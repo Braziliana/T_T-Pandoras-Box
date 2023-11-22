@@ -2,7 +2,7 @@
 
 #include "Functions.h"
 #include "Offsets.h"
-
+#include "SpoofCall.h"
 
 HMODULE localModule;
 // bool WINAPI HideThread(const HANDLE hThread) noexcept
@@ -33,7 +33,9 @@ DWORD WINAPI Run(LPVOID lpReserved)
         Sleep(300);
     }
 
-    Functions::PrintChat("Hello world");
+    // std::string(SP_STRING("<font color='") + std::string(SP_STRING(color)) + SP_STRING("'>") + std::string(text) + SP_STRING("</font>"))
+    Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
+    Functions::RightClick(10, 10);
     
     FreeLibraryAndExitThread(localModule, 0);
     return 0;
