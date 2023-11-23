@@ -3,6 +3,7 @@
 
 #include "Commands/Command.h"
 #include "Commands/CommandType.h"
+#include "Commands/MoveToCommand.h"
 #include "Commands/PrintChatCommand.h"
 
 struct alignas(1024) Packet
@@ -14,5 +15,10 @@ struct alignas(1024) Packet
     PrintChatCommand& ToPrintChatCommand()
     {
         return *reinterpret_cast<PrintChatCommand*>(payload);
+    }
+
+    MoveToCommand& ToMoveToCommand()
+    {
+        return *reinterpret_cast<MoveToCommand*>(payload);
     }
 };

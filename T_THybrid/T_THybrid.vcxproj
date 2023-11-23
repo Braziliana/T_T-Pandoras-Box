@@ -236,6 +236,8 @@
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
     <ClCompile Include="Game\GameObject.cpp" />
+    <ClCompile Include="Game\Hero.cpp" />
+    <ClCompile Include="Game\Spell.cpp" />
     <ClCompile Include="Offsets.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +249,8 @@
     <ClInclude Include="Communication\Packet.h" />
     <ClInclude Include="Game\Functions.h" />
     <ClInclude Include="Game\GameObject.h" />
+    <ClInclude Include="Game\Hero.h" />
+    <ClInclude Include="Game\Spell.h" />
     <ClInclude Include="Math\Vector2.h" />
     <ClInclude Include="Math\Vector3.h" />
     <ClInclude Include="Offsets.h" />

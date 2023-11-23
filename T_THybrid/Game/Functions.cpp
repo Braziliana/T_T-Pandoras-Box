@@ -3,6 +3,9 @@
 #include "Functions.h"
 #include "GameObject.h"
 #include <sstream>
+
+#include "Hero.h"
+#include "Spell.h"
 #include "../SpoofCall.h"
 #include "../Offsets.h"
 
@@ -78,6 +81,56 @@ void Functions::Attack(GameObject* gameObject)
     {
         IssueOrder(true, static_cast<int>(position.x), static_cast<int>(position.y));
     }
+}
+
+void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3 endPosition)
+{
+	static auto offsets = Offsets::GetInstance();
+    const auto hudInput = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x68);
+
+	const auto localPlayer = Hero::LocalPlayer();
+	const auto spellInput = localPlayer->GetSpell(spellSlot)->GetSpellInput();
+
+	spellInput->SetCaster(localPlayer->GetHandle());
+
+	if(target == nullptr)
+	{
+		spellInput->SetTarget(0);
+	}
+	else
+	{
+		spellInput->SetTarget(target->GetHandle());
+	}
+
+	spellInput->SetEndPosition(endPosition);
+	spellInput->SetClickPosition(endPosition);
+	spellInput->SetEndPosition2(endPosition);
+
+	typedef void(__fastcall* HudCastSpellFunc)(uintptr_t hudInput, SpellInput* spellInput);
+	static auto castSpellFunc = reinterpret_cast<HudCastSpellFunc>(offsets->CastSpell);
+	spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInput);
+	
+}
+
+void Functions::CastSpell(const int spellSlot, GameObject* gameObject)
+{
+	CastSpell(spellSlot, gameObject, gameObject->GetPosition());
+}
+
+void Functions::CastSpell(const int spellSlot, const Vector3 position)
+{
+	CastSpell(spellSlot, nullptr, position);
+}
+
+void Functions::CastSpell(const int spellSlot)
+{
+	CastSpell(spellSlot, nullptr, WorldMousePosition());
+}
+
+void Functions::SelfCast(const int spellSlot)
+{
+    const auto localPlayer = Hero::LocalPlayer();
+	CastSpell(spellSlot, localPlayer, localPlayer->GetPosition());
 }
 
 bool Functions::WorldToScreen(Vector3 position, Vector2& out)

@@ -15,6 +15,12 @@ public:
     static void IssueOrder(bool isAttackCommand, int x, int y);
     static void Attack(GameObject* gameObject);
 
+    static void CastSpell(int spellSlot, GameObject* target, Vector3 endPosition);
+    static void CastSpell(int spellSlot, GameObject* gameObject);
+    static void CastSpell(int spellSlot, Vector3 position);
+    static void CastSpell(int spellSlot);
+    static void SelfCast(int spellSlot);
+
     static bool WorldToScreen(Vector3 position, Vector2& out);
     static Vector3 WorldMousePosition();
     static Vector2 MousePosition();

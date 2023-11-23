@@ -2,5 +2,6 @@
 
 enum class CommandType
 {
-    PrintChat
+    PrintChat,
+    MoveTo
 };

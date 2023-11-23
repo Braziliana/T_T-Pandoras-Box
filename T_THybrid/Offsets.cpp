@@ -56,6 +56,7 @@ Offsets::Offsets()
     HudInstance += base;
     IssueOrder += base;
     IssueMove += base;
+    CastSpell += base;
 }
 
 Offsets* Offsets::GetInstance()

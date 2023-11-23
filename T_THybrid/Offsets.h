@@ -5,13 +5,19 @@
 
 namespace GameObjectOffsets
 {
-    constexpr uintptr_t NetworkId = 0x0010;
+    constexpr uintptr_t Handle = 0x0010;
     constexpr uintptr_t Name = 0x0060;
     constexpr uintptr_t Team = 0x003C;
     constexpr uintptr_t IsVisible = 0x0340;
     constexpr uintptr_t Expiry = 0x0298;
     constexpr uintptr_t Position = 0x0220;
     constexpr uintptr_t ObjectName = 0x38A8;
+}
+
+namespace HeroOffsets
+{
+    constexpr uintptr_t SpellBook = 0x2A38;
+    constexpr uintptr_t SpellBookSpellSlot = 0x6D0;
 }
 
 class Offsets
@@ -41,4 +47,5 @@ public:
     uintptr_t HudInstance = 0x21F3ED0;
     uintptr_t IssueOrder = 0x8CDE50;
     uintptr_t IssueMove = 0x8B6C50;
+    uintptr_t CastSpell = 0x0;
 };

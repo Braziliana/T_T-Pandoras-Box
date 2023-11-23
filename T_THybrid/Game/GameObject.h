@@ -9,4 +9,9 @@ public:
     {
         return *reinterpret_cast<Vector3*>(this + GameObjectOffsets::Position);
     }
+
+    int GetHandle()
+    {
+        return *reinterpret_cast<int*>(this + GameObjectOffsets::Handle);
+    }
 };

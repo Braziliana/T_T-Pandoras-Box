@@ -36,7 +36,8 @@ DWORD WINAPI Run(LPVOID lpReserved)
     // std::string(SP_STRING("<font color='") + std::string(SP_STRING(color)) + SP_STRING("'>") + std::string(text) + SP_STRING("</font>"))
     Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
     //Functions::MoveTo(8000, 8000);
-    Functions::MoveToMouse();
+    //Functions::MoveToMouse();
+    //Functions::CastSpell(0);
     
     FreeLibraryAndExitThread(localModule, 0);
     return 0;

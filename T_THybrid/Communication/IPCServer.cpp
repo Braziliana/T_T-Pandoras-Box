@@ -47,12 +47,16 @@ void IPCServer::Run() const
     if(ReadFile(pipe, buffer, size, &bytesRead, nullptr))
     {
         Packet packet = *reinterpret_cast<Packet*>(buffer);
-        switch (packet.commandType) {
+        switch (packet.commandType)
+        {
         case CommandType::PrintChat:
-                auto printChatCommand = packet.ToPrintChatCommand();
-                Functions::PrintChat(printChatCommand.message);
+            const auto printChatCommand = packet.ToPrintChatCommand();
+            printChatCommand.Handle();
             break;
-        default: ;
+        case CommandType::MoveTo:
+            const auto moveToCommand = packet.ToMoveToCommand();
+            moveToCommand.Handle();
+            break;
         }
     }
 }
