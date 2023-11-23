@@ -3,5 +3,5 @@
 
 struct PrintChatCommand : Command
 {
-    char message[256];
+    char message[1000];
 };

@@ -21,7 +21,8 @@ bool IPCServer::Start()
         PIPE_ACCESS_DUPLEX, 
         PIPE_TYPE_BYTE | PIPE_READMODE_BYTE | PIPE_WAIT, //PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT
         PIPE_UNLIMITED_INSTANCES, 
-        size, size, 
+        size * 16,
+        size * 16, 
         NMPWAIT_USE_DEFAULT_WAIT,
         nullptr);
 

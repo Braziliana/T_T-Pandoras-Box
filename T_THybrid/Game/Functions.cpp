@@ -13,6 +13,20 @@ std::string GetHexString(int hexNumber)
     return ss.str();
 }
 
+std::string GetString(Vector2 pos)
+{
+    std::stringstream ss;
+    ss << "x: " << pos.x << " y: " << pos.y;
+    return ss.str();
+}
+
+std::string GetString(Vector3 pos)
+{
+    std::stringstream ss;
+    ss << "x: " << pos.x << " y: " << pos.y << " z: " << pos.z;
+    return ss.str();
+}
+
 void Functions::PrintChat(const char* msg)
 {
     static auto offsets = Offsets::GetInstance();
@@ -22,18 +36,32 @@ void Functions::PrintChat(const char* msg)
     spoof_call(offsets->SpoofTrampoline, printChat, offsets->ChatClient, msg, 0);
 }
 
-void Functions::MoveTo(int x, int y)
+void Functions::MoveTo(const int x, const int y)
 {
+    PrintChat(GetString(Vector2(x, y)).c_str());
     IssueOrder(false, x, y);
+}
+
+void Functions::MoveTo(const Vector2 position)
+{
+    MoveTo(static_cast<int>(position.x), static_cast<int>(position.y));
+}
+
+void Functions::MoveTo(const Vector3 worldPosition)
+{
+    Vector2 screenPosition;
+    if(WorldToScreen(worldPosition, screenPosition))
+    {
+        MoveTo(screenPosition);
+    }
 }
 
 void Functions::MoveToMouse()
 {
-    const auto mousePos = MousePosition();
-    MoveTo(static_cast<int>(mousePos.x), static_cast<int>(mousePos.y));
+    MoveTo(MousePosition());
 }
 
-void Functions::IssueOrder(bool isAttackCommand, int x, int y)
+void Functions::IssueOrder(const bool isAttackCommand, const int x, const int y)
 {
     static auto offsets = Offsets::GetInstance();
     typedef bool(__fastcall* IssueOrderFunc)(uintptr_t hudInput, int state, int isAttack, int isAttackCommand, int x, int y, int attackAndMove);
@@ -54,11 +82,16 @@ void Functions::Attack(GameObject* gameObject)
 
 bool Functions::WorldToScreen(Vector3 position, Vector2& out)
 {
+    PrintChat(GetString(position).c_str());
     static auto offsets = Offsets::GetInstance();
-    typedef bool(__fastcall* WorldToScreenFunc)(uintptr_t viewport, Vector3* in, Vector3* out);
+    typedef bool(__fastcall* WorldToScreenFunc)(uintptr_t* viewport, Vector3* in, Vector3* out);
     static auto worldToScreenFunc = reinterpret_cast<WorldToScreenFunc>(offsets->WorldToScreen);
     Vector3 funcOut;
-    auto result = spoof_call(offsets->SpoofTrampoline, worldToScreenFunc, (offsets->ViewPort + 0x270), &position, &funcOut);
+
+    uintptr_t* viewport = *reinterpret_cast<uintptr_t**>(offsets->ViewPort);
+    viewport = reinterpret_cast<uintptr_t*>(reinterpret_cast<uintptr_t>(viewport) + 0x270);
+    auto result = spoof_call(offsets->SpoofTrampoline, worldToScreenFunc, viewport, &position, &funcOut);
+    PrintChat(result ? "true" : "false");
     out.x = funcOut.x;
     out.y = funcOut.y;
     return result;

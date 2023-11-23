@@ -5,11 +5,11 @@
 #include "Commands/CommandType.h"
 #include "Commands/PrintChatCommand.h"
 
-struct Packet
+struct alignas(1024) Packet
 {
     CommandType commandType;
     int payloadSize;
-    byte payload[256];
+    byte payload[1016];
 
     PrintChatCommand& ToPrintChatCommand()
     {

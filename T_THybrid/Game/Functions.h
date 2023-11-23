@@ -9,6 +9,8 @@ class Functions
 public:
     static void PrintChat(const char* msg);
     static void MoveTo(int x, int y);
+    static void MoveTo(Vector2 position);
+    static void MoveTo(Vector3 worldPosition);
     static void MoveToMouse();
     static void IssueOrder(bool isAttackCommand, int x, int y);
     static void Attack(GameObject* gameObject);
