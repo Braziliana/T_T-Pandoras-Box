@@ -1,8 +1,8 @@
 #include <windows.h>
 
-#include "Functions.h"
 #include "Offsets.h"
 #include "SpoofCall.h"
+#include "Game/Functions.h"
 
 HMODULE localModule;
 // bool WINAPI HideThread(const HANDLE hThread) noexcept
@@ -35,7 +35,8 @@ DWORD WINAPI Run(LPVOID lpReserved)
 
     // std::string(SP_STRING("<font color='") + std::string(SP_STRING(color)) + SP_STRING("'>") + std::string(text) + SP_STRING("</font>"))
     Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
-    Functions::RightClick(10, 10);
+    //Functions::MoveTo(8000, 8000);
+    Functions::MoveToMouse();
     
     FreeLibraryAndExitThread(localModule, 0);
     return 0;

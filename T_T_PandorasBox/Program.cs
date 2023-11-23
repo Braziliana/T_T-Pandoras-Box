@@ -53,7 +53,7 @@ var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-if(args.Any(x => x == "Hybrid=true"))
+//if(args.Any(x => x == "Hybrid=true"))
 {
     var process = host.Services.GetRequiredService<ITargetProcess>();
     process.SetTargetProcessName("League of Legends.exe");

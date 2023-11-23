@@ -1,6 +1,6 @@
 ﻿#include "IPCServer.h"
 
-#include "../Functions.h"
+#include "../Game//Functions.h"
 
 IPCServer::IPCServer(std::wstring name): pipeName(std::move(name)), pipe(INVALID_HANDLE_VALUE)
 {}

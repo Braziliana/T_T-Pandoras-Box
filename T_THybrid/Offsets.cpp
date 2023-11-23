@@ -50,7 +50,12 @@ Offsets::Offsets()
     ChatClient += base;
     PrintChat += base;
 
-    RightClick += base;
+    ViewPort += base;
+    WorldToScreen += base;
+    
+    HudInstance += base;
+    IssueOrder += base;
+    IssueMove += base;
 }
 
 Offsets* Offsets::GetInstance()
