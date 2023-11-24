@@ -13,9 +13,16 @@ public:
     void SetEndPosition2(Vector3 position);
 };
 
+class SpellInfo
+{
+public:
+    
+};
+
 class Spell
 {
 public:
     SpellInput* GetSpellInput();
+    SpellInfo* GetSpellInfo();
 };
 

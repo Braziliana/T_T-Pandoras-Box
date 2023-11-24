@@ -5,26 +5,29 @@
 #include "Game/Functions.h"
 
 HMODULE localModule;
-// bool WINAPI HideThread(const HANDLE hThread) noexcept
-// {
-//     __try {
-//         using FnSetInformationThread = NTSTATUS(NTAPI*)(HANDLE ThreadHandle, UINT ThreadInformationClass, PVOID ThreadInformation, ULONG ThreadInformationLength);
-//         const auto NtSetInformationThread{ reinterpret_cast<FnSetInformationThread>(::GetProcAddress(::GetModuleHandle(L"ntdll.dll"), "NtSetInformationThread")) };
-//
-//         if (!NtSetInformationThread)
-//             return false;
-//
-//         if (const auto status{ NtSetInformationThread(hThread, 0x11u, nullptr, 0ul) }; status == 0x00000000)
-//             return true;
-//     }
-//     __except (TRUE) {
-//         return false;
-//     }
-// }
+bool WINAPI HideThread(const HANDLE hThread) noexcept
+{
+    __try {
+        using FnSetInformationThread = NTSTATUS(NTAPI*)(HANDLE ThreadHandle, UINT ThreadInformationClass, PVOID ThreadInformation, ULONG ThreadInformationLength);
+        const auto NtSetInformationThread{ reinterpret_cast<FnSetInformationThread>(::GetProcAddress(::GetModuleHandle(L"ntdll.dll"), "NtSetInformationThread")) };
+
+        if (!NtSetInformationThread)
+            return false;
+
+        const auto status = NtSetInformationThread(hThread, 0x11u, nullptr, 0ul);
+        if (status == 0x00000000)
+        {
+            return true;
+        }
+    }
+    __except (TRUE) {
+        return false;
+    }
+}
 
 DWORD WINAPI Run(LPVOID lpReserved)
 {
-    //HideThread(::GetCurrentThread());
+    HideThread(::GetCurrentThread());
     auto offsets = Offsets::GetInstance();
     while (true)
     {
@@ -37,8 +40,8 @@ DWORD WINAPI Run(LPVOID lpReserved)
     Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
     //Functions::MoveTo(8000, 8000);
     //Functions::MoveToMouse();
-    //Functions::CastSpell(0);
-    
+    //Functions::CastSpell(1);
+    //Functions::CastSpellClick(1, Vector2());
     FreeLibraryAndExitThread(localModule, 0);
     return 0;
 }

@@ -44,6 +44,7 @@ Offsets::Offsets()
         SpoofTrampoline = static_cast<void*>(PatternScan(reinterpret_cast<byte*>(base), moduleInfo.SizeOfImage, std::vector<BYTE>{0xFF, 0x23}, "xx", 0));
     }
 
+    MouseScreenPosition += base;
     GameTime += base;
     LocalPlayer += base;
     
@@ -57,6 +58,7 @@ Offsets::Offsets()
     IssueOrder += base;
     IssueMove += base;
     CastSpell += base;
+    CastSpellClick += base;
 }
 
 Offsets* Offsets::GetInstance()

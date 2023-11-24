@@ -8,8 +8,9 @@
 #include "Spell.h"
 #include "../SpoofCall.h"
 #include "../Offsets.h"
+#include "Hud.h"
 
-std::string GetHexString(int hexNumber)
+std::string GetHexString(uintptr_t hexNumber)
 {
     std::stringstream ss;
     ss << std::hex << hexNumber;
@@ -37,6 +38,12 @@ void Functions::PrintChat(const char* msg)
     static PrintChatFunc printChat = reinterpret_cast<PrintChatFunc>(offsets->PrintChat);
 
     spoof_call(offsets->SpoofTrampoline, printChat, offsets->ChatClient, msg, 0);
+}
+
+Hud* Functions::GetHud()
+{
+    static auto offsets = Offsets::GetInstance();
+    return *reinterpret_cast<Hud**>(offsets->HudInstance);
 }
 
 void Functions::MoveTo(const int x, const int y)
@@ -86,30 +93,42 @@ void Functions::Attack(GameObject* gameObject)
 void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3 endPosition)
 {
 	static auto offsets = Offsets::GetInstance();
-    const auto hudInput = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x68);
 
+    const auto hudInput = GetHud()->GetCastHandle();
+    
+    const auto hudMouseInfo = GetHud()->GetMouseInfo();
 	const auto localPlayer = Hero::LocalPlayer();
-	const auto spellInput = localPlayer->GetSpell(spellSlot)->GetSpellInput();
-
+    const auto spell = localPlayer->GetSpell(spellSlot);
+	const auto spellInput = spell->GetSpellInput();
+    const auto spellInfo = spell->GetSpellInfo();
+    const auto hudMouseWorldPosition = hudMouseInfo->GetMousePosition();
+    
 	spellInput->SetCaster(localPlayer->GetHandle());
 
 	if(target == nullptr)
 	{
 		spellInput->SetTarget(0);
+	    hudMouseInfo->SetTargetHandle(0);
 	}
 	else
 	{
 		spellInput->SetTarget(target->GetHandle());
+	    hudMouseInfo->SetTargetHandle(target->GetHandle());
 	}
 
 	spellInput->SetEndPosition(endPosition);
 	spellInput->SetClickPosition(endPosition);
 	spellInput->SetEndPosition2(endPosition);
 
-	typedef void(__fastcall* HudCastSpellFunc)(uintptr_t hudInput, SpellInput* spellInput);
+    hudInput->SetSpellInfo(spellInfo);
+    hudMouseInfo->SetMouseWorldPosition(endPosition);
+    
+	typedef void(__fastcall* HudCastSpellFunc)(HudCastSpell* hudInput, SpellInfo* spellInfo);
 	static auto castSpellFunc = reinterpret_cast<HudCastSpellFunc>(offsets->CastSpell);
-	spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInput);
-	
+	spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInfo);
+    
+    hudInput->SetSpellInfo(nullptr);
+    hudMouseInfo->SetMouseWorldPosition(hudMouseWorldPosition);
 }
 
 void Functions::CastSpell(const int spellSlot, GameObject* gameObject)
@@ -133,6 +152,25 @@ void Functions::SelfCast(const int spellSlot)
 	CastSpell(spellSlot, localPlayer, localPlayer->GetPosition());
 }
 
+void Functions::CastSpellClick(int spellSlot, Vector2 screenPosition)
+{
+    static auto offsets = Offsets::GetInstance();
+
+    const auto hudInput = GetHud()->GetCastHandle();
+    
+    const auto localPlayer = Hero::LocalPlayer();
+    const auto spellInfo = localPlayer->GetSpell(spellSlot)->GetSpellInfo();
+
+    typedef void(__fastcall* HudCastSpellFunc)(HudCastSpell* hudInput, SpellInfo* spellInfo, int isDown);
+    static auto castSpellFunc = reinterpret_cast<HudCastSpellFunc>(offsets->CastSpellClick);
+
+    const auto mousePos = MousePosition();
+    SetMousePosition(screenPosition);
+    spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInfo, 0);
+    spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInfo, 1);
+    SetMousePosition(mousePos);
+}
+
 bool Functions::WorldToScreen(Vector3 position, Vector2& out)
 {
     PrintChat(GetString(position).c_str());
@@ -152,20 +190,22 @@ bool Functions::WorldToScreen(Vector3 position, Vector2& out)
 
 Vector3 Functions::WorldMousePosition()
 {
-    static auto offsets = Offsets::GetInstance();
-    uintptr_t MousePtr = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x28);
-     
-    Vector3 mousePos;
-     
-    mousePos.x = *reinterpret_cast<float*>(MousePtr + 0x20);
-    mousePos.y = *reinterpret_cast<float*>(MousePtr + 0x30);
-    mousePos.z = *reinterpret_cast<float*>(MousePtr + 0x28);
-    return mousePos;
+    return GetHud()->GetMouseInfo()->GetMousePosition();
 }
 
 Vector2 Functions::MousePosition()
 {
-    Vector2 mousePosition;
-    WorldToScreen(WorldMousePosition(), mousePosition);
-    return mousePosition;
+    static auto offsets = Offsets::GetInstance();
+    const auto mouse = *reinterpret_cast<uintptr_t*>(offsets->MouseScreenPosition);
+    const int x = *reinterpret_cast<int*>(mouse + 0xC);
+    const int y = *reinterpret_cast<int*>(mouse + 0x10);
+    return {static_cast<float>(x), static_cast<float>(y)};
+}
+
+void Functions::SetMousePosition(Vector2 position)
+{
+    static auto offsets = Offsets::GetInstance();
+    const auto mouse = *reinterpret_cast<uintptr_t*>(offsets->MouseScreenPosition);
+    *reinterpret_cast<int*>(mouse + 0xC) = static_cast<int>(position.x);
+    *reinterpret_cast<int*>(mouse + 0x10) = static_cast<int>(position.y);
 }

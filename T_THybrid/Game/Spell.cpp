@@ -32,5 +32,10 @@ void SpellInput::SetEndPosition2(const Vector3 position)
 
 SpellInput* Spell::GetSpellInput()
 {
-    return reinterpret_cast<SpellInput*>(this + 0x128);
+    return *reinterpret_cast<SpellInput**>(this + 0x128);
+}
+
+SpellInfo* Spell::GetSpellInfo()
+{
+    return *reinterpret_cast<SpellInfo**>(this + 0x130);
 }

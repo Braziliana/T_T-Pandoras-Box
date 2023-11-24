@@ -34,7 +34,8 @@ public:
     static Offsets* GetInstance();
 
     void* SpoofTrampoline = nullptr;
-    
+
+    uintptr_t MouseScreenPosition = 0x21f6f08;
     uintptr_t GameTime = 0x21FE6F8;
     uintptr_t LocalPlayer = 0x22118D8;
     
@@ -47,5 +48,6 @@ public:
     uintptr_t HudInstance = 0x21F3ED0;
     uintptr_t IssueOrder = 0x8CDE50;
     uintptr_t IssueMove = 0x8B6C50;
-    uintptr_t CastSpell = 0x0;
+    uintptr_t CastSpell = 0x8c2880;
+    uintptr_t CastSpellClick = 0x8b9750;
 };
