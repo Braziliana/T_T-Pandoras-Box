@@ -16,4 +16,5 @@ public:
 
     bool Start();
     void Run() const;
+    bool IsRunning();
 };

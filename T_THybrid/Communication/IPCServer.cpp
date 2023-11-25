@@ -1,7 +1,5 @@
 ﻿#include "IPCServer.h"
 
-#include "../Game//Functions.h"
-
 IPCServer::IPCServer(std::wstring name): pipeName(std::move(name)), pipe(INVALID_HANDLE_VALUE)
 {}
 
@@ -32,10 +30,12 @@ bool IPCServer::Start()
 
     const BOOL connected = ConnectNamedPipe(pipe, nullptr) ? TRUE : (GetLastError() == ERROR_PIPE_CONNECTED);
     if (!connected) {
+        //Functions::PrintChat("Failed to create pipe");
         CloseHandle(pipe);
         return false;
     }
         
+    //Functions::PrintChat("Pipe created");
     return true;
 }
 
@@ -50,13 +50,28 @@ void IPCServer::Run() const
         switch (packet.commandType)
         {
         case CommandType::PrintChat:
-            const auto printChatCommand = packet.ToPrintChatCommand();
-            printChatCommand.Handle();
-            break;
-        case CommandType::MoveTo:
-            const auto moveToCommand = packet.ToMoveToCommand();
-            moveToCommand.Handle();
-            break;
+            {
+                const auto printChatCommand = packet.ToPrintChatCommand();
+                printChatCommand.Handle();
+                break;
+            }
+        case CommandType::IssueOrder:
+            {
+                const auto issueOrderCommand = packet.ToIssueOrderCommand();
+                issueOrderCommand.Handle();
+                break;
+            }
+        case CommandType::CastSpell:
+            {
+                const auto spellCastCommand = packet.ToCastSpellCommand();
+                spellCastCommand.Handle();
+                break;
+            }
         }
     }
+}
+
+bool IPCServer::IsRunning()
+{
+    return pipe != INVALID_HANDLE_VALUE;
 }

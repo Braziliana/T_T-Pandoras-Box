@@ -1,4 +1,5 @@
 ﻿using Api;
+using Api.Game.GameInputs;
 using Api.GameProcess;
 using Api.Inputs;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ using Newtonsoft.Json.Converters;
 using Scripts;
 using T_T_PandorasBox;
 
-
+var useHybrid = args.Any(x => x == "Hybrid=true");
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureHostConfiguration(configHost =>
     {
@@ -47,13 +48,19 @@ var host = Host.CreateDefaultBuilder(args)
         collection.AddSingleton<IInputManager, InputManager>();
         collection.AddSingleton<IMainMenu, MainMenu>();
         collection.AddSingleton<Overlay>();
+
+        if(useHybrid)
+        {
+            collection.AddSingleton<IGameInput, HybridGameInput>();
+        }
+        
         InternalServiceInstaller.InstallServices(collection);
         ScriptsServiceInstaller.InstallServices(collection);
         
     })
     .Build();
 
-if(args.Any(x => x == "Hybrid=true"))
+if(useHybrid)
 {
     var process = host.Services.GetRequiredService<ITargetProcess>();
     process.SetTargetProcessName("League of Legends.exe");

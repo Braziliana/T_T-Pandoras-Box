@@ -48,7 +48,6 @@ Hud* Functions::GetHud()
 
 void Functions::MoveTo(const int x, const int y)
 {
-    PrintChat(GetString(Vector2(x, y)).c_str());
     IssueOrder(false, x, y);
 }
 
@@ -75,7 +74,10 @@ void Functions::IssueOrder(const bool isAttackCommand, const int x, const int y)
 {
     static auto offsets = Offsets::GetInstance();
     typedef bool(__fastcall* IssueOrderFunc)(uintptr_t hudInput, int state, int isAttack, int isAttackCommand, int x, int y, int attackAndMove);
-    auto hudInput = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x48);
+
+    auto hud = GetHud();
+    auto hudInput = hud->GetOrderHandle();
+    //auto hudInput = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x48);
     static auto issueOrder = reinterpret_cast<IssueOrderFunc>(offsets->IssueOrder);
     spoof_call(offsets->SpoofTrampoline, issueOrder, hudInput, 0, 0, static_cast<int>(isAttackCommand), x, y, 0);
     spoof_call(offsets->SpoofTrampoline, issueOrder, hudInput, 1, 0, static_cast<int>(isAttackCommand), x, y, 0);
@@ -102,6 +104,7 @@ void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3
 	const auto spellInput = spell->GetSpellInput();
     const auto spellInfo = spell->GetSpellInfo();
     const auto hudMouseWorldPosition = hudMouseInfo->GetMousePosition();
+    const auto hudMouseTarget = hudMouseInfo->GetUnderMouseObjectHandle();
     
 	spellInput->SetCaster(localPlayer->GetHandle());
 
@@ -129,6 +132,7 @@ void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3
     
     hudInput->SetSpellInfo(nullptr);
     hudMouseInfo->SetMouseWorldPosition(hudMouseWorldPosition);
+    hudMouseInfo->SetTargetHandle(hudMouseTarget);
 }
 
 void Functions::CastSpell(const int spellSlot, GameObject* gameObject)
@@ -146,7 +150,7 @@ void Functions::CastSpell(const int spellSlot)
 	CastSpell(spellSlot, nullptr, WorldMousePosition());
 }
 
-void Functions::SelfCast(const int spellSlot)
+void Functions::CastSpellSelf(const int spellSlot)
 {
     const auto localPlayer = Hero::LocalPlayer();
 	CastSpell(spellSlot, localPlayer, localPlayer->GetPosition());
@@ -173,7 +177,6 @@ void Functions::CastSpellClick(int spellSlot, Vector2 screenPosition)
 
 bool Functions::WorldToScreen(Vector3 position, Vector2& out)
 {
-    PrintChat(GetString(position).c_str());
     static auto offsets = Offsets::GetInstance();
     typedef bool(__fastcall* WorldToScreenFunc)(uintptr_t* viewport, Vector3* in, Vector3* out);
     static auto worldToScreenFunc = reinterpret_cast<WorldToScreenFunc>(offsets->WorldToScreen);
@@ -182,7 +185,6 @@ bool Functions::WorldToScreen(Vector3 position, Vector2& out)
     uintptr_t* viewport = *reinterpret_cast<uintptr_t**>(offsets->ViewPort);
     viewport = reinterpret_cast<uintptr_t*>(reinterpret_cast<uintptr_t>(viewport) + 0x270);
     auto result = spoof_call(offsets->SpoofTrampoline, worldToScreenFunc, viewport, &position, &funcOut);
-    PrintChat(result ? "true" : "false");
     out.x = funcOut.x;
     out.y = funcOut.y;
     return result;

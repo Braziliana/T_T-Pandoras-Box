@@ -23,7 +23,7 @@ public:
     static void CastSpell(int spellSlot, GameObject* gameObject);
     static void CastSpell(int spellSlot, Vector3 position);
     static void CastSpell(int spellSlot);
-    static void SelfCast(int spellSlot);
+    static void CastSpellSelf(int spellSlot);
 
     static void CastSpellClick(int spellSlot, Vector2 screenPosition);
 

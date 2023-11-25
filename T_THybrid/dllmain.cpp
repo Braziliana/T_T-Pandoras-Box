@@ -2,6 +2,7 @@
 
 #include "Offsets.h"
 #include "SpoofCall.h"
+#include "Communication/IPCServer.h"
 #include "Game/Functions.h"
 
 HMODULE localModule;
@@ -29,15 +30,32 @@ DWORD WINAPI Run(LPVOID lpReserved)
 {
     HideThread(::GetCurrentThread());
     auto offsets = Offsets::GetInstance();
+    auto ipcServer = IPCServer(L"HelloWorld");
     while (true)
     {
         const float gameTime = *reinterpret_cast<float*>(offsets->GameTime);
-        if (gameTime > 3.0f) break;
-        Sleep(300);
+        if (gameTime > 3.0f)
+        {
+            if(!ipcServer.IsRunning())
+            {
+                ipcServer.Start();
+            }
+            else
+            {
+                ipcServer.Run();
+            }
+            
+            if(GetAsyncKeyState(VK_F11))
+            {
+                break;
+            }
+        }
+
+        Sleep(1);
     }
 
     // std::string(SP_STRING("<font color='") + std::string(SP_STRING(color)) + SP_STRING("'>") + std::string(text) + SP_STRING("</font>"))
-    Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
+    //Functions::PrintChat("<font color=#FC6A03>T_T Pandora's box</font>");
     //Functions::MoveTo(8000, 8000);
     //Functions::MoveToMouse();
     //Functions::CastSpell(1);
