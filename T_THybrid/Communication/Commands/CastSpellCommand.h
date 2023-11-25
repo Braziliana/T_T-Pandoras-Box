@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include "../../Math/Vector2.h"
 #include "../../Game/Functions.h"
+#include "../../Game/GameObject.h"
 
 enum class CastSpellType
 {

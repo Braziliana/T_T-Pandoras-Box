@@ -43,7 +43,7 @@ struct CastSpellCommand
     
     CastSpellCommand(const int spellSlot, uintptr_t objectPtr) : spellSlot(spellSlot), objectPtr(objectPtr)
     {
-        castSpellType = CastSpellType::WorldPosition;
+        castSpellType = CastSpellType::Target;
         screenPosition = Vector2();
         worldPosition = Vector3();
     }

@@ -75,7 +75,19 @@ namespace Api.Internal.Game.GameInputs
 
         public bool TryCast(ISpell spell, IAttackableUnit target)
         {
-            return TryCast(spell, target.Position);
+            // return TryCast(spell, target.Position);
+            if (!CanCast(spell) || !IsInRange(spell, target.Position))
+            {
+                return false;
+            }
+
+            if (_gameInput.CastSpell(spell.SpellSlot, target))
+            {
+                _nextCast = _gameState.Time + spell.SpellData.CastDelayTime;
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryCast(ISpell spell, Vector3 position)

@@ -69,7 +69,7 @@ public class TArray : IDisposable
         for (uint i = 0; i < _size; i++)
         {
             var ptr = _memoryBuffer.Read<IntPtr>(_intPtrSize * i);
-            if (ptr != IntPtr.Zero && ptr.ToInt64() > 0x1000)
+            if (ptr.ToInt64() > 0x1000)
             {
                 yield return ptr;
             }
