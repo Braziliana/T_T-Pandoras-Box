@@ -4,6 +4,7 @@
 #include "SpoofCall.h"
 #include "Communication/IPCServer.h"
 #include "Game/Functions.h"
+#include "Game/Hero.h"
 
 HMODULE localModule;
 bool WINAPI HideThread(const HANDLE hThread) noexcept
@@ -51,7 +52,7 @@ DWORD WINAPI Run(LPVOID lpReserved)
             }
         }
 
-        Sleep(1);
+        //Sleep(1);
     }
 
     // std::string(SP_STRING("<font color='") + std::string(SP_STRING(color)) + SP_STRING("'>") + std::string(text) + SP_STRING("</font>"))

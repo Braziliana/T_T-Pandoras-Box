@@ -77,10 +77,13 @@ void Functions::IssueOrder(const bool isAttackCommand, const int x, const int y)
 
     auto hud = GetHud();
     auto hudInput = hud->GetOrderHandle();
-    //auto hudInput = *reinterpret_cast<uintptr_t*>(*reinterpret_cast<uintptr_t*>(offsets->HudInstance) + 0x48);
     static auto issueOrder = reinterpret_cast<IssueOrderFunc>(offsets->IssueOrder);
+    
+    const auto mousePos = MousePosition();
+    SetMousePosition(Vector2(static_cast<float>(x), static_cast<float>(y)));
     spoof_call(offsets->SpoofTrampoline, issueOrder, hudInput, 0, 0, static_cast<int>(isAttackCommand), x, y, 0);
     spoof_call(offsets->SpoofTrampoline, issueOrder, hudInput, 1, 0, static_cast<int>(isAttackCommand), x, y, 0);
+    SetMousePosition(mousePos);
 }
 
 void Functions::Attack(GameObject* gameObject)

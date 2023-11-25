@@ -1,4 +1,6 @@
 ﻿#include "Hero.h"
+
+#include "Functions.h"
 #include "../Offsets.h"
 
 Spell* Hero::GetSpell(const int slot)
