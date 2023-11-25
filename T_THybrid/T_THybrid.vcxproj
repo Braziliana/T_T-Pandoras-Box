@@ -171,6 +171,7 @@
     <ClInclude Include="Communication\Commands\Command.h" />
     <ClInclude Include="Communication\Commands\CommandType.h" />
     <ClInclude Include="Communication\Commands\IssueOrderCommand.h" />
+    <ClInclude Include="Communication\Commands\LevelSpellCommand.h" />
     <ClInclude Include="Communication\Commands\PrintChatCommand.h" />
     <ClInclude Include="Communication\IPCServer.h" />
     <ClInclude Include="Communication\Packet.h" />

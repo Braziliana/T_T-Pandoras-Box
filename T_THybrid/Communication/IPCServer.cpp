@@ -67,6 +67,12 @@ void IPCServer::Run() const
                 spellCastCommand.Handle();
                 break;
             }
+        case CommandType::LevelSpell:
+            {
+                const auto levelSpellCommand = packet.ToLevelSpellCommand();
+                levelSpellCommand.Handle();
+                break;
+            }
         }
     }
 }

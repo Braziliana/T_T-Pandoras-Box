@@ -2,5 +2,6 @@
 
 public interface IValueSlider : IMenuElement
 {
-    public float Value { get; set; }
+    float Value { get; set; }
+    int IntValue => (int)Math.Round(Value);
 }

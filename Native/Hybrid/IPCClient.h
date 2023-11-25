@@ -19,6 +19,7 @@ private:
     IPCClient(std::wstring pipeName);
 public:
     static IPCClient* GetInstance();
+    bool IsConnected();
     bool Connect();
     void Disconnect();
     bool PrintChat(const std::string& message);
@@ -30,13 +31,15 @@ public:
     bool MoveTo(Vector2 screenPosition);
     bool MoveTo(Vector3 worldPosition);
     bool Attack(uintptr_t target);
-    bool IsConnected();
+
+    bool LevelSpell(int spellSlot);
 };
 
 
 extern "C"
 {
     __declspec(dllexport) IPCClient* IPCClient_GetInstance();
+    __declspec(dllexport) bool IPCClient_IsConnected();
     __declspec(dllexport) bool IPCClient_Connect();
     __declspec(dllexport) void IPCClient_Disconnect();
 
@@ -52,5 +55,5 @@ extern "C"
     __declspec(dllexport) bool IPCClient_MoveToWorldPosition(const Vector3* worldPosition);
     __declspec(dllexport) bool IPCClient_Attack(uintptr_t target);
 
-    __declspec(dllexport) bool IPCClient_IsConnected();
+    __declspec(dllexport) bool IPCClient_LevelSpell(int spellSlot);
 }

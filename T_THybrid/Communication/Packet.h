@@ -5,6 +5,7 @@
 #include "Commands/Command.h"
 #include "Commands/CommandType.h"
 #include "Commands/IssueOrderCommand.h"
+#include "Commands/LevelSpellCommand.h"
 #include "Commands/PrintChatCommand.h"
 
 struct alignas(1024) Packet
@@ -26,5 +27,10 @@ struct alignas(1024) Packet
     CastSpellCommand ToCastSpellCommand()
     {
         return *reinterpret_cast<CastSpellCommand*>(payload);
+    }
+    
+    LevelSpellCommand ToLevelSpellCommand()
+    {
+        return *reinterpret_cast<LevelSpellCommand*>(payload);
     }
 };

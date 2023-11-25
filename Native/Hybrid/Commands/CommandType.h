@@ -4,5 +4,6 @@ enum class CommandType
 {
     PrintChat,
     IssueOrder,
-    CastSpell
+    CastSpell,
+    LevelSpell
 };

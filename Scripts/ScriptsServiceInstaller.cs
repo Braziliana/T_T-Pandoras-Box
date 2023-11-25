@@ -34,6 +34,8 @@ public static class ScriptsServiceInstaller
 
     private static void InstallCSharpScripts(IServiceCollection collection)
     {
+        collection.AddSingleton<IScript, AutLeveler>();
+        collection.AddSingleton<IScript, TargetSelector>();
         collection.AddSingleton<IScript, OrbWalker>();
         collection.AddSingleton<IScript, Tracker>();
         collection.AddSingleton<IScript, AutoSmite>();
@@ -42,6 +44,5 @@ public static class ScriptsServiceInstaller
         collection.AddSingleton<IScript, TwitchScript>();
         collection.AddSingleton<IScript, RyzeScript>();
         collection.AddSingleton<IScript, ProjectileViewer>();
-        collection.AddSingleton<IScript, TargetSelector>();
     }
 }

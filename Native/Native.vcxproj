@@ -615,6 +615,7 @@
     <ClInclude Include="Hybrid\Commands\Command.h" />
     <ClInclude Include="Hybrid\Commands\CommandType.h" />
     <ClInclude Include="Hybrid\Commands\IssueOrderCommand.h" />
+    <ClInclude Include="Hybrid\Commands\LevelSpellCommand.h" />
     <ClInclude Include="Hybrid\Commands\PrintChatCommand.h" />
     <ClInclude Include="Hybrid\IPCClient.h" />
     <ClInclude Include="Hybrid\Packet.h" />

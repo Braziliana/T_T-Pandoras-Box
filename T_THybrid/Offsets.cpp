@@ -56,7 +56,7 @@ Offsets::Offsets()
     
     HudInstance += base;
     IssueOrder += base;
-    IssueMove += base;
+    LevelSpell += base;
     CastSpell += base;
     CastSpellClick += base;
 }

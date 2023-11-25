@@ -39,7 +39,11 @@ DWORD WINAPI Run(LPVOID lpReserved)
         {
             if(!ipcServer.IsRunning())
             {
-                ipcServer.Start();
+                if(!ipcServer.Start())
+                {
+                    Sleep(1);
+                }
+                
             }
             else
             {

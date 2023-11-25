@@ -46,6 +46,7 @@ Hud* Functions::GetHud()
     return *reinterpret_cast<Hud**>(offsets->HudInstance);
 }
 
+
 void Functions::MoveTo(const int x, const int y)
 {
     IssueOrder(false, x, y);
@@ -95,6 +96,15 @@ void Functions::Attack(GameObject* gameObject)
     }
 }
 
+void Functions::LevelSpell(int spellSlot)
+{
+    static auto offsets = Offsets::GetInstance();
+    const auto hudInput = GetHud()->GetCastHandle();
+    typedef void(__fastcall* LevelSpellFunc)(HudCastSpell* hudInput, int spellSlot);
+    static auto levelSpell = reinterpret_cast<LevelSpellFunc>(offsets->LevelSpell);
+    spoof_call(offsets->SpoofTrampoline, levelSpell, hudInput, spellSlot);
+}
+
 void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3 endPosition)
 {
 	static auto offsets = Offsets::GetInstance();
@@ -109,29 +119,41 @@ void Functions::CastSpell(const int spellSlot, GameObject* target, const Vector3
     const auto hudMouseWorldPosition = hudMouseInfo->GetMousePosition();
     const auto hudMouseTarget = hudMouseInfo->GetUnderMouseObjectHandle();
     
-	spellInput->SetCaster(localPlayer->GetHandle());
+    const auto mousePos = MousePosition();
+    Vector2 screenPosition;
+    WorldToScreen(endPosition, screenPosition);
+    SetMousePosition(screenPosition);
+    hudMouseInfo->SetMouseWorldPosition(endPosition);
+    typedef void(__fastcall* HudCastSpellClickFunc)(HudCastSpell* hudInput, SpellInfo* spellInfo, int isDown);
+    static auto hudCastSpellClickFunc = reinterpret_cast<HudCastSpellClickFunc>(offsets->CastSpellClick);
+    spoof_call(offsets->SpoofTrampoline, hudCastSpellClickFunc, hudInput, spellInfo, 0);
+    
+	// typedef void(__fastcall* HudCastSpellFunc)(HudCastSpell* hudInput, SpellInfo* spellInfo);
+	// static auto castSpellFunc = reinterpret_cast<HudCastSpellFunc>(offsets->CastSpell);
+	// spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInfo);
 
-	if(target == nullptr)
-	{
-		spellInput->SetTarget(0);
-	    hudMouseInfo->SetTargetHandle(0);
-	}
-	else
-	{
-		spellInput->SetTarget(target->GetHandle());
-	    hudMouseInfo->SetTargetHandle(target->GetHandle());
-	}
+    spellInput->SetCaster(localPlayer->GetHandle());
 
-	spellInput->SetEndPosition(endPosition);
-	spellInput->SetClickPosition(endPosition);
-	spellInput->SetEndPosition2(endPosition);
+    if(target == nullptr)
+    {
+        spellInput->SetTarget(0);
+        hudMouseInfo->SetTargetHandle(0);
+    }
+    else
+    {
+        spellInput->SetTarget(target->GetHandle());
+        hudMouseInfo->SetTargetHandle(target->GetHandle());
+    }
+
+    spellInput->SetEndPosition(endPosition);
+    spellInput->SetClickPosition(endPosition);
+    spellInput->SetEndPosition2(endPosition);
 
     hudInput->SetSpellInfo(spellInfo);
-    hudMouseInfo->SetMouseWorldPosition(endPosition);
-    
-	typedef void(__fastcall* HudCastSpellFunc)(HudCastSpell* hudInput, SpellInfo* spellInfo);
-	static auto castSpellFunc = reinterpret_cast<HudCastSpellFunc>(offsets->CastSpell);
-	spoof_call(offsets->SpoofTrampoline, castSpellFunc, hudInput, spellInfo);
+
+    SetMousePosition(screenPosition);
+    spoof_call(offsets->SpoofTrampoline, hudCastSpellClickFunc, hudInput, spellInfo, 1);
+    SetMousePosition(mousePos);
     
     hudInput->SetSpellInfo(nullptr);
     hudMouseInfo->SetMouseWorldPosition(hudMouseWorldPosition);

@@ -19,6 +19,8 @@ public:
     static void IssueOrder(bool isAttackCommand, int x, int y);
     static void Attack(GameObject* gameObject);
 
+    static void LevelSpell(int spellSlot);
+    
     static void CastSpell(int spellSlot, GameObject* target, Vector3 endPosition);
     static void CastSpell(int spellSlot, GameObject* gameObject);
     static void CastSpell(int spellSlot, Vector3 position);

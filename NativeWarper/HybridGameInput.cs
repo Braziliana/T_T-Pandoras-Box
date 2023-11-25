@@ -85,7 +85,7 @@ public class HybridGameInput : IGameInput
 
     public bool LevelUpSpell(SpellSlot spellSlot)
     {
-        return false;
+        return _ipcClient.LevelSpell((int)spellSlot);
     }
 
     public bool CastSpell(SpellSlot spellSlot)

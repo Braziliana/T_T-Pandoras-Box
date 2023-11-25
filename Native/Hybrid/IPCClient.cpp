@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Commands/CastSpellCommand.h"
+#include "Commands/LevelSpellCommand.h"
 #include "Commands/PrintChatCommand.h"
 
 IPCClient* IPCClient::_instance = nullptr;
@@ -132,6 +133,12 @@ bool IPCClient::Attack(const uintptr_t target)
     return SendPacket(Packet(command));
 }
 
+bool IPCClient::LevelSpell(int spellSlot)
+{
+    const auto command = LevelSpellCommand(spellSlot);
+    return SendPacket(Packet(command));
+}
+
 bool IPCClient::IsConnected()
 {
     return pipe != INVALID_HANDLE_VALUE;
@@ -202,4 +209,9 @@ bool IPCClient_CastSpell(int spellSlot)
 bool IPCClient_MoveToWorldPosition(const Vector3* worldPosition)
 {
     return IPCClient::GetInstance()->MoveTo(*worldPosition);
+}
+
+bool IPCClient_LevelSpell(int spellSlot)
+{
+    return IPCClient::GetInstance()->LevelSpell(spellSlot);
 }
