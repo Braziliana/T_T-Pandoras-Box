@@ -169,16 +169,23 @@ public class HitChanceCalculator : IHitChanceCalculator
     private bool WillCollide(Vector3 start, Vector3 end, float projectileWidth, Vector3 objectPosition,
         float objectCollisionRadius)
     {     
-        var direction = Vector3.Normalize(new Vector3(end.X - start.X, 0, end.Z - start.Z));
-        var perpendicular = new Vector3(-direction.Z, 0, direction.X) * projectileWidth / 2;
+        // Define the line as start + t * dir for a scalar parameter t
+        Vector3 dir = Vector3.Normalize(end - start);
+    
+        // Compute the vector from the line starting point to the object position
+        Vector3 fromStartToObject = objectPosition - start;
+   
+        // Compute the projection length of fromStartToObject onto the line 
+        float t = Vector3.Dot(dir, fromStartToObject);
 
-        var line1Start = start + perpendicular;
-        var line1End = end + perpendicular;
-        var line2Start = start - perpendicular;
-        var line2End = end - perpendicular;
-        
-        return DoesLineIntersectCircle(line1Start, line1End, objectPosition, objectCollisionRadius) ||
-               DoesLineIntersectCircle(line2Start, line2End, objectPosition, objectCollisionRadius);
+        // Compute the closest point on the line to the center of the circle
+        Vector3 closest = start + t * dir;
+
+        // Compute the vector from the center of the circle to this closest point
+        Vector3 fromObjectToClosest = closest - objectPosition;
+
+        // If the length of this vector is less than or equal to the collision circle radius, the line intersects the circle
+        return fromObjectToClosest.Length() <= projectileWidth + objectCollisionRadius;
     }
     
     private bool CollidesWithTarget(CollisionType collisionType, Vector3 start, Vector3 end, float width)
@@ -188,11 +195,11 @@ public class HitChanceCalculator : IHitChanceCalculator
             return false;
         }
 
-        var center = (start + end) / 2;
+        //var center = (start + end) / 2;
         var range = Vector3.Distance(start, end);
         if (collisionType.HasFlag(CollisionType.Minion))
         {
-            var minions = _minionManager.GetEnemyMinions(center, range).Where(x => x is { IsVisible: true, IsAlive: true });
+            var minions = _minionManager.GetEnemyMinions(range);
             if (minions.Any(minion => WillCollide(start, end, width, minion.Position, minion.CollisionRadius)))
             {
                 return false;
@@ -201,7 +208,7 @@ public class HitChanceCalculator : IHitChanceCalculator
         
         if (collisionType.HasFlag(CollisionType.Hero))
         {
-            var heroes = _heroManager.GetEnemyHeroes(center, range).Where(x => x is { IsVisible: true, IsAlive: true });
+            var heroes = _heroManager.GetEnemyHeroes(range);
             if (heroes.Any(hero => WillCollide(start, end, width, hero.Position, hero.CollisionRadius)))
             {
                 return false;
