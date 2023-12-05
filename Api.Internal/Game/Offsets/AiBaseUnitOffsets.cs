@@ -16,6 +16,7 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
     public OffsetData Lethality { get; }
     public OffsetData ArmorPenetrationPercent { get; }
     public OffsetData Level { get; set; }
+    public OffsetData CriticalChance { get; }
 
     public AiBaseUnitOffsets(IConfiguration configuration)
     {
@@ -32,6 +33,7 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
         Lethality = new OffsetData(nameof(Lethality), Convert.ToUInt32(cs[nameof(Lethality)], 16), typeof(float));
         ArmorPenetrationPercent = new OffsetData(nameof(ArmorPenetrationPercent), Convert.ToUInt32(cs[nameof(ArmorPenetrationPercent)], 16), typeof(float));
         Level = new OffsetData(nameof(Level), Convert.ToUInt32(cs[nameof(Level)], 16), typeof(int));
+        CriticalChance = new OffsetData(nameof(CriticalChance), Convert.ToUInt32(cs[nameof(CriticalChance)], 16), typeof(float));
     }
     
     public IEnumerable<OffsetData> GetOffsets()
@@ -47,5 +49,6 @@ public class AiBaseUnitOffsets : IAiBaseUnitOffsets
         yield return Lethality;
         yield return ArmorPenetrationPercent;
         yield return Level;
+        yield return CriticalChance;
     }
 }
