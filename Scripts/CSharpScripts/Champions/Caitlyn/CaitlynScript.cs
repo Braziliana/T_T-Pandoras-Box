@@ -53,6 +53,10 @@ public class CaitlynScript : IChampionScript
     private IToggle _autoWCC;
     private IToggle _autoWDashing;
 
+    private IToggle _DrawRKillable;
+
+    private readonly float[] _rDamage = new float[]{300, 500, 700};    
+
     public CaitlynScript(
         IMainMenu mainMenu,
         ILocalPlayer localPlayer,
@@ -103,6 +107,9 @@ public class CaitlynScript : IChampionScript
         _autoQCC = autoMenu.AddToggle("Auto Q CC enemy", true);
         _autoWCC = autoMenu.AddToggle("Auto W CC enemy", true);
         _autoWDashing = autoMenu.AddToggle("Auto W dashing enemy", true);
+
+        var DrawMenu = _menu.AddSubMenu("Drawing");
+        _DrawRKillable = DrawMenu.AddToggle("Draw R Killable Status (Currently no CritBonus)", true);
     }
 
     public void OnUnload()
@@ -134,6 +141,19 @@ public class CaitlynScript : IChampionScript
         {
             return;
         }
+    }
+
+    private float GetrDamage(IHero target)
+    {
+        var spell = _localPlayer.R;
+        if (!spell.IsReady)
+        {
+            return 0;
+        }
+        // TODO: Fix CriticalChance not being returned as 0 even after adding to AIBaseUnit 
+        var physicalDamage = _rDamage[spell.Level-1] + (1.7f + (1.7f * (0.5f * _localPlayer.CriticalChance))) * _localPlayer.BonusAttackDamage;
+       
+        return _damageCalculator.GetPhysicalDamage(_localPlayer, target, physicalDamage);
     }
 
     private float GetImmobileBuffDuration(IHero hero)
@@ -306,6 +326,15 @@ public class CaitlynScript : IChampionScript
 
     public void OnRender(float deltaTime)
     {
-
+        if (_DrawRKillable.Toggled)
+        {
+            foreach (var enemyHero in _heroManager.GetEnemyHeroes(_localPlayer.R.Range))
+            {
+                if (enemyHero.Health < GetrDamage(enemyHero))
+    			{
+                    _renderer.Text($"R Killable", enemyHero.Position, 36, Color.Green);
+    			}
+            }
+        }
     }
 }
