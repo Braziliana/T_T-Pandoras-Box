@@ -19,4 +19,5 @@ public interface IAiBaseUnit : IAttackableUnit
 	float FlatArmorPenetration { get; }
 	float ArmorPenetrationPercent { get; set; }
 	int Level { get; set; }
+  	float CriticalChance { get; set; }
 }
