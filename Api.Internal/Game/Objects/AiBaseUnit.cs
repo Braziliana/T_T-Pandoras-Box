@@ -21,6 +21,7 @@ internal class AiBaseUnit : AttackableUnit, IAiBaseUnit
     public float MagicPenetration { get; set; }
     public float MagicPenetrationPercent { get; set; }
     public float Lethality { get; set; }
+    public float CriticalChance { get; set; }
     
     public float FlatArmorPenetration => GetFlatArmorPenetration();
     
