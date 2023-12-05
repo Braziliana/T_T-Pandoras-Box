@@ -13,5 +13,6 @@ public interface IAiBaseUnitOffsets
     OffsetData Lethality { get; }
     OffsetData ArmorPenetrationPercent { get; }
     OffsetData Level { get; set; }
+    OffsetData CriticalChance { get; }
     IEnumerable<OffsetData> GetOffsets();
 }
